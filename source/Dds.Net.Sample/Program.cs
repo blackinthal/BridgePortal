@@ -11,10 +11,10 @@ namespace Dds.Net.Sample
         static void Main(string[] args)
         {
             var dds = new DdsConnect();
-            var pbnCode = "E:AT5.AJT.A632.KJ7 Q763.KQ9.KQJ94.T 942.87653..98653 KJ8.42.T875.AQ42";
+            var pbnCode = "E:J832.KQ52.A852.A AK.T864.T7643.KT Q974.9.KJ.J98652 T65.AJ73.Q9.Q743";
             Console.WriteLine("Board: " + pbnCode);
             
-            var game = BridgeHelper.GetGameFromPbn(pbnCode);
+            var game = BridgeHelper.GetGameFromPbn(pbnCode, "4S", "W");
             var res = dds.CalculateMakeableContracts(pbnCode);
             Console.WriteLine("Best results:");
             foreach (var contract in res)
@@ -23,7 +23,8 @@ namespace Dds.Net.Sample
             }
             Console.WriteLine("------------- Game Starts ----------------");
             Console.WriteLine("Trump: " + game.Contract.Trump);
-            var player = game.Declarer;
+            //var player = game.Declarer;
+            var player = PlayerPosition.North;
             while (game.CardsRemaning > 0)
             {
                 var result = dds.SolveBoardPbnBestCard(game);
