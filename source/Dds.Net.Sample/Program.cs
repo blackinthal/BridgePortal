@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using System.Text;
 using Bridge.Domain;
 using Bridge.Domain.Utils;
 
@@ -11,16 +10,19 @@ namespace Dds.Net.Sample
         static void Main(string[] args)
         {
             var dds = new DdsConnect();
-            var pbnCode = "E:J832.KQ52.A852.A AK.T864.T7643.KT Q974.9.KJ.J98652 T65.AJ73.Q9.Q743";
+            var pbnCode = "E:K9742.763.Q.K764 AT6.AJ98.A5.QT53 853.QT.KT742.J92 QJ.K542.J9863.A8";
             Console.WriteLine("Board: " + pbnCode);
             
-            var game = BridgeHelper.GetGameFromPbn(pbnCode, "4S", "W");
+        
             var res = dds.CalculateMakeableContracts(pbnCode);
             Console.WriteLine("Best results:");
             foreach (var contract in res)
             {
                 Console.WriteLine(contract);
             }
+
+            var game = BridgeHelper.GetGameFromPbn(pbnCode, "4S", "W");
+
             Console.WriteLine("------------- Game Starts ----------------");
             Console.WriteLine("Trump: " + game.Contract.Trump);
             //var player = game.Declarer;
