@@ -1,15 +1,13 @@
 ﻿using System;
 using System.IO;
-using System.Text.RegularExpressions;
 
 namespace PBNParserTest
 {
     class Program
     {
-        static void Main(string[] args)
+        static void Main()
         {
             const string pbnFile = @"C:\Users\mpopescu\Desktop\sample.txt";
-            var regex = new Regex("[Deal \".\"]");
             var boards = 0;
 
             using (var reader = new StreamReader(pbnFile))
@@ -24,12 +22,10 @@ namespace PBNParserTest
 
                     var pbnDeal = line.Substring(start + 1, end - start - 1);
 
-                    if (pbnDeal.Length > 0)
-                    {
-                        Console.WriteLine(pbnDeal);
-                        boards++;
-                    }
-                        
+                    if (pbnDeal.Length <= 0) continue;
+
+                    Console.WriteLine(pbnDeal);
+                    boards++;
                 }
             }
 
