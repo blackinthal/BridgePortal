@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="eb7594eb5f9f43a8b550efaf8e166703" Name="Diagram1">
+        <EntityTypeShape EntityType="BridgeModel.Deal" Width="1.5" PointX="0.75" PointY="6" IsExpanded="true" />
+        <EntityTypeShape EntityType="BridgeModel.DuplicateDeal" Width="1.5" PointX="3" PointY="1" IsExpanded="true" />
+        <EntityTypeShape EntityType="BridgeModel.Event" Width="1.5" PointX="1.5" PointY="9.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="BridgeModel.Pair" Width="1.5" PointX="0.75" PointY="16" IsExpanded="true" />
+        <EntityTypeShape EntityType="BridgeModel.SysEventType" Width="1.5" PointX="1.5" PointY="13.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="BridgeModel.SysPlayer" Width="1.5" PointX="0.75" PointY="2.125" IsExpanded="true" />
+        <AssociationConnector Association="BridgeModel.FK_Deal_Event" ManuallyRouted="false" />
+        <AssociationConnector Association="BridgeModel.FK_DuplicateDeal_Deal" ManuallyRouted="false" />
+        <AssociationConnector Association="BridgeModel.FK_DuplicateDeal_BestContractDeclarer" ManuallyRouted="false" />
+        <AssociationConnector Association="BridgeModel.FK_DuplicateDeal_Declarer" ManuallyRouted="false" />
+        <AssociationConnector Association="BridgeModel.FK_DuplicateDeal_EWPair" ManuallyRouted="false" />
+        <AssociationConnector Association="BridgeModel.FK_DuplicateDeal_NSPair" ManuallyRouted="false" />
+        <AssociationConnector Association="BridgeModel.FK_Event_EventType" ManuallyRouted="false" />
+        <AssociationConnector Association="BridgeModel.FK_Pair_Event" ManuallyRouted="false" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>
