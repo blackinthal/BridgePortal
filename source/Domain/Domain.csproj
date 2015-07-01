@@ -143,12 +143,6 @@
     <Content Include="App_Readme\Elmah.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\AFM.Resources\AFM.Resources.csproj">
-      <Project>{7db72a0d-2a50-4b4c-a733-dfb18d4e4dd5}</Project>
-      <Name>AFM.Resources</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <Folder Include="DomainEvents\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

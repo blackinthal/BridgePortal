@@ -4,6 +4,8 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
+using Castle.MicroKernel.Registration;
+using Castle.Windsor;
 
 namespace BridgeWebAPI.Dependencies
 {
@@ -14,7 +16,7 @@ namespace BridgeWebAPI.Dependencies
         {
             return descriptor.Select((type, baseType) =>
             {
-                IEnumerable<Type> types = type.GetInterfaces().Where(t => !t.IsGenericType && t.Namespace.StartsWith(interfaceNamespace));
+                var types = type.GetInterfaces().Where(t => t.Namespace != null && (!t.IsGenericType && t.Namespace.StartsWith(interfaceNamespace))).ToList();
                 if (!types.Any())
                     return (IEnumerable<Type>)null;
                 return (IEnumerable<Type>)new[]

@@ -1,6 +1,18 @@
 ﻿using System;
-using System.ComponentModel;
+using System.Configuration;
+using System.Data.Entity;
 using System.Linq;
+using System.Reflection;
+using System.Web.Mvc;
+using System.Web.Routing;
+using Castle.Core;
+using Castle.MicroKernel.Registration;
+using Castle.Windsor;
+using CommonServiceLocator.WindsorAdapter;
+using Domain.Common;
+using Domain.Contracts;
+using Domain.EventStorage;
+using Microsoft.Practices.ServiceLocation;
 
 namespace BridgeWebAPI.Dependencies
 {
@@ -123,57 +135,6 @@ namespace BridgeWebAPI.Dependencies
 
         public ComponentRegistrarBuilder RegisterModules(string connectionName = null)
         {
-            var connectionString = ConfigurationManager.ConnectionStrings[connectionName].ConnectionString;
-
-            _container.Register(
-                Component.For(typeof(ExportModule)).LifeStyle.Transient);
-
-            _container.Register(
-                Component.For(typeof(ImportModule)).LifeStyle.Transient);
-
-            _container.Register(
-               Component.For(typeof(ImportRequestValidator)).LifeStyle.Transient);
-
-            _container.Register(
-               Component.For(typeof(ImportedInvalidationReasonBuilder)).LifeStyle.Transient);
-
-            _container.Register(
-               Component.For(typeof(CorrectRequestDRPCIVValidator)).LifeStyle.Transient);
-
-            _container.Register(
-                Component.For(typeof(RegisterRequestValidator)).LifeStyle.Transient);
-
-            _container.Register(
-                Component.For(typeof(RequestInfoModelValidator)).LifeStyle.Transient);
-
-            _container.Register(
-                Component.For(typeof(UserValidator)).LifeStyle.Transient);
-
-            _container.Register(
-                 Component.For(typeof(ExcelFactoryModule)).LifeStyle.Transient);
-
-            _container.Register(
-                 Component.For(typeof(InvoiceImportModule)).LifeStyle.Transient);
-
-            _container.Register(
-                Component.For(typeof(ValidatedVehiclesImportModule)).LifeStyle.Transient);
-
-            _container.Register(
-                Component.For(typeof(ValidatedVehiclesValidator)).LifeStyle.Transient);
-
-            _container.Register(
-                 Component.For(typeof(DownloadReportModule)).LifeStyle.Transient);
-
-            _container.Register(
-                Component.For(typeof(ApproveInvoiceValidator)).LifeStyle.Transient);
-
-            _container.Register(
-                Component.For(typeof(InvoiceValidator)).LifeStyle.Transient);
-
-            _container.Register(
-               Component.For(typeof(ApplicationKeys)).DependsOn(Property.ForKey("connectionString")
-                                        .Eq(connectionString)).IsDefault().LifeStyle.Singleton);
-
             return this;
         }
 
@@ -236,28 +197,6 @@ namespace BridgeWebAPI.Dependencies
             RegisterControllers(assembly.GetExportedTypes());
             ControllerBuilder.Current.SetControllerFactory(new WindsorControllerFactory(_container));
             DataAnnotationsModelValidatorProvider.AddImplicitRequiredAttributeForValueTypes = false;
-
-            return this;
-        }
-
-        public ComponentRegistrarBuilder RegisterUserManager()
-        {
-            _container.Register(
-                Component.For<IUserManager>().ImplementedBy<CustomUserManager>().LifestyleTransient()
-            );
-
-            _container.Register(
-                Component.For<IUserStore>().ImplementedBy<CustomUserStore>().LifestyleTransient()
-            );
-            return this;
-        }
-
-        public ComponentRegistrarBuilder RegisterCaches()
-        {
-            _container.Register(
-                Component.For<AuthenticationCache>().Forward<IApplyEvent<UserLoggedIn>>()
-                    .ImplementedBy<AuthenticationCache>().LifestyleSingleton()
-                );
 
             return this;
         }
