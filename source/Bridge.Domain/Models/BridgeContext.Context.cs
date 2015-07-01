@@ -31,5 +31,6 @@ namespace Bridge.Domain.Models
         public virtual DbSet<Pair> Pairs { get; set; }
         public virtual DbSet<SysEventType> SysEventTypes { get; set; }
         public virtual DbSet<SysPlayer> SysPlayers { get; set; }
+        public virtual DbSet<Player> Players { get; set; }
     }
 }

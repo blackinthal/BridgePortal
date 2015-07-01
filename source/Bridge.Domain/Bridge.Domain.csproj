@@ -61,6 +61,9 @@
     <Compile Include="CardColor.cs" />
     <Compile Include="Contract.cs" />
     <Compile Include="Deck.cs" />
+    <Compile Include="EventAggregate\Commands\ImportEvent.cs" />
+    <Compile Include="EventAggregate\EventAggregate.cs" />
+    <Compile Include="EventAggregate\EventService.cs" />
     <Compile Include="Models\BridgeContext.Context.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -86,6 +89,9 @@
       <DependentUpon>BridgeContext.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Pair.cs">
+      <DependentUpon>BridgeContext.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Player.cs">
       <DependentUpon>BridgeContext.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\SysEventType.cs">
@@ -127,6 +133,15 @@
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Domain\Domain.csproj">
+      <Project>{a42d72d5-0003-436f-bed2-d23869d97e29}</Project>
+      <Name>Domain</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="EventAggregate\DomainEvents\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
