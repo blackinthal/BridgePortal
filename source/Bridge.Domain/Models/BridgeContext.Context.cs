@@ -25,12 +25,13 @@ namespace Bridge.Domain.Models
             throw new UnintentionalCodeFirstException();
         }
     
-        public virtual DbSet<Deal> Deals { get; set; }
         public virtual DbSet<DuplicateDeal> DuplicateDeals { get; set; }
         public virtual DbSet<Event> Events { get; set; }
         public virtual DbSet<Pair> Pairs { get; set; }
         public virtual DbSet<SysEventType> SysEventTypes { get; set; }
         public virtual DbSet<SysPlayer> SysPlayers { get; set; }
         public virtual DbSet<Player> Players { get; set; }
+        public virtual DbSet<Deal> Deals { get; set; }
+        public virtual DbSet<SysVulnerability> SysVulnerabilities { get; set; }
     }
 }

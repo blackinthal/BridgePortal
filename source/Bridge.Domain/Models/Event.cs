@@ -16,8 +16,8 @@ namespace Bridge.Domain.Models
     {
         public Event()
         {
-            this.Deals = new HashSet<Deal>();
             this.Pairs = new HashSet<Pair>();
+            this.Deals = new HashSet<Deal>();
         }
     
         public int Id { get; set; }
@@ -25,8 +25,8 @@ namespace Bridge.Domain.Models
         public System.DateTime Date { get; set; }
         public int SysEventTypeId { get; set; }
     
-        public virtual ICollection<Deal> Deals { get; set; }
         public virtual SysEventType SysEventType { get; set; }
         public virtual ICollection<Pair> Pairs { get; set; }
+        public virtual ICollection<Deal> Deals { get; set; }
     }
 }

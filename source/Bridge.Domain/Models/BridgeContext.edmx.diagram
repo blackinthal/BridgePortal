@@ -5,14 +5,11 @@
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
       <Diagram DiagramId="eb7594eb5f9f43a8b550efaf8e166703" Name="Diagram1">
-        <EntityTypeShape EntityType="BridgeModel.Deal" Width="1.5" PointX="0.75" PointY="6" IsExpanded="true" />
         <EntityTypeShape EntityType="BridgeModel.DuplicateDeal" Width="1.5" PointX="3" PointY="1" IsExpanded="true" />
         <EntityTypeShape EntityType="BridgeModel.Event" Width="1.5" PointX="1.5" PointY="9.875" IsExpanded="true" />
         <EntityTypeShape EntityType="BridgeModel.Pair" Width="1.5" PointX="0.75" PointY="16" IsExpanded="true" />
         <EntityTypeShape EntityType="BridgeModel.SysEventType" Width="1.5" PointX="1.5" PointY="13.25" IsExpanded="true" />
         <EntityTypeShape EntityType="BridgeModel.SysPlayer" Width="1.5" PointX="0.75" PointY="2.125" IsExpanded="true" />
-        <AssociationConnector Association="BridgeModel.FK_Deal_Event" ManuallyRouted="false" />
-        <AssociationConnector Association="BridgeModel.FK_DuplicateDeal_Deal" ManuallyRouted="false" />
         <AssociationConnector Association="BridgeModel.FK_DuplicateDeal_BestContractDeclarer" ManuallyRouted="false" />
         <AssociationConnector Association="BridgeModel.FK_DuplicateDeal_Declarer" ManuallyRouted="false" />
         <AssociationConnector Association="BridgeModel.FK_DuplicateDeal_EWPair" ManuallyRouted="false" />
@@ -22,6 +19,11 @@
         <EntityTypeShape EntityType="BridgeModel.Player" Width="1.5" PointX="0.75" PointY="20.75" />
         <AssociationConnector Association="BridgeModel.FK_Pair_Player1" />
         <AssociationConnector Association="BridgeModel.FK_Pair_Player2" />
+        <EntityTypeShape EntityType="BridgeModel.Deal" Width="1.5" PointX="3.75" PointY="9.75" />
+        <EntityTypeShape EntityType="BridgeModel.SysVulnerability" Width="1.5" PointX="1.5" PointY="7.25" />
+        <AssociationConnector Association="BridgeModel.FK_Deal_Event" />
+        <AssociationConnector Association="BridgeModel.FK_Deal_SysVulnerability" />
+        <AssociationConnector Association="BridgeModel.FK_DuplicateDeal_Deal" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

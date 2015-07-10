@@ -13,6 +13,7 @@
           <Property Name="EventId" Type="int" Nullable="false" />
           <Property Name="Index" Type="int" Nullable="false" />
           <Property Name="PBNRepresentation" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="SysVulnerabilityId" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="DuplicateDeal">
           <Key>
@@ -71,6 +72,13 @@
           <Property Name="Id" Type="int" Nullable="false" />
           <Property Name="Player" Type="nvarchar" MaxLength="50" Nullable="false" />
         </EntityType>
+        <EntityType Name="SysVulnerability">
+          <Key>
+            <PropertyRef Name="SysVulnerabilityId" />
+          </Key>
+          <Property Name="SysVulnerabilityId" Type="int" Nullable="false" />
+          <Property Name="SysVulnerabilityName" Type="nchar" MaxLength="50" Nullable="false" />
+        </EntityType>
         <Association Name="FK_Deal_Event">
           <End Role="Event" Type="Self.Event" Multiplicity="1" />
           <End Role="Deal" Type="Self.Deal" Multiplicity="*" />
@@ -80,6 +88,18 @@
             </Principal>
             <Dependent Role="Deal">
               <PropertyRef Name="EventId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Deal_SysVulnerability">
+          <End Role="SysVulnerability" Type="Self.SysVulnerability" Multiplicity="1" />
+          <End Role="Deal" Type="Self.Deal" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SysVulnerability">
+              <PropertyRef Name="SysVulnerabilityId" />
+            </Principal>
+            <Dependent Role="Deal">
+              <PropertyRef Name="SysVulnerabilityId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -199,8 +219,13 @@
           <EntitySet Name="Player" EntityType="Self.Player" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="SysEventType" EntityType="Self.SysEventType" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="SysPlayer" EntityType="Self.SysPlayer" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="SysVulnerability" EntityType="Self.SysVulnerability" Schema="dbo" store:Type="Tables" />
           <AssociationSet Name="FK_Deal_Event" Association="Self.FK_Deal_Event">
             <End Role="Event" EntitySet="Event" />
+            <End Role="Deal" EntitySet="Deal" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Deal_SysVulnerability" Association="Self.FK_Deal_SysVulnerability">
+            <End Role="SysVulnerability" EntitySet="SysVulnerability" />
             <End Role="Deal" EntitySet="Deal" />
           </AssociationSet>
           <AssociationSet Name="FK_DuplicateDeal_BestContractDeclarer" Association="Self.FK_DuplicateDeal_BestContractDeclarer">
@@ -244,17 +269,6 @@
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="BridgeModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
-        <EntityType Name="Deal">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="EventId" Type="Int32" Nullable="false" />
-          <Property Name="Index" Type="Int32" Nullable="false" />
-          <Property Name="PBNRepresentation" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
-          <NavigationProperty Name="Event" Relationship="Self.FK_Deal_Event" FromRole="Deal" ToRole="Event" />
-          <NavigationProperty Name="DuplicateDeals" Relationship="Self.FK_DuplicateDeal_Deal" FromRole="Deal" ToRole="DuplicateDeal" />
-        </EntityType>
         <EntityType Name="DuplicateDeal">
           <Key>
             <PropertyRef Name="Id" />
@@ -269,11 +283,11 @@
           <Property Name="BestContract" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="BestContractDeclarer" Type="Int32" />
           <Property Name="BestContractResult" Type="Int32" />
-          <NavigationProperty Name="Deal" Relationship="Self.FK_DuplicateDeal_Deal" FromRole="DuplicateDeal" ToRole="Deal" />
           <NavigationProperty Name="SysPlayer" Relationship="Self.FK_DuplicateDeal_BestContractDeclarer" FromRole="DuplicateDeal" ToRole="SysPlayer" />
           <NavigationProperty Name="SysPlayer1" Relationship="Self.FK_DuplicateDeal_Declarer" FromRole="DuplicateDeal" ToRole="SysPlayer" />
           <NavigationProperty Name="Pair" Relationship="Self.FK_DuplicateDeal_EWPair" FromRole="DuplicateDeal" ToRole="Pair" />
           <NavigationProperty Name="Pair1" Relationship="Self.FK_DuplicateDeal_NSPair" FromRole="DuplicateDeal" ToRole="Pair" />
+          <NavigationProperty Name="Deal" Relationship="BridgeModel.FK_DuplicateDeal_Deal" FromRole="DuplicateDeal" ToRole="Deal" />
         </EntityType>
         <EntityType Name="Event">
           <Key>
@@ -283,9 +297,9 @@
           <Property Name="Name" Type="String" MaxLength="500" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="Date" Type="DateTime" Nullable="false" Precision="0" />
           <Property Name="SysEventTypeId" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="Deals" Relationship="Self.FK_Deal_Event" FromRole="Event" ToRole="Deal" />
           <NavigationProperty Name="SysEventType" Relationship="Self.FK_Event_EventType" FromRole="Event" ToRole="SysEventType" />
           <NavigationProperty Name="Pairs" Relationship="Self.FK_Pair_Event" FromRole="Event" ToRole="Pair" />
+          <NavigationProperty Name="Deals" Relationship="BridgeModel.FK_Deal_Event" FromRole="Event" ToRole="Deal" />
         </EntityType>
         <EntityType Name="Pair">
           <Key>
@@ -321,30 +335,6 @@
           <NavigationProperty Name="DuplicateDeals" Relationship="Self.FK_DuplicateDeal_BestContractDeclarer" FromRole="SysPlayer" ToRole="DuplicateDeal" />
           <NavigationProperty Name="DuplicateDeals1" Relationship="Self.FK_DuplicateDeal_Declarer" FromRole="SysPlayer" ToRole="DuplicateDeal" />
         </EntityType>
-        <Association Name="FK_Deal_Event">
-          <End Role="Event" Type="Self.Event" Multiplicity="1" />
-          <End Role="Deal" Type="Self.Deal" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Event">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="Deal">
-              <PropertyRef Name="EventId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_DuplicateDeal_Deal">
-          <End Role="Deal" Type="Self.Deal" Multiplicity="1" />
-          <End Role="DuplicateDeal" Type="Self.DuplicateDeal" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Deal">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="DuplicateDeal">
-              <PropertyRef Name="DealId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_DuplicateDeal_BestContractDeclarer">
           <End Role="SysPlayer" Type="Self.SysPlayer" Multiplicity="0..1" />
           <End Role="DuplicateDeal" Type="Self.DuplicateDeal" Multiplicity="*" />
@@ -418,20 +408,11 @@
           </ReferentialConstraint>
         </Association>
         <EntityContainer Name="BridgeContext" annotation:LazyLoadingEnabled="true">
-          <EntitySet Name="Deals" EntityType="Self.Deal" />
           <EntitySet Name="DuplicateDeals" EntityType="Self.DuplicateDeal" />
           <EntitySet Name="Events" EntityType="Self.Event" />
           <EntitySet Name="Pairs" EntityType="Self.Pair" />
           <EntitySet Name="SysEventTypes" EntityType="Self.SysEventType" />
           <EntitySet Name="SysPlayers" EntityType="Self.SysPlayer" />
-          <AssociationSet Name="FK_Deal_Event" Association="Self.FK_Deal_Event">
-            <End Role="Event" EntitySet="Events" />
-            <End Role="Deal" EntitySet="Deals" />
-          </AssociationSet>
-          <AssociationSet Name="FK_DuplicateDeal_Deal" Association="Self.FK_DuplicateDeal_Deal">
-            <End Role="Deal" EntitySet="Deals" />
-            <End Role="DuplicateDeal" EntitySet="DuplicateDeals" />
-          </AssociationSet>
           <AssociationSet Name="FK_DuplicateDeal_BestContractDeclarer" Association="Self.FK_DuplicateDeal_BestContractDeclarer">
             <End Role="SysPlayer" EntitySet="SysPlayers" />
             <End Role="DuplicateDeal" EntitySet="DuplicateDeals" />
@@ -464,6 +445,20 @@
           <AssociationSet Name="FK_Pair_Player2" Association="BridgeModel.FK_Pair_Player2">
             <End Role="Player" EntitySet="Players" />
             <End Role="Pair" EntitySet="Pairs" />
+          </AssociationSet>
+          <EntitySet Name="Deals" EntityType="BridgeModel.Deal" />
+          <EntitySet Name="SysVulnerabilities" EntityType="BridgeModel.SysVulnerability" />
+          <AssociationSet Name="FK_Deal_Event" Association="BridgeModel.FK_Deal_Event">
+            <End Role="Event" EntitySet="Events" />
+            <End Role="Deal" EntitySet="Deals" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Deal_SysVulnerability" Association="BridgeModel.FK_Deal_SysVulnerability">
+            <End Role="SysVulnerability" EntitySet="SysVulnerabilities" />
+            <End Role="Deal" EntitySet="Deals" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DuplicateDeal_Deal" Association="BridgeModel.FK_DuplicateDeal_Deal">
+            <End Role="Deal" EntitySet="Deals" />
+            <End Role="DuplicateDeal" EntitySet="DuplicateDeals" />
           </AssociationSet>
         </EntityContainer>
         <EntityType Name="Player">
@@ -499,22 +494,69 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="Deal">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="EventId" Type="Int32" Nullable="false" />
+          <Property Name="Index" Type="Int32" Nullable="false" />
+          <Property Name="PBNRepresentation" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="SysVulnerabilityId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Event" Relationship="BridgeModel.FK_Deal_Event" FromRole="Deal" ToRole="Event" />
+          <NavigationProperty Name="SysVulnerability" Relationship="BridgeModel.FK_Deal_SysVulnerability" FromRole="Deal" ToRole="SysVulnerability" />
+          <NavigationProperty Name="DuplicateDeals" Relationship="BridgeModel.FK_DuplicateDeal_Deal" FromRole="Deal" ToRole="DuplicateDeal" />
+        </EntityType>
+        <EntityType Name="SysVulnerability">
+          <Key>
+            <PropertyRef Name="SysVulnerabilityId" />
+          </Key>
+          <Property Name="SysVulnerabilityId" Type="Int32" Nullable="false" />
+          <Property Name="SysVulnerabilityName" Type="String" Nullable="false" MaxLength="50" FixedLength="true" Unicode="true" />
+          <NavigationProperty Name="Deals" Relationship="BridgeModel.FK_Deal_SysVulnerability" FromRole="SysVulnerability" ToRole="Deal" />
+        </EntityType>
+        <Association Name="FK_Deal_Event">
+          <End Type="BridgeModel.Event" Role="Event" Multiplicity="1" />
+          <End Type="BridgeModel.Deal" Role="Deal" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Event">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Deal">
+              <PropertyRef Name="EventId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Deal_SysVulnerability">
+          <End Type="BridgeModel.SysVulnerability" Role="SysVulnerability" Multiplicity="1" />
+          <End Type="BridgeModel.Deal" Role="Deal" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SysVulnerability">
+              <PropertyRef Name="SysVulnerabilityId" />
+            </Principal>
+            <Dependent Role="Deal">
+              <PropertyRef Name="SysVulnerabilityId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DuplicateDeal_Deal">
+          <End Type="BridgeModel.Deal" Role="Deal" Multiplicity="1" />
+          <End Type="BridgeModel.DuplicateDeal" Role="DuplicateDeal" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Deal">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="DuplicateDeal">
+              <PropertyRef Name="DealId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
     <edmx:Mappings>
       <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
         <EntityContainerMapping StorageEntityContainer="BridgeModelStoreContainer" CdmEntityContainer="BridgeContext">
-          <EntitySetMapping Name="Deals">
-            <EntityTypeMapping TypeName="BridgeModel.Deal">
-              <MappingFragment StoreEntitySet="Deal">
-                <ScalarProperty Name="Id" ColumnName="Id" />
-                <ScalarProperty Name="EventId" ColumnName="EventId" />
-                <ScalarProperty Name="Index" ColumnName="Index" />
-                <ScalarProperty Name="PBNRepresentation" ColumnName="PBNRepresentation" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="DuplicateDeals">
             <EntityTypeMapping TypeName="BridgeModel.DuplicateDeal">
               <MappingFragment StoreEntitySet="DuplicateDeal">
@@ -575,6 +617,25 @@
               <MappingFragment StoreEntitySet="Player">
                 <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Deals">
+            <EntityTypeMapping TypeName="BridgeModel.Deal">
+              <MappingFragment StoreEntitySet="Deal">
+                <ScalarProperty Name="SysVulnerabilityId" ColumnName="SysVulnerabilityId" />
+                <ScalarProperty Name="PBNRepresentation" ColumnName="PBNRepresentation" />
+                <ScalarProperty Name="Index" ColumnName="Index" />
+                <ScalarProperty Name="EventId" ColumnName="EventId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="SysVulnerabilities">
+            <EntityTypeMapping TypeName="BridgeModel.SysVulnerability">
+              <MappingFragment StoreEntitySet="SysVulnerability">
+                <ScalarProperty Name="SysVulnerabilityName" ColumnName="SysVulnerabilityName" />
+                <ScalarProperty Name="SysVulnerabilityId" ColumnName="SysVulnerabilityId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

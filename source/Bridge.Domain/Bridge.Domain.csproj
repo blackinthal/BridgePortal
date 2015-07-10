@@ -100,9 +100,15 @@
     <Compile Include="Models\SysPlayer.cs">
       <DependentUpon>BridgeContext.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\SysVulnerability.cs">
+      <DependentUpon>BridgeContext.tt</DependentUpon>
+    </Compile>
     <Compile Include="Player.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Rank.cs" />
+    <Compile Include="StaticModels\SysEventType.cs" />
+    <Compile Include="StaticModels\SysPlayer.cs" />
+    <Compile Include="StaticModels\SysVulnerabilityEnum.cs" />
     <Compile Include="Suit.cs" />
     <Compile Include="Trick.cs" />
     <Compile Include="Trump.cs" />

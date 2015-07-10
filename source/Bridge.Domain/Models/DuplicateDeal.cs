@@ -25,10 +25,10 @@ namespace Bridge.Domain.Models
         public Nullable<int> BestContractDeclarer { get; set; }
         public Nullable<int> BestContractResult { get; set; }
     
-        public virtual Deal Deal { get; set; }
         public virtual SysPlayer SysPlayer { get; set; }
         public virtual SysPlayer SysPlayer1 { get; set; }
         public virtual Pair Pair { get; set; }
         public virtual Pair Pair1 { get; set; }
+        public virtual Deal Deal { get; set; }
     }
 }
