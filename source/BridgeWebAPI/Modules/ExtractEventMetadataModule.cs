@@ -1,6 +1,8 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
-using System.Net;
+using Bridge.Domain.EventAggregate.Commands;
+using BridgeWebAPI.Providers;
 
 namespace BridgeWebAPI.Modules
 {
@@ -9,75 +11,43 @@ namespace BridgeWebAPI.Modules
         private readonly IEventProvider _provider;
         private readonly IUrlProvider _urlProvider;
 
+        public List<string> Errors; 
         public ExtractEventMetadataModule(IEventProvider provider, IUrlProvider urlProvider)
         {
             _provider = provider;
             _urlProvider = urlProvider;
+
+            Errors = new List<string>();
         }
-    }
 
-    public interface IUrlProvider
-    {
-        string GetUrl(DateTime selectedDate);
-    }
-    public interface IEventProvider
-    {
-        /// <summary>
-        /// Returns a path to a temporary file that contains metatadata about the event
-        /// </summary>
-        /// <param name="url">Url from where to read data</param>
-        /// <returns>Returns a path to a temporary file that contains metatadata about the event</returns>
-        string ReadEventPBNData(string url);
-
-        void CleanUp(string temporaryFilePath);
-    }
-
-    public class LocomotivaEventProvider : IEventProvider
-    {
-        public string ReadEventPBNData(string url)
+        public ImportEvent ExtractEventMetadata(DateTime selectedDate)
         {
-            var tempPath = Path.GetTempFileName();
+            var tempFilePath = _provider.ReadEventPBNData(_urlProvider.GetUrl(new DateTime(2015, 4, 28)));
 
-            var request = WebRequest.Create(url);
+            var command = ProcessPbnFile(tempFilePath);
 
-            var response = request.GetResponse() as HttpWebResponse;
+            _provider.CleanUp(tempFilePath);
 
-            if (response == null || response.StatusCode != HttpStatusCode.OK)
-                return tempPath;
+            return command;
+        }
 
-            var stream = response.GetResponseStream();
-
-            if (stream == null)
-                return tempPath;
-
-            var reader = new StreamReader(stream);
-            var contents = reader.ReadToEnd();
-
-            using (var writer = new StreamWriter(tempPath))
+        private static ImportEvent ProcessPbnFile(string filePath)
+        {
+            var result = new ImportEvent();
+            using (var reader = new StreamReader(filePath))
             {
-                writer.Write(contents);
+                string line;
+                while ((line = reader.ReadLine()) != null)
+                {
+                    if (!line.StartsWith("[Deal ")) continue;
+
+                    var start = line.IndexOf('"');
+                    var end = line.LastIndexOf('"');
+
+                    var pbnDeal = line.Substring(start + 1, end - start - 1);
+                }
             }
-
-            return tempPath;
-        }
-
-        public void CleanUp(string temporaryFilePath)
-        {
-            if(File.Exists(temporaryFilePath))
-                File.Delete(temporaryFilePath);
-        }
-    }
-
-    public class LocomotivaUrlProvider : IUrlProvider
-    {
-        private const string BaseUrl = "http://www.locomotiva.ro/cls";
-        public string GetUrl(DateTime selectedDate)
-        {
-            var year = (selectedDate.Year % 2000);
-            var month = selectedDate.Month.ToString("D2");
-            var day = selectedDate.Day;
-
-            return string.Format("{0}/{1}/{2}/{3}-{4}-{5}.pbn",BaseUrl,year,month,day,month,year);
+            return result;
         }
     }
 }

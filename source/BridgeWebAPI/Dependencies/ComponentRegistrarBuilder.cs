@@ -130,11 +130,21 @@ namespace BridgeWebAPI.Dependencies
         {
             _container.Register(
                 Classes.FromThisAssembly().Pick().If(a => a.Name.EndsWith("Queries")).LifestyleTransient());
+
             return this;
         }
 
         public ComponentRegistrarBuilder RegisterModules(string connectionName = null)
         {
+            _container.Register(
+                Classes.FromThisAssembly().Pick().If(a => a.Name.EndsWith("Provider")).LifestyleTransient());
+
+            _container.Register(
+                Classes.FromThisAssembly().Pick().If(a => a.Name.EndsWith("Module")).LifestyleTransient());
+
+            _container.Register(
+                Classes.FromThisAssembly().Pick().If(a => a.Name.EndsWith("Factory")).LifestyleTransient());
+
             return this;
         }
 
@@ -142,18 +152,6 @@ namespace BridgeWebAPI.Dependencies
 
         public ComponentRegistrarBuilder RegisterAutoMapper()
         {
-            _container.Register(
-                Types.FromAssemblyNamed("DRPCIV.SupportingDomain")
-                .BasedOn(typeof(IModelMap))
-                .WithService.AllInterfaces().LifestyleTransient()
-            );
-
-            _container.Register(
-                Types.FromAssemblyNamed("AFM.Domain.AFM")
-                .BasedOn(typeof(IModelMap))
-                .WithService.AllInterfaces().LifestyleTransient()
-            );
-
             _container.Register(
                 Types.FromThisAssembly()
                 .BasedOn(typeof(IModelMap))

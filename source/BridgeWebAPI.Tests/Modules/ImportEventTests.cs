@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using BridgeWebAPI.Modules;
+using BridgeWebAPI.Providers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace BridgeWebAPI.Tests.Modules
