@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text;
 using Domain.Contracts;
 
 namespace Bridge.Domain.EventAggregate.Commands
@@ -9,8 +10,16 @@ namespace Bridge.Domain.EventAggregate.Commands
         public string Name { get; set; }
         public DateTime Date { get; set; }
         public int SysEventTypeId { get; set; }
-        public IEnumerable<DealMetadata> Deals { get; set; }
-        public IEnumerable<PairMetadata> Pairs { get; set; }
+        public IList<DealMetadata> Deals { get; set; }
+        public IList<PairMetadata> Pairs { get; set; }
+        public int NoOfBoards { get; set; }
+        public int NoOfPairs { get; set; }
+        public int NoOfRounds { get; set; }
+        public ImportEvent()
+        {
+            Deals = new List<DealMetadata>();
+            Pairs = new List<PairMetadata>();
+        }
     }
 
     public class PairMetadata
@@ -20,13 +29,19 @@ namespace Bridge.Domain.EventAggregate.Commands
         public string Player2Name { get; set; }
         public decimal Result { get; set; }
         public int Rank { get; set; }
+        public int PairId { get; set; }
     }
 
     public class DealMetadata
     {
         public string PBNRepresentation { get; set; }
         public int Index { get; set; }
-        public IEnumerable<DuplicateDealMetadata> DealResults { get; set; }
+        public IList<DuplicateDealMetadata> DealResults { get; set; }
+        public int SysVulnerabilityId { get; set; }
+        public DealMetadata()
+        {
+            DealResults = new List<DuplicateDealMetadata>();
+        }
     }
 
     public class DuplicateDealMetadata
