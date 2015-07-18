@@ -24,19 +24,20 @@ namespace Bridge.Domain
 
         public Contract(string contract, PlayerPosition declarer)
         {
-            Value = int.Parse(contract[0].ToString());
+            var value = 0;
+            int.TryParse(contract[0].ToString(), out value);
+            Value = value;
             PlayerPosition = declarer;
             var suit = Suit.Suits.FirstOrDefault(x => x.ShortName == new string(contract[1], 1));
             Trump = suit !=null ? new Trump(suit) : Trump.NoTrump;
+            Doubled = contract.ToLower().Count(x => x == 'x') == 1;
+            Redoubled = contract.ToLower().Count(x => x == 'x') == 2;
         }
 
-        public bool Doubled { get; set; }
-        public bool Redoubled { get; set; }
+        public bool Doubled { get; private set; }
+        public bool Redoubled { get; private set; }
         public bool Undoubled { get { return !Doubled && !Redoubled; } }
-        public int TricksToBeMade
-        {
-            get { return Value + 6; }
-        }
+        public int TricksToBeMade { get { return Value + 6; } }
         public bool SmallSlam { get { return TricksToBeMade == 12; } }
         public bool BigSlam { get { return TricksToBeMade == 13; } }
     }

@@ -51,5 +51,7 @@ namespace Bridge.Domain.EventAggregate.Commands
         public int Result { get; set; }
         public int NSPairIndex { get; set; }
         public int EWPairIndex { get; set; }
+        public decimal NSPercentage { get; set; }
+        public decimal EWPercentage { get; set; }
     }
 }

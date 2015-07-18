@@ -1,10 +1,11 @@
 ﻿using System;
+using System.Globalization;
 using System.Linq;
 using Bridge.Domain.StaticModels;
 
-namespace Bridge.Domain
+namespace Bridge.Domain.Modules
 {
-    public class ContractCalculatorModule
+    public class ContractScoreCalculatorModule
     {
         private const int MinorSuitTrickScore = 20;
         private const int MajorSuitTrickScore = 30;
@@ -36,16 +37,30 @@ namespace Bridge.Domain
         private bool _vulnerable;
         private ContractDenomination _contractType;
 
+        public int CalculateScore(Contract c, string tricksMade, SysVulnerabilityEnum vulnerability)
+        {
+            if (tricksMade.Length == 0)
+                return 0;
+
+            var firstLetter = tricksMade.ElementAt(0);
+            if (firstLetter == '=')
+                return CalculateScore(c, c.TricksToBeMade, vulnerability);
+            var tricks = int.Parse(tricksMade.ElementAt(1).ToString(CultureInfo.InvariantCulture));
+            return firstLetter == '+' ? CalculateScore(c, c.TricksToBeMade + tricks, vulnerability) : CalculateScore(c, c.TricksToBeMade - tricks, vulnerability);
+        }
         public int CalculateScore(Contract c, int tricksMade, SysVulnerabilityEnum vulnerability)
         {
             _contract = c;
 
+            if (c.Value == 0)
+                return 0;
+
             SetVulnerability(vulnerability);
             SetContractType();
 
-            var trickDifference = _contract.TricksToBeMade - tricksMade;
+            var trickDifference = tricksMade - _contract.TricksToBeMade;
 
-            var score = trickDifference >= 0 ? CalculateContractMadePoints(trickDifference) : CalculateContractPenaltyPoints(Math.Abs(trickDifference));
+            var score = trickDifference >= 0 ? CalculateContractMadePoints(trickDifference) : -1 * CalculateContractPenaltyPoints(Math.Abs(trickDifference));
 
             return _contract.PlayerPosition == PlayerPosition.North || _contract.PlayerPosition == PlayerPosition.South ? score : -1*score;
         }
@@ -72,8 +87,8 @@ namespace Bridge.Domain
                                   _contract.PlayerPosition == PlayerPosition.South;
                     break;
                 case SysVulnerabilityEnum.EW:
-                    _vulnerable = _contract.PlayerPosition == PlayerPosition.North ||
-                                  _contract.PlayerPosition == PlayerPosition.South;
+                    _vulnerable = _contract.PlayerPosition == PlayerPosition.East ||
+                                  _contract.PlayerPosition == PlayerPosition.West;
                     break;
                 default:
                     _vulnerable = false;

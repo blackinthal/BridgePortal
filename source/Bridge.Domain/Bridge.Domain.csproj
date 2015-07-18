@@ -36,6 +36,14 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Elmah, Version=1.2.14706.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\elmah.corelibrary.1.2.2\lib\Elmah.dll</HintPath>
+    </Reference>
+    <Reference Include="ElmahExtensions, Version=1.0.7.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\CustomErrorSignal.1.0.7\lib\ElmahExtensions.dll</HintPath>
+    </Reference>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\EntityFramework.6.1.1\lib\net45\EntityFramework.dll</HintPath>
@@ -60,7 +68,6 @@
     <Compile Include="Card.cs" />
     <Compile Include="CardColor.cs" />
     <Compile Include="Contract.cs" />
-    <Compile Include="ContractCalculatorModule.cs" />
     <Compile Include="Deck.cs" />
     <Compile Include="EventAggregate\Commands\ImportEvent.cs" />
     <Compile Include="EventAggregate\EventAggregate.cs" />
@@ -104,6 +111,7 @@
     <Compile Include="Models\SysVulnerability.cs">
       <DependentUpon>BridgeContext.tt</DependentUpon>
     </Compile>
+    <Compile Include="Modules\ContractScoreCalculatorModule.cs" />
     <Compile Include="Player.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Rank.cs" />

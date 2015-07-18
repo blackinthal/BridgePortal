@@ -29,6 +29,8 @@
           <Property Name="BestContract" Type="nvarchar" MaxLength="50" />
           <Property Name="BestContractDeclarer" Type="int" />
           <Property Name="BestContractResult" Type="int" />
+          <Property Name="NSPercentage" Type="int" Nullable="false" />
+          <Property Name="EWPercentage" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="Event">
           <Key>
@@ -288,6 +290,8 @@
           <NavigationProperty Name="Pair" Relationship="Self.FK_DuplicateDeal_EWPair" FromRole="DuplicateDeal" ToRole="Pair" />
           <NavigationProperty Name="Pair1" Relationship="Self.FK_DuplicateDeal_NSPair" FromRole="DuplicateDeal" ToRole="Pair" />
           <NavigationProperty Name="Deal" Relationship="BridgeModel.FK_DuplicateDeal_Deal" FromRole="DuplicateDeal" ToRole="Deal" />
+          <Property Name="NSPercentage" Type="Int32" Nullable="false" />
+          <Property Name="EWPercentage" Type="Int32" Nullable="false" />
         </EntityType>
         <EntityType Name="Event">
           <Key>
@@ -560,6 +564,8 @@
           <EntitySetMapping Name="DuplicateDeals">
             <EntityTypeMapping TypeName="BridgeModel.DuplicateDeal">
               <MappingFragment StoreEntitySet="DuplicateDeal">
+                <ScalarProperty Name="EWPercentage" ColumnName="EWPercentage" />
+                <ScalarProperty Name="NSPercentage" ColumnName="NSPercentage" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="DealId" ColumnName="DealId" />
                 <ScalarProperty Name="NSPairId" ColumnName="NSPairId" />

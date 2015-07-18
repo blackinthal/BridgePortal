@@ -24,6 +24,8 @@ namespace Bridge.Domain.Models
         public string BestContract { get; set; }
         public Nullable<int> BestContractDeclarer { get; set; }
         public Nullable<int> BestContractResult { get; set; }
+        public int NSPercentage { get; set; }
+        public int EWPercentage { get; set; }
     
         public virtual SysPlayer SysPlayer { get; set; }
         public virtual SysPlayer SysPlayer1 { get; set; }

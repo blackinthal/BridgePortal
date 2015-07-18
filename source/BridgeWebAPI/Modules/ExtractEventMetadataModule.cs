@@ -1,9 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using Bridge.Domain;
 using Bridge.Domain.EventAggregate.Commands;
+using Bridge.Domain.Modules;
 using Bridge.Domain.StaticModels;
 using BridgeWebAPI.Providers;
+using ElmahExtensions;
 
 namespace BridgeWebAPI.Modules
 {
@@ -11,12 +14,14 @@ namespace BridgeWebAPI.Modules
     {
         private readonly IEventProvider _provider;
         private readonly IUrlProvider _urlProvider;
+        private readonly ContractScoreCalculatorModule _scoreCalculator;
 
         public List<string> Errors; 
-        public ExtractEventMetadataModule(IEventProvider provider, IUrlProvider urlProvider)
+        public ExtractEventMetadataModule(IEventProvider provider, IUrlProvider urlProvider, ContractScoreCalculatorModule scoreCalculator)
         {
             _provider = provider;
             _urlProvider = urlProvider;
+            _scoreCalculator = scoreCalculator;
 
             Errors = new List<string>();
         }
@@ -32,7 +37,7 @@ namespace BridgeWebAPI.Modules
             return command;
         }
 
-        private static ImportEvent ProcessPbnFile(string filePath)
+        private ImportEvent ProcessPbnFile(string filePath)
         {
             var result = new ImportEvent();
             var currentDeal = new DealMetadata();
@@ -68,7 +73,9 @@ namespace BridgeWebAPI.Modules
                     }
                     if (currentState == ParseState.ReadingDealScoreTable && identifiedDealResults < result.NoOfRounds)
                     {
-                        currentDeal.DealResults.Add(ExtractDuplicateDealMetadata(line));
+                        var duplicateDeal = ExtractDuplicateDealMetadata(line, (SysVulnerabilityEnum) currentDeal.SysVulnerabilityId);
+                        if(duplicateDeal != null)
+                            currentDeal.DealResults.Add(duplicateDeal);
                         identifiedDealResults++;
                         continue;
                     }
@@ -105,9 +112,49 @@ namespace BridgeWebAPI.Modules
             return pair;
         }
 
-        public static DuplicateDealMetadata ExtractDuplicateDealMetadata(string line)
+        public DuplicateDealMetadata ExtractDuplicateDealMetadata(string line, SysVulnerabilityEnum dealVulnerability)
         {
-            return new DuplicateDealMetadata();
+            try
+            {
+                var duplicateDeal = new DuplicateDealMetadata();
+                var values = line.Split(new[] {' '}, StringSplitOptions.RemoveEmptyEntries);
+
+                duplicateDeal.NSPairIndex = Int32.Parse(values[2]);
+                duplicateDeal.EWPairIndex = Int32.Parse(values[3]);
+                duplicateDeal.Contract = values[4];
+
+                SysPlayer declarer;
+                duplicateDeal.Declarer = Enum.TryParse(values[5], true, out declarer) ? (int)declarer : (int)SysPlayer.N;
+
+                if (duplicateDeal.Contract == "-")
+                    return null;
+
+                var position = PlayerPosition.North;
+                switch (duplicateDeal.Declarer)
+                {
+                    case (int) SysPlayer.E:
+                    case (int) SysPlayer.W:
+                        position = PlayerPosition.West;
+                        break;
+                }
+
+                var contract = new Contract(duplicateDeal.Contract, position);
+
+                int tricks;
+                duplicateDeal.Result = Int32.TryParse(values[6], out tricks)
+                    ? _scoreCalculator.CalculateScore(contract, tricks, dealVulnerability)
+                    : _scoreCalculator.CalculateScore(contract, values[6], dealVulnerability);
+
+                duplicateDeal.NSPercentage = Int32.Parse(values[12]);
+                duplicateDeal.EWPercentage = Int32.Parse(values[13]);
+
+                return duplicateDeal;
+            }
+            catch (Exception ex)
+            {
+                CustomErrorSignal.Handle(ex);
+                return null;
+            }
         }
 
         public enum ParseState

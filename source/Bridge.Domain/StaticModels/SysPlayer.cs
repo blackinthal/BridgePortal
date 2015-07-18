@@ -2,9 +2,9 @@
 {
     public enum SysPlayer
     {
-        North = 1,
-        East = 2,
-        South = 3,
-        West = 4
+        N = 1,
+        E = 2,
+        S = 3,
+        W = 4
     }
 }

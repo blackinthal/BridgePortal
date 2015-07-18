@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using Bridge.Domain.Modules;
 using Bridge.Domain.StaticModels;
 using BridgeWebAPI.Modules;
 using BridgeWebAPI.Providers;
@@ -70,7 +71,7 @@ namespace BridgeWebAPI.Tests.Modules
         public void TestPbnParsing()
         {
             //Arrange
-            var module = new ExtractEventMetadataModule(new LocomotivaEventProvider(), new LocomotivaUrlProvider());
+            var module = new ExtractEventMetadataModule(new LocomotivaEventProvider(), new LocomotivaUrlProvider(), new ContractScoreCalculatorModule());
 
             //Act
             var command = module.ExtractEventMetadata(new DateTime(2015, 7, 14));
@@ -85,7 +86,7 @@ namespace BridgeWebAPI.Tests.Modules
         public void TestPbnParsing_DealList()
         {
             //Arrange
-            var module = new ExtractEventMetadataModule(new LocomotivaEventProvider(), new LocomotivaUrlProvider());
+            var module = new ExtractEventMetadataModule(new LocomotivaEventProvider(), new LocomotivaUrlProvider(), new ContractScoreCalculatorModule());
 
             //Act
             var command = module.ExtractEventMetadata(new DateTime(2015, 7, 14));
@@ -98,7 +99,7 @@ namespace BridgeWebAPI.Tests.Modules
         public void TestPbnParsing_RandomDeal()
         {
             //Arrange
-            var module = new ExtractEventMetadataModule(new LocomotivaEventProvider(), new LocomotivaUrlProvider());
+            var module = new ExtractEventMetadataModule(new LocomotivaEventProvider(), new LocomotivaUrlProvider(), new ContractScoreCalculatorModule());
 
             //Act
             var command = module.ExtractEventMetadata(new DateTime(2015, 7, 14));
@@ -114,7 +115,7 @@ namespace BridgeWebAPI.Tests.Modules
         public void TestPbnParsing_PairsList()
         {
             //Arrange
-            var module = new ExtractEventMetadataModule(new LocomotivaEventProvider(), new LocomotivaUrlProvider());
+            var module = new ExtractEventMetadataModule(new LocomotivaEventProvider(), new LocomotivaUrlProvider(), new ContractScoreCalculatorModule());
 
             //Act
             var command = module.ExtractEventMetadata(new DateTime(2015, 7, 14));
@@ -127,7 +128,7 @@ namespace BridgeWebAPI.Tests.Modules
         public void TestPbnParsing_RandomPair()
         {
             //Arrange
-            var module = new ExtractEventMetadataModule(new LocomotivaEventProvider(), new LocomotivaUrlProvider());
+            var module = new ExtractEventMetadataModule(new LocomotivaEventProvider(), new LocomotivaUrlProvider(), new ContractScoreCalculatorModule());
 
             //Act
             var command = module.ExtractEventMetadata(new DateTime(2015, 7, 14));
@@ -140,6 +141,78 @@ namespace BridgeWebAPI.Tests.Modules
             Assert.AreEqual("POSEA VLAD", pair.Player1Name);
             Assert.AreEqual("RUSU VLAD", pair.Player2Name);
             Assert.AreEqual(21, pair.PairId);
+        }
+
+        [TestMethod]
+        public void TestPbnParsing_DuplicateDealResultsList()
+        {    //Arrange
+            var module = new ExtractEventMetadataModule(new LocomotivaEventProvider(), new LocomotivaUrlProvider(), new ContractScoreCalculatorModule());
+
+            //Act
+            var command = module.ExtractEventMetadata(new DateTime(2015, 7, 14));
+
+            //Assert
+            var deal = command.Deals.ElementAt(1);
+            Assert.AreEqual(12,deal.DealResults.Count);
+        }
+
+        [TestMethod]
+        public void TestPbnParsing_RandomDuplicateDeal1()
+        {    //Arrange
+            var module = new ExtractEventMetadataModule(new LocomotivaEventProvider(), new LocomotivaUrlProvider(), new ContractScoreCalculatorModule());
+
+            //Act
+            var command = module.ExtractEventMetadata(new DateTime(2015, 7, 14));
+
+            //Assert
+            var deal = command.Deals.ElementAt(3);
+            var duplicateDeal = deal.DealResults.ElementAt(5);
+            //"13  3 13 31 4S   W 11 H6      -  "650"  6.6 15.4  30  70"
+            Assert.AreEqual(13, duplicateDeal.NSPairIndex);
+            Assert.AreEqual(31, duplicateDeal.EWPairIndex);
+            Assert.AreEqual("4S", duplicateDeal.Contract);
+            Assert.AreEqual((int)SysPlayer.W, duplicateDeal.Declarer);
+            Assert.AreEqual(-650, duplicateDeal.Result);
+            Assert.AreEqual(30, duplicateDeal.NSPercentage);
+            Assert.AreEqual(70, duplicateDeal.EWPercentage);
+        }
+
+        [TestMethod]
+        public void TestPbnParsing_RandomDuplicateDeal2()
+        {    
+            //Arrange
+            var module = new ExtractEventMetadataModule(new LocomotivaEventProvider(), new LocomotivaUrlProvider(), new ContractScoreCalculatorModule());
+
+            //Act
+            var command = module.ExtractEventMetadata(new DateTime(2015, 7, 14));
+
+            //Assert
+            var deal = command.Deals.ElementAt(5);
+            var duplicateDeal = deal.DealResults.ElementAt(10);
+            // 5 12 27  5 1N   E  7 S8      -   "90"  3.0 19.0  14  86
+            Assert.AreEqual(27, duplicateDeal.NSPairIndex);
+            Assert.AreEqual(5, duplicateDeal.EWPairIndex);
+            Assert.AreEqual("1N", duplicateDeal.Contract);
+            Assert.AreEqual((int)SysPlayer.E, duplicateDeal.Declarer);
+            Assert.AreEqual(-90, duplicateDeal.Result);
+            Assert.AreEqual(14, duplicateDeal.NSPercentage);
+            Assert.AreEqual(86, duplicateDeal.EWPercentage);
+        }
+
+        [TestMethod]
+        public void TestDuplicateDealAreWellExtracted()
+        {
+            //Arrange
+            var module = new ExtractEventMetadataModule(new LocomotivaEventProvider(), new LocomotivaUrlProvider(), new ContractScoreCalculatorModule());
+
+            //Act
+            var command = module.ExtractEventMetadata(new DateTime(2015, 7, 14));
+
+            //Assert
+            Assert.AreEqual(17,command.Deals.Count(d => d.DealResults.Count() == 12));
+            Assert.AreEqual(8, command.Deals.Count(d => d.DealResults.Count() == 11));
+            Assert.AreEqual(1, command.Deals.Count(d => d.DealResults.Count() == 10));
+            Assert.AreEqual(26, command.Deals.Count());
         }
     }
 }
