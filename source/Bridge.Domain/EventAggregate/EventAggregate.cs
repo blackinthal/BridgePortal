@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Bridge.Domain.EventAggregate.Commands;
 using Bridge.Domain.Models;
 using Domain.Contracts;
