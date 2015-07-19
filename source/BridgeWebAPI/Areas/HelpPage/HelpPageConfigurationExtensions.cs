@@ -11,10 +11,11 @@ using System.Net.Http.Headers;
 using System.Web.Http;
 using System.Web.Http.Controllers;
 using System.Web.Http.Description;
-using BridgeWebAPI.Areas.HelpPage.ModelDescriptions;
-using BridgeWebAPI.Areas.HelpPage.Models;
+using Bridge.WebAPI.Areas.HelpPage.ModelDescriptions;
+using Bridge.WebAPI.Areas.HelpPage.Models;
+using Bridge.WebAPI.Areas.HelpPage.SampleGeneration;
 
-namespace BridgeWebAPI.Areas.HelpPage
+namespace Bridge.WebAPI.Areas.HelpPage
 {
     public static class HelpPageConfigurationExtensions
     {

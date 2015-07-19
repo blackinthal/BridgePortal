@@ -7,7 +7,7 @@ using System.Web.Routing;
 using Castle.MicroKernel.Registration;
 using Castle.Windsor;
 
-namespace BridgeWebAPI.Dependencies
+namespace Bridge.WebAPI.Dependencies
 {
     public static class WindsorExtensions
     {

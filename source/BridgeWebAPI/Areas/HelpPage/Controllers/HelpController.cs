@@ -1,10 +1,10 @@
 using System;
 using System.Web.Http;
 using System.Web.Mvc;
-using BridgeWebAPI.Areas.HelpPage.ModelDescriptions;
-using BridgeWebAPI.Areas.HelpPage.Models;
+using Bridge.WebAPI.Areas.HelpPage.ModelDescriptions;
+using Bridge.WebAPI.Areas.HelpPage.Models;
 
-namespace BridgeWebAPI.Areas.HelpPage.Controllers
+namespace Bridge.WebAPI.Areas.HelpPage.Controllers
 {
     /// <summary>
     /// The controller that will handle requests for the help page.

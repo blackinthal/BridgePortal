@@ -1,6 +1,6 @@
 using System;
 
-namespace BridgeWebAPI.Areas.HelpPage.ModelDescriptions
+namespace Bridge.WebAPI.Areas.HelpPage.ModelDescriptions
 {
     /// <summary>
     /// Describes a type model.

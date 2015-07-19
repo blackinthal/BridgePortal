@@ -1,14 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Net.Http;
-using System.Text;
-using System.Web.Http;
+using Bridge.WebAPI.Controllers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using BridgeWebAPI;
-using BridgeWebAPI.Controllers;
 
-namespace BridgeWebAPI.Tests.Controllers
+namespace Bridge.WebAPI.Tests.Controllers
 {
     [TestClass]
     public class ValuesControllerTest

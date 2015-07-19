@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
-VisualStudioVersion = 12.0.30501.0
+VisualStudioVersion = 12.0.30723.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dds.Net", "Dds.Net\Dds.Net.csproj", "{F3672BD0-CF43-43BB-BE0A-4ABAA1CDE779}"
 EndProject
@@ -13,9 +13,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebRequestTest", "WebReques
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PBNParserTest", "PBNParserTest\PBNParserTest.csproj", "{D13E4DD3-1840-46AA-849B-AB581D72A5B3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BridgeWebAPI", "BridgeWebAPI\BridgeWebAPI.csproj", "{E2B9E98F-D3BB-40C2-82E3-77573CDCEDF7}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bridge.WebAPI", "BridgeWebAPI\Bridge.WebAPI.csproj", "{E2B9E98F-D3BB-40C2-82E3-77573CDCEDF7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BridgeWebAPI.Tests", "BridgeWebAPI.Tests\BridgeWebAPI.Tests.csproj", "{8A399CE6-691F-46BE-9A9C-F6CEF0644465}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bridge.WebAPI.Tests", "BridgeWebAPI.Tests\Bridge.WebAPI.Tests.csproj", "{8A399CE6-691F-46BE-9A9C-F6CEF0644465}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BridgePortal", "BridgePortal\BridgePortal.csproj", "{C647B763-2D8C-480C-965E-BFB5F40D8791}"
 EndProject

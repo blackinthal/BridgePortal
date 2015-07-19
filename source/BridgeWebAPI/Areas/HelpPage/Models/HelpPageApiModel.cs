@@ -2,9 +2,9 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Net.Http.Headers;
 using System.Web.Http.Description;
-using BridgeWebAPI.Areas.HelpPage.ModelDescriptions;
+using Bridge.WebAPI.Areas.HelpPage.ModelDescriptions;
 
-namespace BridgeWebAPI.Areas.HelpPage.Models
+namespace Bridge.WebAPI.Areas.HelpPage.Models
 {
     /// <summary>
     /// The model that represents an API displayed on the help page.

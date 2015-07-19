@@ -3,7 +3,7 @@ using Bridge.Domain.Modules;
 using Bridge.Domain.StaticModels;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace BridgeWebAPI.Tests.Modules
+namespace Bridge.WebAPI.Tests.Modules
 {
     [TestClass]
     public class ComputeContractScore

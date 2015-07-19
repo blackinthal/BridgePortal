@@ -1,6 +1,6 @@
 using System;
 
-namespace BridgeWebAPI.Providers
+namespace Bridge.WebAPI.Providers
 {
     public class LocomotivaUrlProvider : IUrlProvider
     {

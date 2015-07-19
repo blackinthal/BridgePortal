@@ -3,7 +3,7 @@ using System.Globalization;
 using System.Linq;
 using System.Reflection;
 
-namespace BridgeWebAPI.Areas.HelpPage.ModelDescriptions
+namespace Bridge.WebAPI.Areas.HelpPage.ModelDescriptions
 {
     internal static class ModelNameHelper
     {

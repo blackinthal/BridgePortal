@@ -1,7 +1,6 @@
-﻿using System.Web;
-using System.Web.Mvc;
+﻿using System.Web.Mvc;
 
-namespace BridgeWebAPI
+namespace Bridge.WebAPI
 {
     public class FilterConfig
     {

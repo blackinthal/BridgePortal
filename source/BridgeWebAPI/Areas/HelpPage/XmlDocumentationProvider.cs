@@ -5,9 +5,9 @@ using System.Reflection;
 using System.Web.Http.Controllers;
 using System.Web.Http.Description;
 using System.Xml.XPath;
-using BridgeWebAPI.Areas.HelpPage.ModelDescriptions;
+using Bridge.WebAPI.Areas.HelpPage.ModelDescriptions;
 
-namespace BridgeWebAPI.Areas.HelpPage
+namespace Bridge.WebAPI.Areas.HelpPage
 {
     /// <summary>
     /// A custom <see cref="IDocumentationProvider"/> that reads the API documentation from an XML documentation file.

@@ -1,17 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+using Bridge.WebAPI.Models;
+using Bridge.WebAPI.Providers;
 using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.Owin;
 using Microsoft.Owin.Security.Cookies;
-using Microsoft.Owin.Security.Google;
 using Microsoft.Owin.Security.OAuth;
 using Owin;
-using BridgeWebAPI.Providers;
-using BridgeWebAPI.Models;
 
-namespace BridgeWebAPI
+namespace Bridge.WebAPI
 {
     public partial class Startup
     {

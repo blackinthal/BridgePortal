@@ -1,4 +1,4 @@
-namespace BridgeWebAPI.Areas.HelpPage.ModelDescriptions
+namespace Bridge.WebAPI.Areas.HelpPage.ModelDescriptions
 {
     public class CollectionModelDescription : ModelDescription
     {

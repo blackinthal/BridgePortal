@@ -1,9 +1,8 @@
 ﻿using System.Web.Mvc;
+using Bridge.WebAPI.Controllers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using BridgeWebAPI;
-using BridgeWebAPI.Controllers;
 
-namespace BridgeWebAPI.Tests.Controllers
+namespace Bridge.WebAPI.Tests.Controllers
 {
     [TestClass]
     public class HomeControllerTest

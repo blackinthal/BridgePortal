@@ -5,6 +5,7 @@ using System.Linq;
 using System.Reflection;
 using System.Web.Mvc;
 using System.Web.Routing;
+using Bridge.WebAPI.Providers;
 using Castle.Core;
 using Castle.MicroKernel.Registration;
 using Castle.Windsor;
@@ -14,7 +15,7 @@ using Domain.Contracts;
 using Domain.EventStorage;
 using Microsoft.Practices.ServiceLocation;
 
-namespace BridgeWebAPI.Dependencies
+namespace Bridge.WebAPI.Dependencies
 {
     public class ComponentRegistrarBuilder
     {
@@ -129,21 +130,21 @@ namespace BridgeWebAPI.Dependencies
         public ComponentRegistrarBuilder RegisterQueries()
         {
             _container.Register(
-                Classes.FromThisAssembly().Pick().If(a => a.Name.EndsWith("Queries")).LifestyleTransient());
+                Classes.FromAssemblyInThisApplication().Pick().If(a => a.Name.EndsWith("Queries")).LifestyleTransient());
 
             return this;
         }
 
-        public ComponentRegistrarBuilder RegisterModules(string connectionName = null)
+        public ComponentRegistrarBuilder RegisterModules()
         {
             _container.Register(
-                Classes.FromThisAssembly().Pick().If(a => a.Name.EndsWith("Provider")).LifestyleTransient());
+                Types.FromAssemblyInThisApplication().Pick().If(a => a.Name.EndsWith("Module")).LifestyleTransient());
 
             _container.Register(
-                Classes.FromThisAssembly().Pick().If(a => a.Name.EndsWith("Module")).LifestyleTransient());
+                Types.FromAssemblyInThisApplication().Pick().If(a => a.Name.EndsWith("Factory")).LifestyleTransient());
 
-            _container.Register(
-                Classes.FromThisAssembly().Pick().If(a => a.Name.EndsWith("Factory")).LifestyleTransient());
+            _container.Register(Component.For<IUrlProvider>().ImplementedBy<LocomotivaUrlProvider>());
+            _container.Register(Component.For<IEventProvider>().ImplementedBy<LocomotivaEventProvider>());
 
             return this;
         }

@@ -1,8 +1,8 @@
 ﻿using System.Web.Mvc;
-using BridgeWebAPI.Modules;
+using Bridge.WebAPI.Modules;
 using Domain.Contracts;
 
-namespace BridgeWebAPI.Controllers
+namespace Bridge.WebAPI.Controllers
 {
     public class ImportEventController : Controller
     {

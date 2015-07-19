@@ -3,11 +3,11 @@ using System.IO;
 using System.Linq;
 using Bridge.Domain.Modules;
 using Bridge.Domain.StaticModels;
-using BridgeWebAPI.Modules;
-using BridgeWebAPI.Providers;
+using Bridge.WebAPI.Modules;
+using Bridge.WebAPI.Providers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace BridgeWebAPI.Tests.Modules
+namespace Bridge.WebAPI.Tests.Modules
 {
     [TestClass]
     public class ImportEventTests

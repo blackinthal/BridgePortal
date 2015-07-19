@@ -8,7 +8,6 @@ namespace Domain.Contracts
         DateTime OccurredOn { get; set; }
         int UserId { get; set; }
         Guid ProcessId { get; set; }
-        string Display { get; }
     }
 
     public interface IDomainEventError : IDomainEvent

@@ -3,7 +3,7 @@ using System.Text;
 using System.Web;
 using System.Web.Http.Description;
 
-namespace BridgeWebAPI.Areas.HelpPage
+namespace Bridge.WebAPI.Areas.HelpPage
 {
     public static class ApiDescriptionExtensions
     {

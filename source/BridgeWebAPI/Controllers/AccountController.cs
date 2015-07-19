@@ -6,18 +6,17 @@ using System.Security.Cryptography;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Http;
-using System.Web.Http.ModelBinding;
+using Bridge.WebAPI.Models;
+using Bridge.WebAPI.Providers;
+using Bridge.WebAPI.Results;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using Microsoft.Owin.Security.Cookies;
 using Microsoft.Owin.Security.OAuth;
-using BridgeWebAPI.Models;
-using BridgeWebAPI.Providers;
-using BridgeWebAPI.Results;
 
-namespace BridgeWebAPI.Controllers
+namespace Bridge.WebAPI.Controllers
 {
     [Authorize]
     [RoutePrefix("api/Account")]

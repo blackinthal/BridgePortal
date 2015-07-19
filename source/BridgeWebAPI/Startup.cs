@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using Bridge.WebAPI;
 using Microsoft.Owin;
 using Owin;
 
-[assembly: OwinStartup(typeof(BridgeWebAPI.Startup))]
+[assembly: OwinStartup(typeof(Startup))]
 
-namespace BridgeWebAPI
+namespace Bridge.WebAPI
 {
     public partial class Startup
     {

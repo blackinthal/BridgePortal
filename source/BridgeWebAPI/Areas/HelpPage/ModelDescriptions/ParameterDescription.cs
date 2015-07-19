@@ -1,7 +1,6 @@
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
-namespace BridgeWebAPI.Areas.HelpPage.ModelDescriptions
+namespace Bridge.WebAPI.Areas.HelpPage.ModelDescriptions
 {
     public class ParameterDescription
     {

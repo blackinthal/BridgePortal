@@ -1,7 +1,7 @@
 using System.IO;
 using System.Net;
 
-namespace BridgeWebAPI.Providers
+namespace Bridge.WebAPI.Providers
 {
     public class LocomotivaEventProvider : IEventProvider
     {

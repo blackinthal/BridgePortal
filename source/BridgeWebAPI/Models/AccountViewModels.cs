@@ -1,7 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
-namespace BridgeWebAPI.Models
+namespace Bridge.WebAPI.Models
 {
     // Models returned by AccountController actions.
 

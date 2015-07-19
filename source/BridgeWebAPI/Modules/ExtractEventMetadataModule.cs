@@ -5,10 +5,10 @@ using Bridge.Domain;
 using Bridge.Domain.EventAggregate.Commands;
 using Bridge.Domain.Modules;
 using Bridge.Domain.StaticModels;
-using BridgeWebAPI.Providers;
+using Bridge.WebAPI.Providers;
 using ElmahExtensions;
 
-namespace BridgeWebAPI.Modules
+namespace Bridge.WebAPI.Modules
 {
     public class ExtractEventMetadataModule
     {
