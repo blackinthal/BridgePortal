@@ -154,7 +154,7 @@ namespace Bridge.WebAPI.Dependencies
         public ComponentRegistrarBuilder RegisterAutoMapper()
         {
             _container.Register(
-                Types.FromThisAssembly()
+                Types.FromAssemblyInThisApplication()
                 .BasedOn(typeof(IModelMap))
                 .WithService.AllInterfaces().LifestyleTransient()
             );

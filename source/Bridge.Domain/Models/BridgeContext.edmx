@@ -50,15 +50,8 @@
           <Property Name="EventId" Type="int" Nullable="false" />
           <Property Name="Score" Type="decimal" Precision="5" Scale="2" Nullable="false" />
           <Property Name="Rank" Type="int" Nullable="false" />
-          <Property Name="Player1Id" Type="int" Nullable="false" />
-          <Property Name="Player2Id" Type="int" Nullable="false" />
-        </EntityType>
-        <EntityType Name="Player">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="Name" Type="nchar" MaxLength="250" Nullable="false" />
+          <Property Name="Player1Name" Type="nvarchar" MaxLength="500" Nullable="false" />
+          <Property Name="Player2Name" Type="nvarchar" MaxLength="500" Nullable="false" />
         </EntityType>
         <EntityType Name="SysEventType">
           <Key>
@@ -189,36 +182,11 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_Pair_Player1">
-          <End Role="Player" Type="Self.Player" Multiplicity="1" />
-          <End Role="Pair" Type="Self.Pair" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Player">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="Pair">
-              <PropertyRef Name="Player1Id" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Pair_Player2">
-          <End Role="Player" Type="Self.Player" Multiplicity="1" />
-          <End Role="Pair" Type="Self.Pair" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Player">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="Pair">
-              <PropertyRef Name="Player2Id" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <EntityContainer Name="BridgeModelStoreContainer">
           <EntitySet Name="Deal" EntityType="Self.Deal" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="DuplicateDeal" EntityType="Self.DuplicateDeal" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Event" EntityType="Self.Event" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Pair" EntityType="Self.Pair" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="Player" EntityType="Self.Player" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="SysEventType" EntityType="Self.SysEventType" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="SysPlayer" EntityType="Self.SysPlayer" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="SysVulnerability" EntityType="Self.SysVulnerability" Schema="dbo" store:Type="Tables" />
@@ -256,14 +224,6 @@
           </AssociationSet>
           <AssociationSet Name="FK_Pair_Event" Association="Self.FK_Pair_Event">
             <End Role="Event" EntitySet="Event" />
-            <End Role="Pair" EntitySet="Pair" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Pair_Player1" Association="Self.FK_Pair_Player1">
-            <End Role="Player" EntitySet="Player" />
-            <End Role="Pair" EntitySet="Pair" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Pair_Player2" Association="Self.FK_Pair_Player2">
-            <End Role="Player" EntitySet="Player" />
             <End Role="Pair" EntitySet="Pair" />
           </AssociationSet>
         </EntityContainer>
@@ -317,11 +277,9 @@
           <NavigationProperty Name="DuplicateDeals" Relationship="Self.FK_DuplicateDeal_EWPair" FromRole="Pair" ToRole="DuplicateDeal" />
           <NavigationProperty Name="DuplicateDeals1" Relationship="Self.FK_DuplicateDeal_NSPair" FromRole="Pair" ToRole="DuplicateDeal" />
           <NavigationProperty Name="Event" Relationship="Self.FK_Pair_Event" FromRole="Pair" ToRole="Event" />
-          <Property Name="Player1Id" Type="Int32" Nullable="false" />
-          <Property Name="Player2Id" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="Player" Relationship="BridgeModel.FK_Pair_Player1" FromRole="Pair" ToRole="Player" />
-          <NavigationProperty Name="Player1" Relationship="BridgeModel.FK_Pair_Player2" FromRole="Pair" ToRole="Player" />
-        </EntityType>
+          <Property Name="Player1Name" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="Player2Name" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="true" />
+          </EntityType>
         <EntityType Name="SysEventType">
           <Key>
             <PropertyRef Name="Id" />
@@ -441,15 +399,6 @@
             <End Role="Event" EntitySet="Events" />
             <End Role="Pair" EntitySet="Pairs" />
           </AssociationSet>
-          <EntitySet Name="Players" EntityType="BridgeModel.Player" />
-          <AssociationSet Name="FK_Pair_Player1" Association="BridgeModel.FK_Pair_Player1">
-            <End Role="Player" EntitySet="Players" />
-            <End Role="Pair" EntitySet="Pairs" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Pair_Player2" Association="BridgeModel.FK_Pair_Player2">
-            <End Role="Player" EntitySet="Players" />
-            <End Role="Pair" EntitySet="Pairs" />
-          </AssociationSet>
           <EntitySet Name="Deals" EntityType="BridgeModel.Deal" />
           <EntitySet Name="SysVulnerabilities" EntityType="BridgeModel.SysVulnerability" />
           <AssociationSet Name="FK_Deal_Event" Association="BridgeModel.FK_Deal_Event">
@@ -465,39 +414,6 @@
             <End Role="DuplicateDeal" EntitySet="DuplicateDeals" />
           </AssociationSet>
         </EntityContainer>
-        <EntityType Name="Player">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Name" Type="String" Nullable="false" MaxLength="250" FixedLength="true" Unicode="true" />
-          <NavigationProperty Name="Pairs" Relationship="BridgeModel.FK_Pair_Player1" FromRole="Player" ToRole="Pair" />
-          <NavigationProperty Name="Pairs1" Relationship="BridgeModel.FK_Pair_Player2" FromRole="Player" ToRole="Pair" />
-        </EntityType>
-        <Association Name="FK_Pair_Player1">
-          <End Type="BridgeModel.Player" Role="Player" Multiplicity="1" />
-          <End Type="BridgeModel.Pair" Role="Pair" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Player">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="Pair">
-              <PropertyRef Name="Player1Id" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Pair_Player2">
-          <End Type="BridgeModel.Player" Role="Player" Multiplicity="1" />
-          <End Type="BridgeModel.Pair" Role="Pair" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Player">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="Pair">
-              <PropertyRef Name="Player2Id" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <EntityType Name="Deal">
           <Key>
             <PropertyRef Name="Id" />
@@ -592,8 +508,8 @@
           <EntitySetMapping Name="Pairs">
             <EntityTypeMapping TypeName="BridgeModel.Pair">
               <MappingFragment StoreEntitySet="Pair">
-                <ScalarProperty Name="Player2Id" ColumnName="Player2Id" />
-                <ScalarProperty Name="Player1Id" ColumnName="Player1Id" />
+                <ScalarProperty Name="Player2Name" ColumnName="Player2Name" />
+                <ScalarProperty Name="Player1Name" ColumnName="Player1Name" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="EventId" ColumnName="EventId" />
@@ -615,14 +531,6 @@
               <MappingFragment StoreEntitySet="SysPlayer">
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="Player" ColumnName="Player" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="Players">
-            <EntityTypeMapping TypeName="BridgeModel.Player">
-              <MappingFragment StoreEntitySet="Player">
-                <ScalarProperty Name="Name" ColumnName="Name" />
-                <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

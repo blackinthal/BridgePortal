@@ -32,6 +32,13 @@ namespace Bridge.WebAPI.Modules
 
             var command = ProcessPbnFile(tempFilePath);
 
+            command.Date = selectedDate;
+            command.Name = string.Format("Locomotiva {0}", selectedDate);
+            command.ProcessId = Guid.NewGuid();
+            command.SysEventTypeId = selectedDate.DayOfWeek == DayOfWeek.Tuesday
+                ? (int)SysEventType.Percentages
+                : (int)SysEventType.IMP;
+
             _provider.CleanUp(tempFilePath);
 
             return command;

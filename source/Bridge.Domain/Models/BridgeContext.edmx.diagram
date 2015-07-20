@@ -16,9 +16,6 @@
         <AssociationConnector Association="BridgeModel.FK_DuplicateDeal_NSPair" ManuallyRouted="false" />
         <AssociationConnector Association="BridgeModel.FK_Event_EventType" ManuallyRouted="false" />
         <AssociationConnector Association="BridgeModel.FK_Pair_Event" ManuallyRouted="false" />
-        <EntityTypeShape EntityType="BridgeModel.Player" Width="1.5" PointX="0.75" PointY="20.75" />
-        <AssociationConnector Association="BridgeModel.FK_Pair_Player1" />
-        <AssociationConnector Association="BridgeModel.FK_Pair_Player2" />
         <EntityTypeShape EntityType="BridgeModel.Deal" Width="1.5" PointX="3.75" PointY="9.75" />
         <EntityTypeShape EntityType="BridgeModel.SysVulnerability" Width="1.5" PointX="1.5" PointY="7.25" />
         <AssociationConnector Association="BridgeModel.FK_Deal_Event" />

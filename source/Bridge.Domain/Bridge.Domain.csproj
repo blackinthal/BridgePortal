@@ -109,9 +109,6 @@
     <Compile Include="Models\Pair.cs">
       <DependentUpon>BridgeContext.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\Player.cs">
-      <DependentUpon>BridgeContext.tt</DependentUpon>
-    </Compile>
     <Compile Include="Models\SysEventType.cs">
       <DependentUpon>BridgeContext.tt</DependentUpon>
     </Compile>

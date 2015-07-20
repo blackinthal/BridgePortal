@@ -79,6 +79,7 @@
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Transactions" />
     <Reference Include="System.Web" />
     <Reference Include="System.Web.ApplicationServices" />
     <Reference Include="System.Web.Extensions" />
@@ -132,6 +133,7 @@
   <ItemGroup>
     <Compile Include="Aggregates\EventAggregateTests.cs" />
     <Compile Include="AssemblyInit.cs" />
+    <Compile Include="Helpers\TransactionHelpers.cs" />
     <Compile Include="Modules\ComputeContractScore.cs" />
     <Compile Include="Modules\ImportEventTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

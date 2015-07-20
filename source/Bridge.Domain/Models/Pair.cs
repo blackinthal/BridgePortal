@@ -25,13 +25,11 @@ namespace Bridge.Domain.Models
         public int EventId { get; set; }
         public decimal Score { get; set; }
         public int Rank { get; set; }
-        public int Player1Id { get; set; }
-        public int Player2Id { get; set; }
+        public string Player1Name { get; set; }
+        public string Player2Name { get; set; }
     
         public virtual ICollection<DuplicateDeal> DuplicateDeals { get; set; }
         public virtual ICollection<DuplicateDeal> DuplicateDeals1 { get; set; }
         public virtual Event Event { get; set; }
-        public virtual Player Player { get; set; }
-        public virtual Player Player1 { get; set; }
     }
 }
