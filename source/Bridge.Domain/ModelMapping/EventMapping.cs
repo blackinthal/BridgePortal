@@ -12,7 +12,8 @@ namespace Bridge.Domain.ModelMapping
         {
             Mapper.CreateMap<ImportEvent, ImportEventAttempted>();
             Mapper.CreateMap<ImportEvent, Event>()
-                  .ForMember(dest => dest.Pairs, opt => opt.Ignore());
+                  .ForMember(dest => dest.Pairs, opt => opt.Ignore())
+                  .ForMember(dest => dest.Deals, opt => opt.Ignore()); ;
             Mapper.CreateMap<PairMetadata, Pair>();
             Mapper.CreateMap<DealMetadata, Deal>();
             Mapper.CreateMap<DuplicateDealMetadata, DuplicateDeal>();

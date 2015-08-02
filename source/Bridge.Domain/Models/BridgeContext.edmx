@@ -75,7 +75,9 @@
           <Property Name="SysVulnerabilityName" Type="nchar" MaxLength="50" Nullable="false" />
         </EntityType>
         <Association Name="FK_Deal_Event">
-          <End Role="Event" Type="Self.Event" Multiplicity="1" />
+          <End Role="Event" Type="Self.Event" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
           <End Role="Deal" Type="Self.Deal" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Event">
@@ -111,7 +113,9 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_DuplicateDeal_Deal">
-          <End Role="Deal" Type="Self.Deal" Multiplicity="1" />
+          <End Role="Deal" Type="Self.Deal" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
           <End Role="DuplicateDeal" Type="Self.DuplicateDeal" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Deal">
@@ -171,7 +175,9 @@
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_Pair_Event">
-          <End Role="Event" Type="Self.Event" Multiplicity="1" />
+          <End Role="Event" Type="Self.Event" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
           <End Role="Pair" Type="Self.Pair" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Event">

@@ -48,7 +48,7 @@ namespace Bridge.Domain.EventAggregate
                         deal.DuplicateDeals.Add(duplicateDeal);
                     });
 
-                    deal.EventId = bridgeEvent.Id;
+                    bridgeEvent.Deals.Add(deal);
                 });
 
                 _context.Events.Add(bridgeEvent);

@@ -81,6 +81,7 @@
     <Compile Include="EventAggregate\DomainEvents\ImportEventAttempted.cs" />
     <Compile Include="EventAggregate\EventAggregate.cs" />
     <Compile Include="EventAggregate\EventService.cs" />
+    <Compile Include="Extensions\Extensions.cs" />
     <Compile Include="ModelMapping\EventMapping.cs" />
     <Compile Include="Models\BridgeContext.Context.cs">
       <AutoGen>True</AutoGen>

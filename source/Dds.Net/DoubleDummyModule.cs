@@ -9,7 +9,7 @@ using FutureTricks = Dds.Net.Dto.FutureTricks;
 
 namespace Dds.Net
 {
-    public class DdsConnect
+    public class DoubleDummyModule
     {
         public FutureTricks SolveBoardPbn(BridgeGame game, int target, int solutions, int mode)
         {

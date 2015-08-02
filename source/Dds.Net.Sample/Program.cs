@@ -9,7 +9,7 @@ namespace Dds.Net.Sample
     {
         static void Main(string[] args)
         {
-            var dds = new DdsConnect();
+            var dds = new DoubleDummyModule();
             var pbnCode = "E:K9742.763.Q.K764 AT6.AJ98.A5.QT53 853.QT.KT742.J92 QJ.K542.J9863.A8";
             Console.WriteLine("Board: " + pbnCode);
             

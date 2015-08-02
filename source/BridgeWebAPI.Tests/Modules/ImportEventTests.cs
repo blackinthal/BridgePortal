@@ -136,7 +136,7 @@ namespace Bridge.WebAPI.Tests.Modules
             //Assert
             var pair = command.Pairs.ElementAt(9);
             Assert.AreEqual(10, pair.Rank);
-            Assert.AreEqual((decimal)54.14, pair.Result);
+            Assert.AreEqual((decimal)54.14, pair.Score);
             Assert.AreEqual("POSEA VLAD - RUSU VLAD", pair.Name);
             Assert.AreEqual("POSEA VLAD", pair.Player1Name);
             Assert.AreEqual("RUSU VLAD", pair.Player2Name);

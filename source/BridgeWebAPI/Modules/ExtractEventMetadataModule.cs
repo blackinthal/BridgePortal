@@ -108,7 +108,7 @@ namespace Bridge.WebAPI.Modules
 
             pair.Name = ExtractValue(values[6]);
             pair.Rank = Int32.Parse(values[0]);
-            pair.Result = decimal.Parse(values[5]);
+            pair.Score = decimal.Parse(values[5]);
             pair.PairId = Int32.Parse(values[1]);
 
             var playerNames = pair.Name.Split(new[] {" - "}, StringSplitOptions.RemoveEmptyEntries);

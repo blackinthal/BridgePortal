@@ -4,6 +4,7 @@ using Bridge.Domain.EventAggregate;
 using Bridge.Domain.EventAggregate.DomainEvents;
 using Bridge.WebAPI.Modules;
 using Bridge.WebAPI.Tests.Helpers;
+using Domain.Contracts;
 using Microsoft.Practices.ServiceLocation;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -37,6 +38,27 @@ namespace Bridge.WebAPI.Tests.Aggregates
 
                 scope.Dispose();
             }
+        }
+
+        [TestMethod]
+        public void TestCommandProcessor()
+        {
+            //Arrange
+            var commandProcessor = ServiceLocator.Current.GetInstance<ICommandProcessor>();
+            var module = ServiceLocator.Current.GetInstance<ExtractEventMetadataModule>();
+            var command = module.ExtractEventMetadata(new DateTime(2015, 7, 14));
+            //Act
+            commandProcessor.Process(command);
+
+            var successEvent = commandProcessor.DomainEvents.FirstOrDefault();
+
+            //Assert
+            Assert.IsNotNull(successEvent);
+            Assert.IsTrue(successEvent is EventImported);
+
+            var importedEvent = successEvent as EventImported;
+            Assert.AreEqual(26, importedEvent.DealIds.Count());
+            Assert.AreEqual(26, importedEvent.PairIds.Count());
         }
     }
 }

@@ -12,6 +12,7 @@ namespace Bridge.Domain
         public static Trump Clubs = new Trump(Suit.Clubs);
         public static Trump NoTrump = new Trump(new Suit(4, "NoTrump", "NT"));
         public static List<Trump> Trumps = new List<Trump>() { Spades, Hearts, Diamonds, Clubs, NoTrump };
+        public static List<Trump> TrumpOrder = new List<Trump> {Clubs, Diamonds, Hearts, Spades, NoTrump}; 
 
         internal Suit Suit { get; set; }
 

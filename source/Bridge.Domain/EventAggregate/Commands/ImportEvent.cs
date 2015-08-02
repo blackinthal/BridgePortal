@@ -26,7 +26,7 @@ namespace Bridge.Domain.EventAggregate.Commands
         public string Name { get; set; }
         public string Player1Name { get; set; }
         public string Player2Name { get; set; }
-        public decimal Result { get; set; }
+        public decimal Score { get; set; }
         public int Rank { get; set; }
         public int PairId { get; set; }
     }

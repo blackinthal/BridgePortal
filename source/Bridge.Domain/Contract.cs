@@ -33,11 +33,33 @@ namespace Bridge.Domain
             Redoubled = contract.ToLower().Count(x => x == 'x') == 2;
         }
 
-        public bool Doubled { get; private set; }
+        public bool Doubled { get; set; }
         public bool Redoubled { get; private set; }
         public bool Undoubled { get { return !Doubled && !Redoubled; } }
         public int TricksToBeMade { get { return Value + 6; } }
         public bool SmallSlam { get { return TricksToBeMade == 12; } }
         public bool BigSlam { get { return TricksToBeMade == 13; } }
+
+        public Contract GetNextContract()
+        {
+            if (Value == 7 && Trump == Trump.NoTrump)
+                return null;
+
+            var denomination = Trump == Trump.NoTrump ? Value + 1 : Value;
+            var trump = Trump.TrumpOrder.ElementAt((Trump.TrumpOrder.IndexOf(Trump) + 1) % 5);
+
+            return new Contract{Trump = trump, Value = denomination};
+        }
+
+        public Contract Copy()
+        {
+            return new Contract
+            {
+                Doubled = this.Doubled,
+                Trump = this.Trump,
+                Value = this.Value,
+                PlayerPosition = this.PlayerPosition
+            };
+        }
     }
 }
