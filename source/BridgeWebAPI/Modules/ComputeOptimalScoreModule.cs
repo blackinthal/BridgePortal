@@ -47,7 +47,7 @@ namespace Bridge.WebAPI.Modules
                     if (score >= bestScore) return;
 
                     bestScore = score;
-                    bestContract = nextContract.Copy();
+                    bestContract = nextContract.Clone();
                 });
             }
 

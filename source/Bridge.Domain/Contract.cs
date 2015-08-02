@@ -51,7 +51,7 @@ namespace Bridge.Domain
             return new Contract{Trump = trump, Value = denomination};
         }
 
-        public Contract Copy()
+        public Contract Clone()
         {
             return new Contract
             {
@@ -60,6 +60,19 @@ namespace Bridge.Domain
                 Value = this.Value,
                 PlayerPosition = this.PlayerPosition
             };
+        }
+
+        public bool GreaterThan(Contract referenceContract)
+        {
+            if (Value > referenceContract.Value)
+                return true;
+            if (Value < referenceContract.Value)
+                return false;
+
+            var currentTrumpOrder = Trump.TrumpOrder.IndexOf(Trump);
+            var refTrumpOrder = Trump.TrumpOrder.IndexOf(referenceContract.Trump);
+
+            return currentTrumpOrder > refTrumpOrder;
         }
     }
 }
