@@ -136,6 +136,7 @@
     <Compile Include="Helpers\TransactionHelpers.cs" />
     <Compile Include="Modules\ComputeContractScore.cs" />
     <Compile Include="Modules\ImportEventTests.cs" />
+    <Compile Include="Modules\ComputeOptimalScoreModule.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Controllers\HomeControllerTest.cs" />
     <Compile Include="Controllers\ValuesControllerTest.cs" />
@@ -154,6 +155,10 @@
     <ProjectReference Include="..\BridgeWebAPI\Bridge.WebAPI.csproj">
       <Project>{E2B9E98F-D3BB-40C2-82E3-77573CDCEDF7}</Project>
       <Name>Bridge.WebAPI</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Dds.Net\Dds.Net.csproj">
+      <Project>{f3672bd0-cf43-43bb-be0a-4abaa1cde779}</Project>
+      <Name>Dds.Net</Name>
     </ProjectReference>
     <ProjectReference Include="..\Domain\Domain.csproj">
       <Project>{a42d72d5-0003-436f-bed2-d23869d97e29}</Project>

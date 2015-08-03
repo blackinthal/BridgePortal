@@ -30,8 +30,8 @@ namespace Bridge.Domain.Modules
         private const int VulnerableUndertrickPenalty = 100;
         private readonly int[] _doubledVulnerableUndertrickPenalties = {200, 300, 300};
         private readonly int[] _redoubledVulnerableUndertrickPenalties = {400, 600, 600};
-        private readonly int[] _doubledNotVulnerableUndertrickPenalties = {100, 200, 300};
-        private readonly int[] _redoubledNotVulnerableUndertrickPenalties = {200, 400, 600};
+        private readonly int[] _doubledNotVulnerableUndertrickPenalties = {100, 200, 200, 300};
+        private readonly int[] _redoubledNotVulnerableUndertrickPenalties = {200, 400, 400, 600};
 
         private Contract _contract;
         private bool _vulnerable;

@@ -1,11 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Linq;
 using Bridge.Domain;
 using Bridge.Domain.Extensions;
 using Bridge.Domain.Modules;
 using Bridge.Domain.StaticModels;
 using Dds.Net;
-using WebGrease.Css.Extensions;
 
 namespace Bridge.WebAPI.Modules
 {
@@ -22,15 +21,15 @@ namespace Bridge.WebAPI.Modules
 
         public Tuple<int,Contract> ComputeOptimalContract(string pbnDeal, SysVulnerabilityEnum vulnerabilty)
         {
-            var makeableContracts = _solveBoard.CalculateMakeableContracts(pbnDeal);
-            var bestContract = GetBestContract(makeableContracts);
+            var makeableContracts = _solveBoard.CalculateMakeableContracts(pbnDeal).AsQueryable();
+            var bestContract = GetBestUndoubledContract(makeableContracts, vulnerabilty);
 
-            var bestScore = Math.Abs(_calculateScore.CalculateScore(bestContract, 0, vulnerabilty));
+            var bestScore = _calculateScore.CalculateScore(bestContract, bestContract.TricksToBeMade, vulnerabilty);
 
             var contractPlayedByNs = bestContract.PlayerPosition == PlayerPosition.North ||
                                      bestContract.PlayerPosition == PlayerPosition.South;
 
-            var nextContract = bestContract.GetNextContract();
+            var nextContract = bestContract;
 
             for (var i = 0; i < 5; i++)
             {
@@ -38,13 +37,16 @@ namespace Bridge.WebAPI.Modules
                 if (nextContract == null)
                     break;
 
-                var contracts = makeableContracts.GetContractsByTrumpAndPlayingSide(contractPlayedByNs, nextContract.Trump);
+                var contracts = makeableContracts.GetContractsByTrumpAndPlayingSide(contractPlayedByNs, nextContract.Trump)
+                    .ToList();
                 nextContract.Doubled = true;
+                nextContract.PlayerPosition = contractPlayedByNs ? PlayerPosition.East : PlayerPosition.North;
 
                 contracts.ForEach(contract =>
                 {
-                    var score = Math.Abs(_calculateScore.CalculateScore(nextContract, contract.Value - nextContract.Value, vulnerabilty));
-                    if (score >= bestScore) return;
+                    var tricksDown = nextContract.Value - contract.Value;
+                    var score = _calculateScore.CalculateScore(nextContract, nextContract.TricksToBeMade - tricksDown, vulnerabilty);
+                    if (Math.Abs(score) >= Math.Abs(bestScore)) return;
 
                     bestScore = score;
                     bestContract = nextContract.Clone();
@@ -54,15 +56,23 @@ namespace Bridge.WebAPI.Modules
             return new Tuple<int, Contract>(bestScore, bestContract);
         }
 
-        private Contract GetBestContract(IEnumerable<Contract> contractList)
+        public Contract GetBestUndoubledContract(IQueryable<Contract> contractList, SysVulnerabilityEnum vulnerability)
         {
-            var bestContract = new Contract();
-            var bestScore = 0;
-            contractList.ForEach(contract =>
-            {
-                //
-            });
-            return bestContract;
+            var bestNSContract = contractList.PlayedByNS()
+                .OrderByDescending(c => _calculateScore.CalculateScore(c,c.TricksToBeMade,vulnerability))
+                .FirstOrDefault();
+            var bestEWContract = contractList.PlayedByEW()
+                .OrderBy(c => _calculateScore.CalculateScore(c, c.TricksToBeMade, vulnerability))
+                .FirstOrDefault();
+
+            if (bestNSContract == null && bestEWContract == null)
+                return null;
+            if (bestNSContract == null)
+                return bestEWContract;
+            if (bestEWContract == null)
+                return bestNSContract;
+
+            return bestNSContract.GreaterThan(bestEWContract) ? bestNSContract : bestEWContract;
         }
     }
 }
