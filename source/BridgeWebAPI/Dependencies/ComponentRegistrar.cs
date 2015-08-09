@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using System.Web.Http.Controllers;
 using System.Web.Mvc;
 using System.Web.Routing;
 using Castle.MicroKernel.Registration;
@@ -59,7 +60,7 @@ namespace Bridge.WebAPI.Dependencies
         public static bool IsController(Type type)
         {
             if (type != null && type.Name.EndsWith("Controller", StringComparison.OrdinalIgnoreCase) && !type.IsAbstract)
-                return typeof(IController).IsAssignableFrom(type);
+                return typeof(IController).IsAssignableFrom(type) || typeof(IHttpController).IsAssignableFrom(type);
             return false;
         }
     }

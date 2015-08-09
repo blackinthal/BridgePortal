@@ -3,6 +3,7 @@ using System.Configuration;
 using System.Data.Entity;
 using System.Linq;
 using System.Reflection;
+using System.Web.Http;
 using System.Web.Mvc;
 using System.Web.Routing;
 using Bridge.WebAPI.Providers;
@@ -209,6 +210,14 @@ namespace Bridge.WebAPI.Dependencies
                     Component.For(type).Named(type.FullName.ToLower()).LifeStyle.Is(LifestyleType.Transient)
                 });
             }
+        }
+
+        public ComponentRegistrarBuilder RegisterWindsorAsControllerFactory(HttpConfiguration configuration)
+        {
+            var dependencyResolver = new WindsorDependencyResolver(_container);
+            configuration.DependencyResolver = dependencyResolver;
+
+            return this;
         }
     }
 }

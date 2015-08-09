@@ -40,6 +40,7 @@
           <Property Name="Name" Type="nvarchar" MaxLength="500" Nullable="false" />
           <Property Name="Date" Type="date" Nullable="false" />
           <Property Name="SysEventTypeId" Type="int" Nullable="false" />
+          <Property Name="IsImported" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="Pair">
           <Key>
@@ -270,6 +271,7 @@
           <NavigationProperty Name="SysEventType" Relationship="Self.FK_Event_EventType" FromRole="Event" ToRole="SysEventType" />
           <NavigationProperty Name="Pairs" Relationship="Self.FK_Pair_Event" FromRole="Event" ToRole="Pair" />
           <NavigationProperty Name="Deals" Relationship="BridgeModel.FK_Deal_Event" FromRole="Event" ToRole="Deal" />
+          <Property Name="IsImported" Type="Boolean" Nullable="false" />
         </EntityType>
         <EntityType Name="Pair">
           <Key>
@@ -504,6 +506,7 @@
           <EntitySetMapping Name="Events">
             <EntityTypeMapping TypeName="BridgeModel.Event">
               <MappingFragment StoreEntitySet="Event">
+                <ScalarProperty Name="IsImported" ColumnName="IsImported" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="Date" ColumnName="Date" />

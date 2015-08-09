@@ -50,6 +50,7 @@ namespace Bridge.Domain.EventAggregate
 
                     bridgeEvent.Deals.Add(deal);
                 });
+                bridgeEvent.IsImported = true;
 
                 _context.Events.Add(bridgeEvent);
                 _context.SaveChanges();

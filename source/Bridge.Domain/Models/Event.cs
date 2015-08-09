@@ -24,6 +24,7 @@ namespace Bridge.Domain.Models
         public string Name { get; set; }
         public System.DateTime Date { get; set; }
         public int SysEventTypeId { get; set; }
+        public bool IsImported { get; set; }
     
         public virtual SysEventType SysEventType { get; set; }
         public virtual ICollection<Pair> Pairs { get; set; }

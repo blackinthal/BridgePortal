@@ -14,7 +14,7 @@
     <RootNamespace>BridgePortal</RootNamespace>
     <AssemblyName>BridgePortal</AssemblyName>
     <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
-    <UseIISExpress>true</UseIISExpress>
+    <UseIISExpress>false</UseIISExpress>
     <IISExpressSSLPort />
     <IISExpressAnonymousAuthentication />
     <IISExpressWindowsAuthentication />
@@ -126,6 +126,8 @@
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Scripts\jquery-1.9.1.js" />
     <Content Include="Scripts\jquery-1.9.1.min.js" />
+    <Content Include="Scripts\jquery.signalR-2.2.0.js" />
+    <Content Include="Scripts\jquery.signalR-2.2.0.min.js" />
     <Content Include="Scripts\npm.js" />
     <Content Include="Scripts\plugins\flot\excanvas.min.js" />
     <Content Include="Scripts\plugins\flot\flot-data.js" />
@@ -161,7 +163,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>36917</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:36849/</IISUrl>
+          <IISUrl>http://localhost/BridgePortal</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>
