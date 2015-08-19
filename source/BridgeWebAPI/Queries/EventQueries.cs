@@ -31,7 +31,7 @@ namespace Bridge.WebAPI.Queries
                     refDate.DayOfWeek == DayOfWeek.Wednesday)
                 {
                     currentMonthEvents.Add(
-                        importedEvents.FirstOrDefault(w => w.Date.Day == day) ?? DefaultEvent(refDate)
+                        importedEvents.FirstOrDefault(w => w.Day == day) ?? DefaultEvent(refDate)
                     ); 
                 }
             }
@@ -43,8 +43,10 @@ namespace Bridge.WebAPI.Queries
         {
             return new EventModel
             {
-                Date = date,
-                Name = string.Format("Locomotiva {0}", date),
+                Year = date.Year,
+                Month = date.Month,
+                Day = date.Day,
+                Name = string.Format("Locomotiva {0}", date.ToShortDateString()),
                 IsImported = false
             };
         }

@@ -5,6 +5,8 @@ using System.Web.Routing;
 using Bridge.Domain.Models;
 using Bridge.WebAPI.Dependencies;
 using Domain.EventStorage;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 
 namespace Bridge.WebAPI
 {
@@ -12,6 +14,12 @@ namespace Bridge.WebAPI
     {
         protected void Application_Start()
         {
+            var formatters = GlobalConfiguration.Configuration.Formatters;
+            var jsonFormatter = formatters.JsonFormatter;
+            var settings = jsonFormatter.SerializerSettings;
+            settings.Formatting = Formatting.Indented;
+            settings.ContractResolver = new CamelCasePropertyNamesContractResolver();
+
             AreaRegistration.RegisterAllAreas();
             GlobalConfiguration.Configure(WebApiConfig.Register);
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
@@ -19,7 +27,6 @@ namespace Bridge.WebAPI
             BundleConfig.RegisterBundles(BundleTable.Bundles);
 
             ConfigureWindsor(GlobalConfiguration.Configuration);
-            
         }
 
         private void ConfigureWindsor(HttpConfiguration configuration)

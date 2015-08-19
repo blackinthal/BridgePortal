@@ -1,4 +1,36 @@
-﻿(function() {
+﻿///#source 1 1 /common/services/urlBuilder.service.js
+(function() {
+
+    angular.module('BridgePortal')
+        .factory('UrlBuilder', function() {
+            return {
+                build: function(url) {
+                    return 'http://localhost/Bridge.WebAPI/' + url;
+                }    
+            }
+        });
+})();
+///#source 1 1 /app/events/services/ImportEvents.service.js
+(function() {
+    "use strict";
+
+    var importEvent = function($resource, urlBuilder) {
+        return $resource(
+            urlBuilder.build('api/events/:year/:month/:day'),
+            {year: '@year', month:'@month', day:'@day'},
+            {}
+        );
+    };
+
+    importEvent.$inject = ['$resource', 'UrlBuilder'];
+
+    angular
+        .module('BridgePortal')
+        .factory('ImportEventService', importEvent);
+
+})();
+///#source 1 1 /app/events/EventsController.js
+(function() {
     "use strict";
     // ReSharper disable once InconsistentNaming
     var EventsController = function ($stateParams, importEventService) {

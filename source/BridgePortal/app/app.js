@@ -1,6 +1,6 @@
 ﻿(function () {
     "use strict";
-    var app = angular.module('BridgePortal', ['ui.router', 'ngAnimate', 'ui.bootstrap']);
+    var app = angular.module('BridgePortal', ['ui.router', 'ngAnimate', 'ui.bootstrap', 'ngResource']);
 
     app.config(function($stateProvider, $urlRouterProvider) {
 

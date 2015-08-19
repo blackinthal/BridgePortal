@@ -1,4 +1,4 @@
-﻿<h4>Popup</h4>
+﻿<h4>Events</h4>
 <div class="row">
     <div class="col-md-3">
         <p class="input-group">
@@ -22,4 +22,41 @@
             Load Events
         </button>
     </div>
+</div>
+<div class="row container-fluid">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title"><i class="fa fa-money fa-fw"></i> Events</h3>
+        </div>
+        <div class="panel-body">
+            <div class="table-responsive">
+                <table class="table table-bordered table-hover table-striped">
+                    <thead>
+                        <tr>
+                            <th>Event Name</th>
+                            <th>Event Date</th>
+                            <th>Imported</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="event in vm.events">
+                            <td>{{event.name}}</td>
+                            <td>{{event.day}}/{{event.month}}/{{event.year}}</td>
+                            <td ng-show="event.imported"><i class="fa fa-2x fa-check" style="color: goldenrod"></i></td>
+                            <td ng-show="!event.imported"><i class="fa fa-2x fa-ban" style="color: red;"></i></td>
+                            <td>
+                                <button type="button" class="btn btn-success" ng-show="!event.imported" ng-click="vm.importEvent(event)">
+                                    <i class="fa fa-upload"></i> Import
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="text-right">
+                <a href="#">View All Transactions <i class="fa fa-arrow-circle-right"></i></a>
+            </div>
+        </div>
+    </div>    
 </div>
