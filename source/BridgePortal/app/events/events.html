@@ -1,0 +1,25 @@
+﻿<h4>Popup</h4>
+<div class="row">
+    <div class="col-md-3">
+        <p class="input-group">
+            <input type="text" class="form-control" ng-model="vm.selectedDate"
+                   min-date="vm.minDate" max-date="vm.maxDate"
+                   datepicker-options="vm.dateOptions"
+                   datepicker-popup="{{vm.format}}"
+                   is-open="vm.status.opened"
+                   ng-required="true"
+                   close-text="Close" />
+            <span class="input-group-btn">
+                <button type="button" class="btn btn-default" ng-click="vm.open($event)">
+                    <i class="fa fa-calendar"></i>
+                </button>
+            </span>
+        </p>
+    </div>
+    <div class="col-md-3">
+        <button type="button" class="btn btn-success" ng-click="vm.loadEvents()">
+            <i class="fa fa-refresh"></i>
+            Load Events
+        </button>
+    </div>
+</div>

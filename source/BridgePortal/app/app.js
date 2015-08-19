@@ -1,6 +1,6 @@
 ﻿(function () {
     "use strict";
-    var app = angular.module('BridgePortal', ['ui.router']);
+    var app = angular.module('BridgePortal', ['ui.router', 'ngAnimate', 'ui.bootstrap']);
 
     app.config(function($stateProvider, $urlRouterProvider) {
 
@@ -14,6 +14,11 @@
             .state('viewDeal', {
                 url: '/viewDeal',
                 templateUrl: 'app/deals/viewDeal.html'
+            })
+            .state('events', {
+                url: '/events?year&month',
+                templateUrl: 'app/events/events.html',
+                controller: 'EventsController as vm'
             });
     });
 })();
