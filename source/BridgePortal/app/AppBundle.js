@@ -1,12 +1,25 @@
-﻿///#source 1 1 /common/services/urlBuilder.service.js
+﻿///#source 1 1 /app/common/services/urlBuilder.service.js
 (function() {
-
     angular.module('BridgePortal')
         .factory('UrlBuilder', function() {
             return {
                 build: function(url) {
-                    return 'http://localhost/Bridge.WebAPI/' + url;
+                    return 'http://localhost/BridgeWebAPI/' + url;
                 }    
+            }
+        });
+})();
+///#source 1 1 /app/common/services/logger.service.js
+(function () {
+    angular.module('BridgePortal')
+        .factory('logger', function () {
+            return {
+                success: function (message) {
+                    toastr.success(message);
+                },
+                error: function(err) {
+                    toastr.error(err.message || 'An error has occurred');
+                }
             }
         });
 })();
@@ -33,13 +46,23 @@
 (function() {
     "use strict";
     // ReSharper disable once InconsistentNaming
-    var EventsController = function ($stateParams, importEventService) {
+    var EventsController = function ($stateParams, importEventService, logger) {
         var vm = this;
 
-        vm.events = [];
-        vm.month = $stateParams.month || new Date().getMonth() + 1;
-        vm.year = $stateParams.year || new Date().getFullYear();
+        var month = $stateParams.month || new Date().getMonth() + 1;
+        var year = $stateParams.year || new Date().getFullYear();
 
+        var importSuccess = function() {
+            logger.success('Event imported succesfully');
+            vm.loadEvents();
+        }
+
+        var importError = function(err) {
+            logger.error(err);
+        }
+
+        vm.events = [];
+        
         vm.dateOptions = {
             minViewMode: "months",
             maxViewMode: "months",
@@ -52,7 +75,7 @@
         vm.format = 'MMMM yyyy';
         vm.minDate = new Date(2015, 1, 1);
         vm.maxDate = new Date(2015, 12, 31);
-        vm.selectedDate = new Date(vm.year, vm.month - 1, 1);
+        vm.selectedDate = new Date(year, month - 1, 1);
 
         vm.status = {
             opened: false
@@ -70,14 +93,18 @@
         };
 
         vm.importEvent = function(event) {
-            event.$save();
+            event.$save({}, importSuccess, importError);
+        }
+
+        vm.viewEvent = function(event) {
+            console.log(event);
         }
 
         vm.loadEvents();
 
         return vm;
     };
-    EventsController.$inject = ['$stateParams', 'ImportEventService'];
+    EventsController.$inject = ['$stateParams', 'ImportEventService', 'logger'];
 
     angular.module('BridgePortal')
            .controller('EventsController', EventsController);

@@ -72,17 +72,17 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="app\app.js" />
+    <Content Include="app\AppBundle.js">
+      <DependentUpon>AppBundle.js.bundle</DependentUpon>
+    </Content>
+    <Content Include="app\AppBundle.min.js">
+      <DependentUpon>AppBundle.js</DependentUpon>
+    </Content>
     <Content Include="app\deals\viewDeal.html" />
     <Content Include="app\events\EventsController.js" />
     <Content Include="app\events\events.html" />
     <Content Include="app\events\services\ImportEvents.service.js" />
-    <Content Include="common\AppBundle.js">
-      <DependentUpon>AppBundle.js.bundle</DependentUpon>
-    </Content>
-    <Content Include="common\AppBundle.min.js">
-      <DependentUpon>AppBundle.js</DependentUpon>
-    </Content>
-    <Content Include="common\services\urlBuilder.service.js" />
+    <Content Include="app\common\services\urlBuilder.service.js" />
     <Content Include="Content\ui-bootstrap-csp.css" />
     <Content Include="landing.html" />
     <Content Include="Scripts\angular-animate.js" />
@@ -101,8 +101,8 @@
     <Content Include="Scripts\angular.min.js" />
     <Content Include="Scripts\angular.min.js.map" />
     <Content Include="Scripts\angular-animate.min.js.map" />
-    <Content Include="common\AppBundle.js.bundle" />
-    <Content Include="common\AppBundle.min.js.map">
+    <Content Include="app\AppBundle.js.bundle" />
+    <Content Include="app\AppBundle.min.js.map">
       <DependentUpon>AppBundle.min.js</DependentUpon>
     </Content>
     <None Include="Web.Debug.config">

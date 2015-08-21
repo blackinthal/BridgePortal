@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Web.Http;
+using System.Web.Http.Results;
 using Bridge.WebAPI.Models;
 using Bridge.WebAPI.Modules;
 using Bridge.WebAPI.Queries;
 using Domain.Contracts;
+using ElmahExtensions;
 
 namespace Bridge.WebAPI.Controllers
 {
@@ -32,11 +34,19 @@ namespace Bridge.WebAPI.Controllers
         [Route("{year:int}/{month:int}/{day:int}")]
         public IHttpActionResult Post(int year, int month, int day)
         {
-            var command = _eventModule.ExtractEventMetadata(new DateTime(year, month, day));
+            try
+            {
+                var command = _eventModule.ExtractEventMetadata(new DateTime(year, month, day));
 
-            _processor.Process(command);
+                _processor.Process(command);
 
-            return Ok();
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                CustomErrorSignal.Handle(ex);
+                return new ExceptionResult(ex, this);
+            }
         }
     }
 }

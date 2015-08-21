@@ -9,7 +9,7 @@ namespace Bridge.WebAPI.Providers
         {
             var year = (selectedDate.Year % 2000);
             var month = selectedDate.Month.ToString("D2");
-            var day = selectedDate.Day;
+            var day = selectedDate.Day.ToString("D2");
 
             return string.Format("{0}/{1}/{2}/{3}-{4}-{5}.pbn",BaseUrl,year,month,day,month,year);
         }

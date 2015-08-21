@@ -43,11 +43,14 @@
                         <tr ng-repeat="event in vm.events">
                             <td>{{event.name}}</td>
                             <td>{{event.day}}/{{event.month}}/{{event.year}}</td>
-                            <td ng-show="event.imported"><i class="fa fa-2x fa-check" style="color: goldenrod"></i></td>
-                            <td ng-show="!event.imported"><i class="fa fa-2x fa-ban" style="color: red;"></i></td>
+                            <td ng-show="event.isImported"><i class="fa fa-2x fa-check" style="color: goldenrod"></i></td>
+                            <td ng-show="!event.isImported"><i class="fa fa-2x fa-ban" style="color: red;"></i></td>
                             <td>
-                                <button type="button" class="btn btn-success" ng-show="!event.imported" ng-click="vm.importEvent(event)">
+                                <button type="button" class="btn btn-success" ng-show="!event.isImported" ng-click="vm.importEvent(event)">
                                     <i class="fa fa-upload"></i> Import
+                                </button>
+                                <button type="button" class="btn btn-info" ng-show="event.isImported" ng-click="vm.viewEvent(event)">
+                                    <i class="fa fa-eye"></i> View 
                                 </button>
                             </td>
                         </tr>

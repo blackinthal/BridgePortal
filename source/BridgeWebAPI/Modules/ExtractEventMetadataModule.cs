@@ -33,7 +33,7 @@ namespace Bridge.WebAPI.Modules
             var command = ProcessPbnFile(tempFilePath);
 
             command.Date = selectedDate;
-            command.Name = string.Format("Locomotiva {0}", selectedDate);
+            command.Name = string.Format("Locomotiva {0}", selectedDate.ToShortDateString());
             command.ProcessId = Guid.NewGuid();
             command.SysEventTypeId = selectedDate.DayOfWeek == DayOfWeek.Tuesday
                 ? (int)SysEventType.Percentages
@@ -103,6 +103,7 @@ namespace Bridge.WebAPI.Modules
 
         public static PairMetadata ExtractPairMetadata(string line)
         {
+            //TODO instead of hardcoding use table [TotalScoreTable "Rank\2R;RankTie\1R;PairId\2R;Table\2R;Direction\5R;TotalScoreMP\5R;TotalPercentage\5R;Names\40L;NrBoards\2R"]
             var pair = new PairMetadata();
             var values = line.Split(new[]{' '},7,StringSplitOptions.RemoveEmptyEntries);
 
