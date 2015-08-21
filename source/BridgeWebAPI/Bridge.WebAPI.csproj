@@ -320,6 +320,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Modules\Helpers\" />
     <Folder Include="Views\ImportEvent\" />
   </ItemGroup>
   <ItemGroup>

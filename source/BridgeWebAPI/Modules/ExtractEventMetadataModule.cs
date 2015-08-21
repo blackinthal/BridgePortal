@@ -1,12 +1,14 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text.RegularExpressions;
 using Bridge.Domain;
 using Bridge.Domain.EventAggregate.Commands;
 using Bridge.Domain.Modules;
 using Bridge.Domain.StaticModels;
 using Bridge.WebAPI.Providers;
 using ElmahExtensions;
+using WebGrease.Css.Extensions;
 
 namespace Bridge.WebAPI.Modules
 {
@@ -52,6 +54,8 @@ namespace Bridge.WebAPI.Modules
 
             var identifiedPairs = 0;
             var identifiedDealResults = 0;
+            var totalScoreTableHeaders = new Dictionary<string, int>();
+            var scoreTableHeaders = new Dictionary<string, int>();
 
             using (var reader = new StreamReader(filePath))
             {
@@ -74,20 +78,28 @@ namespace Bridge.WebAPI.Modules
                     if (line.StartsWith("[Vulnerable")){ currentDeal.SysVulnerabilityId = (int)Enum.Parse(typeof(SysVulnerabilityEnum),ExtractValue(line), true); continue;}
                     if (currentState == ParseState.ReadingTotalScoreTable && identifiedPairs < result.NoOfPairs)
                     {
-                        result.Pairs.Add(ExtractPairMetadata(line));
+                        result.Pairs.Add(ExtractPairMetadata(line, totalScoreTableHeaders));
                         identifiedPairs++;
                         continue;
                     }
                     if (currentState == ParseState.ReadingDealScoreTable && identifiedDealResults < result.NoOfRounds)
                     {
-                        var duplicateDeal = ExtractDuplicateDealMetadata(line, (SysVulnerabilityEnum) currentDeal.SysVulnerabilityId);
+                        var duplicateDeal = ExtractDuplicateDealMetadata(line, (SysVulnerabilityEnum) currentDeal.SysVulnerabilityId, scoreTableHeaders);
                         if(duplicateDeal != null)
                             currentDeal.DealResults.Add(duplicateDeal);
                         identifiedDealResults++;
                         continue;
                     }
-                    if (line.StartsWith("[TotalScoreTable")){ currentState = ParseState.ReadingTotalScoreTable; continue;}
-                    if (line.StartsWith("[ScoreTable")) { currentState = ParseState.ReadingDealScoreTable;}
+                    if (line.StartsWith("[TotalScoreTable"))
+                    {
+                        totalScoreTableHeaders = ParseTableHeader(ExtractValue(line));
+                        currentState = ParseState.ReadingTotalScoreTable; continue;
+                    }
+                    if (line.StartsWith("[ScoreTable"))
+                    {
+                        scoreTableHeaders = ParseTableHeader(ExtractValue(line));
+                        currentState = ParseState.ReadingDealScoreTable;
+                    }
                 }
             }
             return result;
@@ -101,16 +113,15 @@ namespace Bridge.WebAPI.Modules
             return line.Substring(start + 1, end - start - 1);
         }
 
-        public static PairMetadata ExtractPairMetadata(string line)
+        public static PairMetadata ExtractPairMetadata(string line, Dictionary<string,int> columnHeaders)
         {
-            //TODO instead of hardcoding use table [TotalScoreTable "Rank\2R;RankTie\1R;PairId\2R;Table\2R;Direction\5R;TotalScoreMP\5R;TotalPercentage\5R;Names\40L;NrBoards\2R"]
             var pair = new PairMetadata();
-            var values = line.Split(new[]{' '},7,StringSplitOptions.RemoveEmptyEntries);
+            var values = ParseTableLine(line, columnHeaders);
 
-            pair.Name = ExtractValue(values[6]);
-            pair.Rank = Int32.Parse(values[0]);
-            pair.Score = decimal.Parse(values[5]);
-            pair.PairId = Int32.Parse(values[1]);
+            pair.Name = values["Names"];
+            pair.Rank = Int32.Parse(values["Rank"]);
+            pair.Score = decimal.Parse(values["TotalPercentage"] ?? values["TotalScoreIMP"] ?? "0.0");
+            pair.PairId = Int32.Parse(values["PairId"]);
 
             var playerNames = pair.Name.Split(new[] {" - "}, StringSplitOptions.RemoveEmptyEntries);
 
@@ -120,19 +131,19 @@ namespace Bridge.WebAPI.Modules
             return pair;
         }
 
-        public DuplicateDealMetadata ExtractDuplicateDealMetadata(string line, SysVulnerabilityEnum dealVulnerability)
+        public DuplicateDealMetadata ExtractDuplicateDealMetadata(string line, SysVulnerabilityEnum dealVulnerability, Dictionary<string,int> columnHeaders)
         {
             try
             {
                 var duplicateDeal = new DuplicateDealMetadata();
-                var values = line.Split(new[] {' '}, StringSplitOptions.RemoveEmptyEntries);
+                var values = ParseTableLine(line, columnHeaders);
 
-                duplicateDeal.NSPairIndex = Int32.Parse(values[2]);
-                duplicateDeal.EWPairIndex = Int32.Parse(values[3]);
-                duplicateDeal.Contract = values[4];
+                duplicateDeal.NSPairIndex = Int32.Parse(values["PairId_NS"]);
+                duplicateDeal.EWPairIndex = Int32.Parse(values["PairId_EW"]);
+                duplicateDeal.Contract = values["Contract"];
 
                 SysPlayer declarer;
-                duplicateDeal.Declarer = Enum.TryParse(values[5], true, out declarer) ? (int)declarer : (int)SysPlayer.N;
+                duplicateDeal.Declarer = Enum.TryParse(values["Declarer"], true, out declarer) ? (int)declarer : (int)SysPlayer.N;
 
                 if (duplicateDeal.Contract == "-")
                     return null;
@@ -149,12 +160,12 @@ namespace Bridge.WebAPI.Modules
                 var contract = new Contract(duplicateDeal.Contract, position);
 
                 int tricks;
-                duplicateDeal.Result = Int32.TryParse(values[6], out tricks)
+                duplicateDeal.Result = Int32.TryParse(values["Result"], out tricks)
                     ? _scoreCalculator.CalculateScore(contract, tricks, dealVulnerability)
-                    : _scoreCalculator.CalculateScore(contract, values[6], dealVulnerability);
+                    : _scoreCalculator.CalculateScore(contract, values["Result"], dealVulnerability);
 
-                duplicateDeal.NSPercentage = Int32.Parse(values[12]);
-                duplicateDeal.EWPercentage = Int32.Parse(values[13]);
+                duplicateDeal.NSPercentage = Int32.Parse(values["Percentage_NS"] ?? values["IMP_NS"] ?? "0.0");
+                duplicateDeal.EWPercentage = Int32.Parse(values["Percentage_EW"] ?? values["IMP_EW"] ?? "0.0");
 
                 return duplicateDeal;
             }
@@ -171,5 +182,37 @@ namespace Bridge.WebAPI.Modules
             ReadingTotalScoreTable,
             ReadingDealScoreTable
         }
+
+        public static Dictionary<string, int> ParseTableHeader(string header)
+        {
+            var parseResult = new Dictionary<string, int>();
+            var columns = header.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
+
+            columns.ForEach(column =>
+            {
+                var regex = new Regex("[0-9]+");
+                var columnMeta = column.Split(new[] {'\\'});
+                var columnTitle = columnMeta[0];
+                var valueLength = Int32.Parse(regex.Match(columnMeta[1]).Value);
+
+                parseResult.Add(columnTitle, valueLength);
+            });
+
+            return parseResult;
+        }
+
+        public static Dictionary<string, string> ParseTableLine(string line, Dictionary<string,int> columnConfig)
+        {
+            var parseResult = new Dictionary<string, string>();
+            var position = 0;
+            columnConfig.ForEach(pair =>
+            {
+                var value = line.Substring(position, pair.Value).Trim().Replace("\"",string.Empty);
+                position += pair.Value + 1;
+                parseResult.Add(pair.Key, value);
+            });
+
+            return parseResult;
+        } 
     }
 }

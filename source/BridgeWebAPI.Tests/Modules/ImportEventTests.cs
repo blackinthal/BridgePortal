@@ -214,5 +214,95 @@ namespace Bridge.WebAPI.Tests.Modules
             Assert.AreEqual(1, command.Deals.Count(d => d.DealResults.Count() == 10));
             Assert.AreEqual(26, command.Deals.Count());
         }
+
+        [TestMethod]
+        public void TestScoreTableHeaderIsParsed()
+        {
+            //Arrange
+            const string input = @"Table\2R;Round\2R;PairId_NS\2R;PairId_EW\2R;Contract\4L;Declarer\1R;Result\2R;Lead\3L;Score_NS\6R;Score_EW\6R;MP_NS\2R;MP_EW\2R;Percentage_NS\3R;Percentage_EW\3R";
+            //Act
+            var output = ExtractEventMetadataModule.ParseTableHeader(input);
+            //Assert
+            Assert.AreEqual(2,output["Table"]);
+            Assert.AreEqual(2, output["Round"]);
+            Assert.AreEqual(2, output["PairId_NS"]);
+            Assert.AreEqual(2, output["PairId_EW"]);
+            Assert.AreEqual(4, output["Contract"]);
+            Assert.AreEqual(1, output["Declarer"]);
+            Assert.AreEqual(2, output["Result"]);
+            Assert.AreEqual(3, output["Lead"]);
+            Assert.AreEqual(6, output["Score_NS"]);
+            Assert.AreEqual(6, output["Score_EW"]);
+            Assert.AreEqual(2, output["MP_NS"]);
+            Assert.AreEqual(2, output["MP_EW"]);
+            Assert.AreEqual(3, output["Percentage_NS"]);
+            Assert.AreEqual(3, output["Percentage_EW"]);
+        }
+
+        [TestMethod]
+        public void TestScoreTableLineIsParsed()
+        {
+            //Arrange
+            const string header = @"Table\2R;Round\2R;PairId_NS\2R;PairId_EW\2R;Contract\4L;Declarer\1R;Result\2R;Lead\3L;Score_NS\6R;Score_EW\6R;MP_NS\2R;MP_EW\2R;Percentage_NS\3R;Percentage_EW\3R";
+            const string line = " 8  5  8 24 2H   N  7 H3       -   \"50\" 20  0 100   0";
+            //Act
+            var headerColumns = ExtractEventMetadataModule.ParseTableHeader(header);
+            var output = ExtractEventMetadataModule.ParseTableLine(line, headerColumns);
+
+            //Assert
+            Assert.AreEqual("8", output["Table"]);
+            Assert.AreEqual("5", output["Round"]);
+            Assert.AreEqual("8", output["PairId_NS"]);
+            Assert.AreEqual("24", output["PairId_EW"]);
+            Assert.AreEqual("2H", output["Contract"]);
+            Assert.AreEqual("N", output["Declarer"]);
+            Assert.AreEqual("7", output["Result"]);
+            Assert.AreEqual("H3", output["Lead"]);
+            Assert.AreEqual("-", output["Score_NS"]);
+            Assert.AreEqual("50", output["Score_EW"]);
+            Assert.AreEqual("20", output["MP_NS"]);
+            Assert.AreEqual("0", output["MP_EW"]);
+            Assert.AreEqual("100", output["Percentage_NS"]);
+            Assert.AreEqual("0", output["Percentage_EW"]);
+        }
+
+        [TestMethod]
+        public void TestTotalScoreTableHeaderIsParsed()
+        {
+            //Arrange
+            const string input = @"Rank\2R;PairId\2R;Table\2R;Direction\5R;TotalScoreMP\3R;TotalPercentage\5R;Names\40L;NrBoards\2R";
+            //Act
+            var output = ExtractEventMetadataModule.ParseTableHeader(input);
+            //Assert
+            Assert.AreEqual(2, output["Rank"]);
+            Assert.AreEqual(2, output["PairId"]);
+            Assert.AreEqual(2, output["Table"]);
+            Assert.AreEqual(5, output["Direction"]);
+            Assert.AreEqual(3, output["TotalScoreMP"]);
+            Assert.AreEqual(5, output["TotalPercentage"]);
+            Assert.AreEqual(40, output["Names"]);
+            Assert.AreEqual(2, output["NrBoards"]);
+        }
+
+        [TestMethod]
+        public void TestTotalScoreTableLineIsParsed()
+        {
+            //Arrange
+            const string header = @"Rank\2R;PairId\2R;Table\2R;Direction\5R;TotalScoreMP\3R;TotalPercentage\5R;Names\40L;NrBoards\2R";
+            const string line = " 1  5  5 \"N-S\" 305 69.32 \"GAVRILIU MADALINA - BONTAS BUJOR\"       22";
+            //Act
+            var headerColumns = ExtractEventMetadataModule.ParseTableHeader(header);
+            var output = ExtractEventMetadataModule.ParseTableLine(line, headerColumns);
+
+            //Assert
+            Assert.AreEqual("1", output["Rank"]);
+            Assert.AreEqual("5", output["PairId"]);
+            Assert.AreEqual("5", output["Table"]);
+            Assert.AreEqual("N-S", output["Direction"]);
+            Assert.AreEqual("305", output["TotalScoreMP"]);
+            Assert.AreEqual("69.32", output["TotalPercentage"]);
+            Assert.AreEqual("GAVRILIU MADALINA - BONTAS BUJOR", output["Names"]);
+            Assert.AreEqual("22", output["NrBoards"]);
+        }
     }
 }
