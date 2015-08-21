@@ -78,11 +78,14 @@
     <Content Include="app\AppBundle.min.js">
       <DependentUpon>AppBundle.js</DependentUpon>
     </Content>
+    <Content Include="app\common\services\logger.service.js" />
     <Content Include="app\deals\viewDeal.html" />
     <Content Include="app\events\EventsController.js" />
     <Content Include="app\events\events.html" />
     <Content Include="app\events\services\ImportEvents.service.js" />
     <Content Include="app\common\services\urlBuilder.service.js" />
+    <Content Include="Content\toastr.css" />
+    <Content Include="Content\toastr.min.css" />
     <Content Include="Content\ui-bootstrap-csp.css" />
     <Content Include="landing.html" />
     <Content Include="Scripts\angular-animate.js" />
@@ -105,6 +108,8 @@
     <Content Include="app\AppBundle.min.js.map">
       <DependentUpon>AppBundle.min.js</DependentUpon>
     </Content>
+    <Content Include="Content\toastr.scss" />
+    <Content Include="Content\toastr.less" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -161,6 +166,8 @@
     <Content Include="Scripts\plugins\morris\morris.js" />
     <Content Include="Scripts\plugins\morris\morris.min.js" />
     <Content Include="Scripts\plugins\morris\raphael.min.js" />
+    <Content Include="Scripts\toastr.js" />
+    <Content Include="Scripts\toastr.min.js" />
     <Content Include="Web.config" />
     <Content Include="Scripts\jquery-1.9.1.min.map" />
   </ItemGroup>
