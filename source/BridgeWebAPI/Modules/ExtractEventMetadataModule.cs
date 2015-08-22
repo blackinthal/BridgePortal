@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text;
 using System.Text.RegularExpressions;
 using Bridge.Domain;
 using Bridge.Domain.EventAggregate.Commands;
@@ -10,6 +11,8 @@ using Bridge.WebAPI.Factories;
 using Bridge.WebAPI.Providers;
 using ElmahExtensions;
 using WebGrease.Css.Extensions;
+using SysEventType = Bridge.Domain.StaticModels.SysEventType;
+using SysPlayer = Bridge.Domain.StaticModels.SysPlayer;
 
 namespace Bridge.WebAPI.Modules
 {
@@ -76,8 +79,17 @@ namespace Bridge.WebAPI.Modules
                         identifiedDealResults = 0;
                         continue;
                     }
-                    if (line.StartsWith("[Deal")){ currentDeal.PBNRepresentation = ExtractValue(line); continue; }
-                    if (line.StartsWith("[Vulnerable")){ currentDeal.SysVulnerabilityId = (int)Enum.Parse(typeof(SysVulnerabilityEnum),ExtractValue(line), true); continue;}
+                    if (line.StartsWith("[Deal "))
+                    {
+                        currentDeal.PBNRepresentation = ExtractValue(line); 
+                        currentDeal.HandViewerInput = ConvertPBNToHandViewerInput(currentDeal.PBNRepresentation, currentDeal.Index, (SysVulnerabilityEnum)currentDeal.SysVulnerabilityId);
+                        continue;
+                    }
+                    if (line.StartsWith("[Vulnerable"))
+                    {
+                        currentDeal.SysVulnerabilityId = (int)Enum.Parse(typeof(SysVulnerabilityEnum),ExtractValue(line), true); 
+                        continue;
+                    }
                     if (currentState == ParseState.ReadingTotalScoreTable && identifiedPairs < result.NoOfPairs)
                     {
                         result.Pairs.Add(ExtractPairMetadata(line, totalScoreTableHeaders));
@@ -105,6 +117,66 @@ namespace Bridge.WebAPI.Modules
                 }
             }
             return result;
+        }
+
+        /// <summary>
+        /// We use LIN format ex: http://www.bridgebase.com/tools/handviewer.html?lin=md|1S2389JHTD3JC237KA,S7TH4QKD678TC4569,S456KAH25D25KACJQ,|rh||ah|Board%207|sv|e|
+        /// </summary>
+        /// <param name="pbnRepresentation"></param>
+        /// <param name="boardNo"></param>
+        /// <param name="vulnerability"></param>
+        /// <returns></returns>
+        public string ConvertPBNToHandViewerInput(string pbnRepresentation, int boardNo, SysVulnerabilityEnum vulnerability)
+        {
+            var split = pbnRepresentation.Split(':');
+
+            var dealer = split[0].ToLower();
+            var hands = split[1].Split(' ');
+            var order = new List<string> { "s", "w", "n", "e" };
+            var suitOrder = new List<string> {"S", "H", "D", "C"};
+
+            var indexOfDeclarer = order.IndexOf(dealer);
+            var parsedHands = new string[4];
+
+            var sb = new StringBuilder("http://www.bridgebase.com/tools/handviewer.html?lin=md|");
+
+            sb.Append(string.Format("{0}",(indexOfDeclarer + 1)));
+          
+            for (var i = indexOfDeclarer; i < indexOfDeclarer + 4; i++)
+            {
+                var currentHand = hands[i - indexOfDeclarer];
+                var suits = currentHand.Split('.');
+
+                var hand = new StringBuilder();
+
+                for (var j = 0; j < 4; j ++)
+                {
+                    hand.Append(suitOrder[j]).Append(suits[j]);
+                }
+
+                parsedHands[i % 4] = hand.ToString();
+            }
+
+            for (var i = 0; i < 4; i++)
+            {
+                sb.Append(string.Format("{0},", parsedHands[i]));
+            }
+
+            sb.Append(string.Format("|rh||ah|Board {0}|sv|", boardNo));
+            //It takes values of n, e, b, and - 
+            switch (vulnerability)
+            {
+                case SysVulnerabilityEnum.All:
+                    sb.Append("b|"); break;
+                case SysVulnerabilityEnum.EW:
+                    sb.Append("e|"); break;
+                case SysVulnerabilityEnum.NS:
+                    sb.Append("n|"); break;
+                case SysVulnerabilityEnum.None:
+                    sb.Append("-|"); break;
+            }
+
+            return sb.ToString();
         }
 
         public static string ExtractValue(string line)

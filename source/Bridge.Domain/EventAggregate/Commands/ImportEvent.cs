@@ -37,6 +37,7 @@ namespace Bridge.Domain.EventAggregate.Commands
         public int Index { get; set; }
         public IList<DuplicateDealMetadata> DealResults { get; set; }
         public int SysVulnerabilityId { get; set; }
+        public string HandViewerInput { get; set; }
         public DealMetadata()
         {
             DealResults = new List<DuplicateDealMetadata>();

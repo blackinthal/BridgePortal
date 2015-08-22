@@ -1,4 +1,19 @@
-﻿///#source 1 1 /app/common/services/urlBuilder.service.js
+﻿///#source 1 1 /app/common/filters/trustUrl.filter.js
+(function() {
+    "use strict";
+
+    var trustUrlFilter = function($sce) {
+        return function(val) {
+            return $sce.trustAsResourceUrl(val);
+        };
+    };
+
+    trustUrlFilter.$inject = ['$sce'];
+
+    angular.module('BridgePortal')
+        .filter('trustAsResourceUrl', trustUrlFilter);
+})();
+///#source 1 1 /app/common/services/urlBuilder.service.js
 (function() {
     angular.module('BridgePortal')
         .factory('UrlBuilder', function() {
@@ -163,7 +178,32 @@
     "use strict";
     var eventDetailController = function(event) {
         var vm = this;
+        var noOfDeals = event.deals.length;
+
         vm.event = event;
+        vm.selectedDeal = vm.event.deals[0];
+
+        vm.selectDeal = function(deal) {
+            vm.selectedDeal = deal;
+        }
+
+        vm.goToPreviousDeal = function() {
+            var index = vm.selectedDeal.index - 2;
+            vm.selectedDeal = vm.event.deals[index >= 0 ? index : 0];
+        }
+
+        vm.goToNextDeal = function() {
+            var index = vm.selectedDeal.index;
+            vm.selectedDeal = vm.event.deals[index > noOfDeals - 1 ? noOfDeals - 1 : index];
+        }
+
+        vm.goToFirstDeal = function () {
+            vm.selectedDeal = vm.event.deals[0];
+        }
+
+        vm.goToLastDeal = function () {
+            vm.selectedDeal = vm.event.deals[noOfDeals - 1];
+        }
 
         return vm;
     }

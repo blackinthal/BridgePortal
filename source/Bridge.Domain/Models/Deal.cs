@@ -24,6 +24,7 @@ namespace Bridge.Domain.Models
         public int Index { get; set; }
         public string PBNRepresentation { get; set; }
         public int SysVulnerabilityId { get; set; }
+        public string HandViewerInput { get; set; }
     
         public virtual Event Event { get; set; }
         public virtual SysVulnerability SysVulnerability { get; set; }

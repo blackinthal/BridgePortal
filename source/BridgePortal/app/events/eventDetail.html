@@ -1,1 +1,78 @@
-﻿<div>Test</div>
+﻿<div class="row container-fluid">
+    <div class="col-md-8">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title"><i class="fa fa-list fa-fw"></i>Deals</h3>
+            </div>
+            <div class="panel-body">
+                <div class="wrapper">
+                    <div class="h_iframe">
+                        <!-- a transparent image is preferable -->
+                        <img class="ratio" src="http://placehold.it/16x9" alt="" />
+                        <iframe allowfullscreen src="{{vm.selectedDeal.handViewerInput | trustAsResourceUrl}}"></iframe>
+                    </div>
+                </div>
+                <div align="center">
+                    <nav>
+                        <ul class="pagination pagination-sm">
+                            <li ng-repeat="deal in vm.event.deals" ng-class="vm.selectedDeal.index == deal.index ? 'active' : ''">
+                                <a ng-click="vm.selectDeal(deal)">{{deal.index}}</a>
+                            </li>
+                            
+                        </ul>
+                        <br/>
+                        <ul class="pagination pagination-sm">
+                            <li>
+                                <a ng-click="vm.goToFirstDeal()" aria-label="Previous">
+                                    <span aria-hidden="true"><<</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a ng-click="vm.goToPreviousDeal()" aria-label="Previous">
+                                    <span aria-hidden="true"><</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a ng-click="vm.goToNextDeal()" aria-label="Next">
+                                    <span aria-hidden="true">></span>
+                                </a>
+                            </li>
+                            <li>
+                                <a ng-click="vm.goToLastDeal()" aria-label="Next">
+                                    <span aria-hidden="true">>></span>
+                                </a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>         
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title"><i class="fa fa-trophy fa-fw"></i>Ranking table</h3>
+            </div>
+            <div class="panel-body">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-hover table-striped">
+                        <thead>
+                            <tr>
+                                <th>Rank</th>
+                                <th>Name</th>
+                                <th>Score ({{vm.event.sysEventTypeEventType}})</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="pair in vm.event.pairs">
+                                <td>{{pair.rank}}</td>
+                                <td>{{pair.name}}</td>
+                                <td>{{pair.score}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -78,8 +78,11 @@
     <Content Include="app\AppBundle.min.js">
       <DependentUpon>AppBundle.js</DependentUpon>
     </Content>
+    <Content Include="app\common\filters\trustUrl.filter.js" />
     <Content Include="app\common\services\logger.service.js" />
     <Content Include="app\deals\viewDeal.html" />
+    <Content Include="app\events\eventDetail.controller.js" />
+    <Content Include="app\events\eventDetail.html" />
     <Content Include="app\events\events.controller.js" />
     <Content Include="app\events\importEvents.controller.js" />
     <Content Include="app\events\importEvents.html" />
@@ -87,6 +90,7 @@
     <Content Include="app\events\services\events.service.js" />
     <Content Include="app\events\services\importEvents.service.js" />
     <Content Include="app\common\services\urlBuilder.service.js" />
+    <Content Include="Content\custom\custom.css" />
     <Content Include="Content\toastr.css" />
     <Content Include="Content\toastr.min.css" />
     <Content Include="Content\ui-bootstrap-csp.css" />

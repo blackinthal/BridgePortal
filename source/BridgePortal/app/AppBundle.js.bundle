@@ -10,6 +10,7 @@
   </settings>
   <!--The order of the <file> elements determines the order of the files in the bundle.-->
   <files>
+    <file>/app/common/filters/trustUrl.filter.js</file>
     <file>/app/common/services/urlBuilder.service.js</file>
     <file>/app/common/services/logger.service.js</file>
     <file>/app/events/services/importEvents.service.js</file>

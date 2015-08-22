@@ -38,5 +38,6 @@ namespace Bridge.WebAPI.Models
     {
         public int Index { get; set; }
         public string PBNRepresentation { get; set; }
+        public string HandViewerInput { get; set; }
     }
 }
