@@ -16,14 +16,14 @@ namespace Bridge.WebAPI.Queries
             _context = context;
         }
 
-        public IEnumerable<EventModel> GetEventsInMonth(int year, int month)
+        public IEnumerable<ImportedEventModel> GetEventsInMonth(int year, int month)
         {
             var importedEvents = _context.Events
                 .Where(w => w.Date.Month == month && w.Date.Year == year)
-                .Project().To<EventModel>().ToList();
+                .Project().To<ImportedEventModel>().ToList();
 
             var noOfDaysInMonth = DateTime.DaysInMonth(year, month);
-            var currentMonthEvents = new List<EventModel>();
+            var currentMonthEvents = new List<ImportedEventModel>();
             for (var day = 1; day <= noOfDaysInMonth; day++)
             {
                 var refDate = new DateTime(year, month, day);
@@ -39,9 +39,9 @@ namespace Bridge.WebAPI.Queries
             return currentMonthEvents;
         }
 
-        private static EventModel DefaultEvent(DateTime date)
+        private static ImportedEventModel DefaultEvent(DateTime date)
         {
-            return new EventModel
+            return new ImportedEventModel
             {
                 Year = date.Year,
                 Month = date.Month,
@@ -50,5 +50,16 @@ namespace Bridge.WebAPI.Queries
                 IsImported = false
             };
         }
+
+        public IEnumerable<EventModel> GetEvents()
+        {
+            return _context.Events.OrderBy(o => o.Date).Project().To<EventModel>();
+        }
+        public EventDetailModel GetEvent(int id)
+        {
+            return _context.Events.Where(w => w.Id == id)
+                .Project().To<EventDetailModel>()
+                .FirstOrDefault();
+        } 
     }
 }

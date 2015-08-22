@@ -6,6 +6,7 @@ using Bridge.Domain;
 using Bridge.Domain.EventAggregate.Commands;
 using Bridge.Domain.Modules;
 using Bridge.Domain.StaticModels;
+using Bridge.WebAPI.Factories;
 using Bridge.WebAPI.Providers;
 using ElmahExtensions;
 using WebGrease.Css.Extensions;
@@ -15,14 +16,14 @@ namespace Bridge.WebAPI.Modules
     public class ExtractEventMetadataModule
     {
         private readonly IEventProvider _provider;
-        private readonly IUrlProvider _urlProvider;
+        private readonly UrlProviderFactory _urlProviderFactory;
         private readonly ContractScoreCalculatorModule _scoreCalculator;
 
-        public List<string> Errors; 
-        public ExtractEventMetadataModule(IEventProvider provider, IUrlProvider urlProvider, ContractScoreCalculatorModule scoreCalculator)
+        public List<string> Errors;
+        public ExtractEventMetadataModule(IEventProvider provider, UrlProviderFactory urlProviderFactory, ContractScoreCalculatorModule scoreCalculator)
         {
             _provider = provider;
-            _urlProvider = urlProvider;
+            _urlProviderFactory = urlProviderFactory;
             _scoreCalculator = scoreCalculator;
 
             Errors = new List<string>();
@@ -30,7 +31,8 @@ namespace Bridge.WebAPI.Modules
 
         public ImportEvent ExtractEventMetadata(DateTime selectedDate)
         {
-            var tempFilePath = _provider.ReadEventPBNData(_urlProvider.GetUrl(selectedDate));
+            var urlProvider = _urlProviderFactory.GetUrlProvider(selectedDate);
+            var tempFilePath = _provider.ReadEventPBNData(urlProvider.GetUrl(selectedDate));
 
             var command = ProcessPbnFile(tempFilePath);
 
@@ -120,7 +122,7 @@ namespace Bridge.WebAPI.Modules
 
             pair.Name = values["Names"];
             pair.Rank = Int32.Parse(values["Rank"]);
-            pair.Score = decimal.Parse(values["TotalPercentage"] ?? values["TotalScoreIMP"] ?? "0.0");
+            pair.Score = decimal.Parse(values.ContainsKey("TotalPercentage") ? values["TotalPercentage"] : values["TotalScoreIMP"]);
             pair.PairId = Int32.Parse(values["PairId"]);
 
             var playerNames = pair.Name.Split(new[] {" - "}, StringSplitOptions.RemoveEmptyEntries);
@@ -164,8 +166,8 @@ namespace Bridge.WebAPI.Modules
                     ? _scoreCalculator.CalculateScore(contract, tricks, dealVulnerability)
                     : _scoreCalculator.CalculateScore(contract, values["Result"], dealVulnerability);
 
-                duplicateDeal.NSPercentage = Int32.Parse(values["Percentage_NS"] ?? values["IMP_NS"] ?? "0.0");
-                duplicateDeal.EWPercentage = Int32.Parse(values["Percentage_EW"] ?? values["IMP_EW"] ?? "0.0");
+                duplicateDeal.NSPercentage = Int32.Parse(values.ContainsKey("Percentage_NS") ? values["Percentage_NS"] : values["IMP_NS"]);
+                duplicateDeal.EWPercentage = Int32.Parse(values.ContainsKey("Percentage_EW") ? values["Percentage_EW"] : values["IMP_EW"]);
 
                 return duplicateDeal;
             }

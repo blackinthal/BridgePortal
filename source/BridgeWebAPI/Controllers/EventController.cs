@@ -1,52 +1,28 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Web.Http;
-using System.Web.Http.Results;
 using Bridge.WebAPI.Models;
-using Bridge.WebAPI.Modules;
 using Bridge.WebAPI.Queries;
-using Domain.Contracts;
-using ElmahExtensions;
 
 namespace Bridge.WebAPI.Controllers
 {
     [RoutePrefix("api/events")]
     public class EventController : ApiController
     {
-        private readonly EventQueries _query;
-        private readonly ICommandProcessor _processor;
-        private readonly ExtractEventMetadataModule _eventModule;
-
-        public EventController(EventQueries query, ICommandProcessor processor, ExtractEventMetadataModule eventModule)
+        private readonly EventQueries _queries;
+        
+        public EventController(EventQueries queries)
         {
-            _query = query;
-            _processor = processor;
-            _eventModule = eventModule;
+            _queries = queries;
         }
-
-        //GET api/Event/year/month
-        [Route("{year:int}/{month:int}")]
-        public IEnumerable<EventModel> GetEvents(int year, int month)
+        [Route("")]
+        public IEnumerable<EventModel> Get()
         {
-            return _query.GetEventsInMonth(year, month);
+            return _queries.GetEvents();
         }
-
-        [Route("{year:int}/{month:int}/{day:int}")]
-        public IHttpActionResult Post(int year, int month, int day)
+        [Route("{id:int}")]
+        public EventDetailModel Get(int id)
         {
-            try
-            {
-                var command = _eventModule.ExtractEventMetadata(new DateTime(year, month, day));
-
-                _processor.Process(command);
-
-                return Ok();
-            }
-            catch (Exception ex)
-            {
-                CustomErrorSignal.Handle(ex);
-                return new ExceptionResult(ex, this);
-            }
+            return _queries.GetEvent(id);
         }
     }
 }

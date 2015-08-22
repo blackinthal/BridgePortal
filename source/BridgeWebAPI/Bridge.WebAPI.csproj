@@ -234,13 +234,15 @@
     <Compile Include="Areas\HelpPage\SampleGeneration\TextSample.cs" />
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\BaseCommandProcessorController.cs" />
     <Compile Include="Controllers\EventController.cs" />
-    <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ImportEventController.cs" />
+    <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ValuesController.cs" />
     <Compile Include="Dependencies\ComponentRegistrar.cs" />
     <Compile Include="Dependencies\ComponentRegistrarBuilder.cs" />
     <Compile Include="Dependencies\WindsorDependencyResolver.cs" />
+    <Compile Include="Factories\UrlProviderFactory.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -255,6 +257,7 @@
     <Compile Include="Providers\IEventProvider.cs" />
     <Compile Include="Providers\IUrlProvider.cs" />
     <Compile Include="Providers\LocomotivaEventProvider.cs" />
+    <Compile Include="Providers\LocomotivaMiercuriUrlProvider.cs" />
     <Compile Include="Providers\LocomotivaUrlProvider.cs" />
     <Compile Include="Queries\EventQueries.cs" />
     <Compile Include="Results\ChallengeResult.cs" />
@@ -301,7 +304,9 @@
     <Content Include="Scripts\modernizr-2.6.2.js" />
     <Content Include="Scripts\respond.js" />
     <Content Include="Scripts\respond.min.js" />
-    <Content Include="Web.config" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </Content>

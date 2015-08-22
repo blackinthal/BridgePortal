@@ -27,6 +27,7 @@
             minMode: 'month'
         }
 
+        vm.eventsLoaded = false;
         vm.format = 'MMMM yyyy';
         vm.minDate = new Date(2015, 1, 1);
         vm.maxDate = new Date(2015, 12, 31);
@@ -40,10 +41,15 @@
             vm.status.opened = true;
         };
 
-        vm.loadEvents = function() {
+        vm.loadEvents = function () {
+            vm.eventsLoaded = false;
             vm.events = importEventService.query({
                 month: vm.selectedDate.getMonth() + 1,
                 year: vm.selectedDate.getFullYear()
+            }, function() {
+                vm.eventsLoaded = true;
+            }, function() {
+                logger.error({});
             });
         };
 
@@ -51,8 +57,7 @@
             event.$save({}, importSuccess, importError);
         }
 
-        vm.viewEvent = function(event) {
-            console.log(event);
+        vm.goToImportedEvents = function () {
         }
 
         vm.loadEvents();
@@ -62,6 +67,6 @@
     EventsController.$inject = ['$stateParams', 'ImportEventService', 'logger'];
 
     angular.module('BridgePortal')
-           .controller('EventsController', EventsController);
+           .controller('ImportEventsController', EventsController);
 
 })();

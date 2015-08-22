@@ -1,9 +1,9 @@
-using System;
+﻿using System;
 using System.Globalization;
 
 namespace Bridge.WebAPI.Providers
 {
-    public class LocomotivaUrlProvider : IUrlProvider
+    public class LocomotivaMiercuriUrlProvider : IUrlProvider
     {
         private const string BaseUrl = "http://www.locomotiva.ro/cls";
         public string GetUrl(DateTime selectedDate)
@@ -14,7 +14,7 @@ namespace Bridge.WebAPI.Providers
 
             var dayOfWeek = GetDayName(selectedDate.DayOfWeek);
 
-            return string.Format("{0}/{1}/{2}/{3}-{4}-{5}.pbn",BaseUrl,year,month,day,month,year);
+            return string.Format("{0}/{1}/{2}/{3}-{4}-{5}.pbn", BaseUrl, year, dayOfWeek, day, month, year);
         }
 
         private static string GetDayName(DayOfWeek dayOfWeek)

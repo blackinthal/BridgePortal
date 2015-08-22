@@ -80,9 +80,12 @@
     </Content>
     <Content Include="app\common\services\logger.service.js" />
     <Content Include="app\deals\viewDeal.html" />
-    <Content Include="app\events\EventsController.js" />
+    <Content Include="app\events\events.controller.js" />
+    <Content Include="app\events\importEvents.controller.js" />
+    <Content Include="app\events\importEvents.html" />
     <Content Include="app\events\events.html" />
-    <Content Include="app\events\services\ImportEvents.service.js" />
+    <Content Include="app\events\services\events.service.js" />
+    <Content Include="app\events\services\importEvents.service.js" />
     <Content Include="app\common\services\urlBuilder.service.js" />
     <Content Include="Content\toastr.css" />
     <Content Include="Content\toastr.min.css" />

@@ -15,10 +15,32 @@
                 url: '/viewDeal',
                 templateUrl: 'app/deals/viewDeal.html'
             })
+            .state('importEvents', {
+                url: '/importEvents?year&month',
+                templateUrl: 'app/events/importEvents.html',
+                controller: 'ImportEventsController as vm'
+            })
             .state('events', {
-                url: '/events?year&month',
-                templateUrl: 'app/events/events.html',
-                controller: 'EventsController as vm'
-            });
+                abstract: true,
+                url: '/events',
+                template: '<ui-view/>',
+            })
+             .state('events.all', {
+                 url: '/all',
+                 templateUrl: 'app/events/events.html',
+                 controller: 'EventsController as vm'
+             })
+            .state('events.detail', {
+                resolve: {
+                    eventsResource: 'EventsService',
+                    event: function (eventsResource, $stateParams) {
+                        return eventsResource.get({ id: $stateParams.id }).$promise;
+                    }
+                },
+                url: '/:id',
+                templateUrl: 'app/events/eventDetail.html',
+                controller: 'EventDetailController as vm'
+            })
+            ;
     });
 })();

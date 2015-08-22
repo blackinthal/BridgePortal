@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using Bridge.Domain.Modules;
 using Bridge.Domain.StaticModels;
+using Bridge.WebAPI.Factories;
 using Bridge.WebAPI.Modules;
 using Bridge.WebAPI.Providers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -71,7 +72,7 @@ namespace Bridge.WebAPI.Tests.Modules
         public void TestPbnParsing()
         {
             //Arrange
-            var module = new ExtractEventMetadataModule(new LocomotivaEventProvider(), new LocomotivaUrlProvider(), new ContractScoreCalculatorModule());
+            var module = new ExtractEventMetadataModule(new LocomotivaEventProvider(), new UrlProviderFactory(), new ContractScoreCalculatorModule());
 
             //Act
             var command = module.ExtractEventMetadata(new DateTime(2015, 7, 14));
@@ -86,7 +87,7 @@ namespace Bridge.WebAPI.Tests.Modules
         public void TestPbnParsing_DealList()
         {
             //Arrange
-            var module = new ExtractEventMetadataModule(new LocomotivaEventProvider(), new LocomotivaUrlProvider(), new ContractScoreCalculatorModule());
+            var module = new ExtractEventMetadataModule(new LocomotivaEventProvider(), new UrlProviderFactory(), new ContractScoreCalculatorModule());
 
             //Act
             var command = module.ExtractEventMetadata(new DateTime(2015, 7, 14));
@@ -99,7 +100,7 @@ namespace Bridge.WebAPI.Tests.Modules
         public void TestPbnParsing_RandomDeal()
         {
             //Arrange
-            var module = new ExtractEventMetadataModule(new LocomotivaEventProvider(), new LocomotivaUrlProvider(), new ContractScoreCalculatorModule());
+            var module = new ExtractEventMetadataModule(new LocomotivaEventProvider(), new UrlProviderFactory(), new ContractScoreCalculatorModule());
 
             //Act
             var command = module.ExtractEventMetadata(new DateTime(2015, 7, 14));
@@ -115,7 +116,7 @@ namespace Bridge.WebAPI.Tests.Modules
         public void TestPbnParsing_PairsList()
         {
             //Arrange
-            var module = new ExtractEventMetadataModule(new LocomotivaEventProvider(), new LocomotivaUrlProvider(), new ContractScoreCalculatorModule());
+            var module = new ExtractEventMetadataModule(new LocomotivaEventProvider(), new UrlProviderFactory(), new ContractScoreCalculatorModule());
 
             //Act
             var command = module.ExtractEventMetadata(new DateTime(2015, 7, 14));
@@ -128,7 +129,7 @@ namespace Bridge.WebAPI.Tests.Modules
         public void TestPbnParsing_RandomPair()
         {
             //Arrange
-            var module = new ExtractEventMetadataModule(new LocomotivaEventProvider(), new LocomotivaUrlProvider(), new ContractScoreCalculatorModule());
+            var module = new ExtractEventMetadataModule(new LocomotivaEventProvider(), new UrlProviderFactory(), new ContractScoreCalculatorModule());
 
             //Act
             var command = module.ExtractEventMetadata(new DateTime(2015, 7, 14));
@@ -146,7 +147,7 @@ namespace Bridge.WebAPI.Tests.Modules
         [TestMethod]
         public void TestPbnParsing_DuplicateDealResultsList()
         {    //Arrange
-            var module = new ExtractEventMetadataModule(new LocomotivaEventProvider(), new LocomotivaUrlProvider(), new ContractScoreCalculatorModule());
+            var module = new ExtractEventMetadataModule(new LocomotivaEventProvider(), new UrlProviderFactory(), new ContractScoreCalculatorModule());
 
             //Act
             var command = module.ExtractEventMetadata(new DateTime(2015, 7, 14));
@@ -159,7 +160,7 @@ namespace Bridge.WebAPI.Tests.Modules
         [TestMethod]
         public void TestPbnParsing_RandomDuplicateDeal1()
         {    //Arrange
-            var module = new ExtractEventMetadataModule(new LocomotivaEventProvider(), new LocomotivaUrlProvider(), new ContractScoreCalculatorModule());
+            var module = new ExtractEventMetadataModule(new LocomotivaEventProvider(), new UrlProviderFactory(), new ContractScoreCalculatorModule());
 
             //Act
             var command = module.ExtractEventMetadata(new DateTime(2015, 7, 14));
@@ -181,7 +182,7 @@ namespace Bridge.WebAPI.Tests.Modules
         public void TestPbnParsing_RandomDuplicateDeal2()
         {    
             //Arrange
-            var module = new ExtractEventMetadataModule(new LocomotivaEventProvider(), new LocomotivaUrlProvider(), new ContractScoreCalculatorModule());
+            var module = new ExtractEventMetadataModule(new LocomotivaEventProvider(), new UrlProviderFactory(), new ContractScoreCalculatorModule());
 
             //Act
             var command = module.ExtractEventMetadata(new DateTime(2015, 7, 14));
@@ -203,7 +204,7 @@ namespace Bridge.WebAPI.Tests.Modules
         public void TestDuplicateDealAreWellExtracted()
         {
             //Arrange
-            var module = new ExtractEventMetadataModule(new LocomotivaEventProvider(), new LocomotivaUrlProvider(), new ContractScoreCalculatorModule());
+            var module = new ExtractEventMetadataModule(new LocomotivaEventProvider(), new UrlProviderFactory(), new ContractScoreCalculatorModule());
 
             //Act
             var command = module.ExtractEventMetadata(new DateTime(2015, 7, 14));

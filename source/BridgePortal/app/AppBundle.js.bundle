@@ -12,7 +12,10 @@
   <files>
     <file>/app/common/services/urlBuilder.service.js</file>
     <file>/app/common/services/logger.service.js</file>
-    <file>/app/events/services/ImportEvents.service.js</file>
-    <file>/app/events/EventsController.js</file>
+    <file>/app/events/services/importEvents.service.js</file>
+    <file>/app/events/services/events.service.js</file>
+    <file>/app/events/importEvents.controller.js</file>
+    <file>/app/events/events.controller.js</file>
+    <file>/app/events/eventDetail.controller.js</file>
   </files>
 </bundle>
