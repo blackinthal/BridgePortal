@@ -16,14 +16,16 @@ namespace Bridge.Domain.Models
     {
         public SysPlayer()
         {
-            this.DuplicateDeals = new HashSet<DuplicateDeal>();
             this.DuplicateDeals1 = new HashSet<DuplicateDeal>();
+            this.MakeableContracts = new HashSet<MakeableContract>();
+            this.Deals = new HashSet<Deal>();
         }
     
         public int Id { get; set; }
         public string Player { get; set; }
     
-        public virtual ICollection<DuplicateDeal> DuplicateDeals { get; set; }
         public virtual ICollection<DuplicateDeal> DuplicateDeals1 { get; set; }
+        public virtual ICollection<MakeableContract> MakeableContracts { get; set; }
+        public virtual ICollection<Deal> Deals { get; set; }
     }
 }

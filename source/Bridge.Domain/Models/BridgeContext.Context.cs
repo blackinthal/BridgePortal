@@ -29,8 +29,9 @@ namespace Bridge.Domain.Models
         public virtual DbSet<Event> Events { get; set; }
         public virtual DbSet<Pair> Pairs { get; set; }
         public virtual DbSet<SysEventType> SysEventTypes { get; set; }
-        public virtual DbSet<SysPlayer> SysPlayers { get; set; }
         public virtual DbSet<Deal> Deals { get; set; }
         public virtual DbSet<SysVulnerability> SysVulnerabilities { get; set; }
+        public virtual DbSet<MakeableContract> MakeableContracts { get; set; }
+        public virtual DbSet<SysPlayer> SysPlayers { get; set; }
     }
 }

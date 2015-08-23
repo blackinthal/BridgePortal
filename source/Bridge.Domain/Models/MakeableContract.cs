@@ -12,23 +12,17 @@ namespace Bridge.Domain.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class DuplicateDeal
+    public partial class MakeableContract
     {
-        public int Id { get; set; }
+        public int MakeableContractId { get; set; }
         public int DealId { get; set; }
-        public int NSPairId { get; set; }
-        public int EWPairId { get; set; }
+        public int Level { get; set; }
+        public int Denomination { get; set; }
         public string Contract { get; set; }
         public int Declarer { get; set; }
-        public int Result { get; set; }
-        public int NSPercentage { get; set; }
-        public int EWPercentage { get; set; }
         public string HandViewerInput { get; set; }
-        public string ContractDisplay { get; set; }
     
-        public virtual Pair Pair { get; set; }
-        public virtual Pair Pair1 { get; set; }
         public virtual Deal Deal { get; set; }
-        public virtual SysPlayer SysPlayer1 { get; set; }
+        public virtual SysPlayer SysPlayer { get; set; }
     }
 }

@@ -9,6 +9,7 @@ using Bridge.Domain.Modules;
 using Bridge.Domain.StaticModels;
 using Bridge.WebAPI.Factories;
 using Bridge.WebAPI.Providers;
+using Dds.Net;
 using ElmahExtensions;
 using WebGrease.Css.Extensions;
 using SysEventType = Bridge.Domain.StaticModels.SysEventType;
@@ -21,13 +22,15 @@ namespace Bridge.WebAPI.Modules
         private readonly IEventProvider _provider;
         private readonly UrlProviderFactory _urlProviderFactory;
         private readonly ContractScoreCalculatorModule _scoreCalculator;
+        private readonly ComputeOptimalScoreModule _optimalContract;
 
         public List<string> Errors;
-        public ExtractEventMetadataModule(IEventProvider provider, UrlProviderFactory urlProviderFactory, ContractScoreCalculatorModule scoreCalculator)
+        public ExtractEventMetadataModule(IEventProvider provider, UrlProviderFactory urlProviderFactory, ContractScoreCalculatorModule scoreCalculator, ComputeOptimalScoreModule optimalContract)
         {
             _provider = provider;
             _urlProviderFactory = urlProviderFactory;
             _scoreCalculator = scoreCalculator;
+            _optimalContract = optimalContract;
 
             Errors = new List<string>();
         }
@@ -83,6 +86,8 @@ namespace Bridge.WebAPI.Modules
                     {
                         currentDeal.PBNRepresentation = ExtractValue(line); 
                         currentDeal.HandViewerInput = ConvertPBNToHandViewerInput(currentDeal.PBNRepresentation, currentDeal.Index, (SysVulnerabilityEnum)currentDeal.SysVulnerabilityId);
+                        CalculateMakeableContracts(currentDeal);
+                        CalculateOptimalContract(currentDeal);
                         continue;
                     }
                     if (line.StartsWith("[Vulnerable"))
@@ -99,8 +104,12 @@ namespace Bridge.WebAPI.Modules
                     if (currentState == ParseState.ReadingDealScoreTable && identifiedDealResults < result.NoOfRounds)
                     {
                         var duplicateDeal = ExtractDuplicateDealMetadata(line, (SysVulnerabilityEnum) currentDeal.SysVulnerabilityId, scoreTableHeaders);
-                        if(duplicateDeal != null)
+                        if (duplicateDeal != null)
+                        {
+                            duplicateDeal.HandViewerInput = currentDeal.HandViewerInput;
                             currentDeal.DealResults.Add(duplicateDeal);
+                        }
+                            
                         identifiedDealResults++;
                         continue;
                     }
@@ -117,6 +126,30 @@ namespace Bridge.WebAPI.Modules
                 }
             }
             return result;
+        }
+
+        private void CalculateOptimalContract(DealMetadata currentDeal)
+        {
+            var contract = _optimalContract.ComputeOptimalContract(currentDeal.PBNRepresentation, (SysVulnerabilityEnum) currentDeal.SysVulnerabilityId);
+
+            currentDeal.BestContract = contract.Item2.Notation();
+            currentDeal.BestContractDisplay = contract.Item2.Display();
+            currentDeal.BestContractResult = contract.Item1;
+            currentDeal.BestContractDeclarer = contract.Item2.PlayerPosition.ConvertToSysPlayer();
+        }
+
+        private static void CalculateMakeableContracts(DealMetadata deal)
+        {
+            var contracts = DoubleDummyModule.CalculateMakeableContracts(deal.PBNRepresentation);
+
+            contracts.ForEach(contract => deal.MakeableContracts.Add(new MakeableContractMetadata
+            {
+                Contract = contract.Display(),
+                Declarer = contract.PlayerPosition.ConvertToSysPlayer(),
+                Denomination = contract.Trump.Order,
+                Level = contract.Value,
+                HandViewerInput = deal.HandViewerInput
+            }));
         }
 
         /// <summary>
@@ -240,6 +273,7 @@ namespace Bridge.WebAPI.Modules
 
                 duplicateDeal.NSPercentage = Int32.Parse(values.ContainsKey("Percentage_NS") ? values["Percentage_NS"] : values["IMP_NS"]);
                 duplicateDeal.EWPercentage = Int32.Parse(values.ContainsKey("Percentage_EW") ? values["Percentage_EW"] : values["IMP_EW"]);
+                duplicateDeal.ContractDisplay = new Contract(duplicateDeal.Contract, PlayerPosition.East).Display();
 
                 return duplicateDeal;
             }

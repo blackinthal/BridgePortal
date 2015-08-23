@@ -11,6 +11,7 @@ using Castle.Core;
 using Castle.MicroKernel.Registration;
 using Castle.Windsor;
 using CommonServiceLocator.WindsorAdapter;
+using Dds.Net;
 using Domain.Common;
 using Domain.Contracts;
 using Domain.EventStorage;
@@ -146,7 +147,6 @@ namespace Bridge.WebAPI.Dependencies
 
             //_container.Register(Component.For<IUrlProvider>().ImplementedBy<LocomotivaUrlProvider>());
             _container.Register(Component.For<IEventProvider>().ImplementedBy<LocomotivaEventProvider>());
-
             return this;
         }
 

@@ -21,6 +21,16 @@ namespace Bridge.Domain
             return String.Format("{0}:{1}{2}", PlayerPosition, Value, Trump);
         }
 
+        public string Display()
+        {
+            return String.Format("{0}{1}", Value, Trump);
+        }
+
+        public string Notation()
+        {
+            return String.Format("{0}{1}", Value, Trump.Suit.ShortName);
+        }
+
         public Contract(string contract, PlayerPosition declarer)
         {
             var value = 0;

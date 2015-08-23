@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using Bridge.Domain.StaticModels;
 
 namespace Bridge.Domain
 {
@@ -89,6 +90,18 @@ namespace Bridge.Domain
         public override string ToString()
         {
             return FullName;
+        }
+
+        public int ConvertToSysPlayer()
+        {
+            if (Equals(North))
+                return (int) SysPlayer.N;
+            if (Equals(West))
+                return (int)SysPlayer.W;
+            if (Equals(East))
+                return (int)SysPlayer.E;
+
+            return (int) SysPlayer.S;
         }
     }
 }

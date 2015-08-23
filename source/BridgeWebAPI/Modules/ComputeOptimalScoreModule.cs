@@ -11,17 +11,15 @@ namespace Bridge.WebAPI.Modules
     public class ComputeOptimalScoreModule
     {
         private readonly ContractScoreCalculatorModule _calculateScore;
-        private readonly DoubleDummyModule _solveBoard;
 
-        public ComputeOptimalScoreModule(ContractScoreCalculatorModule calculateScore, DoubleDummyModule solveBoard)
+        public ComputeOptimalScoreModule(ContractScoreCalculatorModule calculateScore)
         {
             _calculateScore = calculateScore;
-            _solveBoard = solveBoard;
         }
 
         public Tuple<int,Contract> ComputeOptimalContract(string pbnDeal, SysVulnerabilityEnum vulnerabilty)
         {
-            var makeableContracts = _solveBoard.CalculateMakeableContracts(pbnDeal).AsQueryable();
+            var makeableContracts = DoubleDummyModule.CalculateMakeableContracts(pbnDeal).AsQueryable();
             var bestContract = GetBestUndoubledContract(makeableContracts, vulnerabilty);
 
             var bestScore = _calculateScore.CalculateScore(bestContract, bestContract.TricksToBeMade, vulnerabilty);

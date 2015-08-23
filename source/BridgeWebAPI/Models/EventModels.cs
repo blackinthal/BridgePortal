@@ -36,6 +36,7 @@ namespace Bridge.WebAPI.Models
 
     public class DealModel
     {
+        public int Id { get; set; }
         public int Index { get; set; }
         public string PBNRepresentation { get; set; }
         public string HandViewerInput { get; set; }

@@ -17,6 +17,7 @@ namespace Bridge.Domain.Models
         public Deal()
         {
             this.DuplicateDeals = new HashSet<DuplicateDeal>();
+            this.MakeableContracts = new HashSet<MakeableContract>();
         }
     
         public int Id { get; set; }
@@ -25,9 +26,15 @@ namespace Bridge.Domain.Models
         public string PBNRepresentation { get; set; }
         public int SysVulnerabilityId { get; set; }
         public string HandViewerInput { get; set; }
+        public string BestContract { get; set; }
+        public string BestContractDisplay { get; set; }
+        public int BestContractDeclarer { get; set; }
+        public int BestContractResult { get; set; }
     
         public virtual Event Event { get; set; }
         public virtual SysVulnerability SysVulnerability { get; set; }
         public virtual ICollection<DuplicateDeal> DuplicateDeals { get; set; }
+        public virtual ICollection<MakeableContract> MakeableContracts { get; set; }
+        public virtual SysPlayer SysPlayer { get; set; }
     }
 }

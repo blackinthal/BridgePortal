@@ -17,6 +17,7 @@ namespace Bridge.Domain.ModelMapping
             Mapper.CreateMap<PairMetadata, Pair>();
             Mapper.CreateMap<DealMetadata, Deal>();
             Mapper.CreateMap<DuplicateDealMetadata, DuplicateDeal>();
+            Mapper.CreateMap<MakeableContractMetadata, MakeableContract>();
         }
     }
 }

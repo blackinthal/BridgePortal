@@ -15,6 +15,10 @@
           <Property Name="PBNRepresentation" Type="nvarchar(max)" Nullable="false" />
           <Property Name="SysVulnerabilityId" Type="int" Nullable="false" />
           <Property Name="HandViewerInput" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="BestContract" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="BestContractDisplay" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="BestContractDeclarer" Type="int" Nullable="false" />
+          <Property Name="BestContractResult" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="DuplicateDeal">
           <Key>
@@ -27,11 +31,10 @@
           <Property Name="Contract" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="Declarer" Type="int" Nullable="false" />
           <Property Name="Result" Type="int" Nullable="false" />
-          <Property Name="BestContract" Type="nvarchar" MaxLength="50" />
-          <Property Name="BestContractDeclarer" Type="int" />
-          <Property Name="BestContractResult" Type="int" />
           <Property Name="NSPercentage" Type="int" Nullable="false" />
           <Property Name="EWPercentage" Type="int" Nullable="false" />
+          <Property Name="HandViewerInput" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="ContractDisplay" Type="nvarchar" MaxLength="50" Nullable="false" />
         </EntityType>
         <EntityType Name="Event">
           <Key>
@@ -42,6 +45,18 @@
           <Property Name="Date" Type="date" Nullable="false" />
           <Property Name="SysEventTypeId" Type="int" Nullable="false" />
           <Property Name="IsImported" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="MakeableContract">
+          <Key>
+            <PropertyRef Name="MakeableContractId" />
+          </Key>
+          <Property Name="MakeableContractId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="DealId" Type="int" Nullable="false" />
+          <Property Name="Level" Type="int" Nullable="false" />
+          <Property Name="Denomination" Type="int" Nullable="false" />
+          <Property Name="Contract" Type="nvarchar" MaxLength="10" Nullable="false" />
+          <Property Name="Declarer" Type="int" Nullable="false" />
+          <Property Name="HandViewerInput" Type="nvarchar(max)" Nullable="false" />
         </EntityType>
         <EntityType Name="Pair">
           <Key>
@@ -90,6 +105,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_Deal_SysPlayer">
+          <End Role="SysPlayer" Type="Self.SysPlayer" Multiplicity="1" />
+          <End Role="Deal" Type="Self.Deal" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SysPlayer">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Deal">
+              <PropertyRef Name="BestContractDeclarer" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_Deal_SysVulnerability">
           <End Role="SysVulnerability" Type="Self.SysVulnerability" Multiplicity="1" />
           <End Role="Deal" Type="Self.Deal" Multiplicity="*" />
@@ -99,18 +126,6 @@
             </Principal>
             <Dependent Role="Deal">
               <PropertyRef Name="SysVulnerabilityId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_DuplicateDeal_BestContractDeclarer">
-          <End Role="SysPlayer" Type="Self.SysPlayer" Multiplicity="0..1" />
-          <End Role="DuplicateDeal" Type="Self.DuplicateDeal" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="SysPlayer">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="DuplicateDeal">
-              <PropertyRef Name="BestContractDeclarer" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -176,6 +191,32 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_MakeableContract_Deal">
+          <End Role="Deal" Type="Self.Deal" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="MakeableContract" Type="Self.MakeableContract" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Deal">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="MakeableContract">
+              <PropertyRef Name="DealId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_MakeableContract_SysPlayer">
+          <End Role="SysPlayer" Type="Self.SysPlayer" Multiplicity="1" />
+          <End Role="MakeableContract" Type="Self.MakeableContract" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SysPlayer">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="MakeableContract">
+              <PropertyRef Name="Declarer" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_Pair_Event">
           <End Role="Event" Type="Self.Event" Multiplicity="1">
             <OnDelete Action="Cascade" />
@@ -194,6 +235,7 @@
           <EntitySet Name="Deal" EntityType="Self.Deal" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="DuplicateDeal" EntityType="Self.DuplicateDeal" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Event" EntityType="Self.Event" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="MakeableContract" EntityType="Self.MakeableContract" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Pair" EntityType="Self.Pair" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="SysEventType" EntityType="Self.SysEventType" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="SysPlayer" EntityType="Self.SysPlayer" Schema="dbo" store:Type="Tables" />
@@ -202,13 +244,13 @@
             <End Role="Event" EntitySet="Event" />
             <End Role="Deal" EntitySet="Deal" />
           </AssociationSet>
+          <AssociationSet Name="FK_Deal_SysPlayer" Association="Self.FK_Deal_SysPlayer">
+            <End Role="SysPlayer" EntitySet="SysPlayer" />
+            <End Role="Deal" EntitySet="Deal" />
+          </AssociationSet>
           <AssociationSet Name="FK_Deal_SysVulnerability" Association="Self.FK_Deal_SysVulnerability">
             <End Role="SysVulnerability" EntitySet="SysVulnerability" />
             <End Role="Deal" EntitySet="Deal" />
-          </AssociationSet>
-          <AssociationSet Name="FK_DuplicateDeal_BestContractDeclarer" Association="Self.FK_DuplicateDeal_BestContractDeclarer">
-            <End Role="SysPlayer" EntitySet="SysPlayer" />
-            <End Role="DuplicateDeal" EntitySet="DuplicateDeal" />
           </AssociationSet>
           <AssociationSet Name="FK_DuplicateDeal_Deal" Association="Self.FK_DuplicateDeal_Deal">
             <End Role="Deal" EntitySet="Deal" />
@@ -230,6 +272,14 @@
             <End Role="SysEventType" EntitySet="SysEventType" />
             <End Role="Event" EntitySet="Event" />
           </AssociationSet>
+          <AssociationSet Name="FK_MakeableContract_Deal" Association="Self.FK_MakeableContract_Deal">
+            <End Role="Deal" EntitySet="Deal" />
+            <End Role="MakeableContract" EntitySet="MakeableContract" />
+          </AssociationSet>
+          <AssociationSet Name="FK_MakeableContract_SysPlayer" Association="Self.FK_MakeableContract_SysPlayer">
+            <End Role="SysPlayer" EntitySet="SysPlayer" />
+            <End Role="MakeableContract" EntitySet="MakeableContract" />
+          </AssociationSet>
           <AssociationSet Name="FK_Pair_Event" Association="Self.FK_Pair_Event">
             <End Role="Event" EntitySet="Event" />
             <End Role="Pair" EntitySet="Pair" />
@@ -250,16 +300,14 @@
           <Property Name="Contract" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="Declarer" Type="Int32" Nullable="false" />
           <Property Name="Result" Type="Int32" Nullable="false" />
-          <Property Name="BestContract" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="BestContractDeclarer" Type="Int32" />
-          <Property Name="BestContractResult" Type="Int32" />
-          <NavigationProperty Name="SysPlayer" Relationship="Self.FK_DuplicateDeal_BestContractDeclarer" FromRole="DuplicateDeal" ToRole="SysPlayer" />
-          <NavigationProperty Name="SysPlayer1" Relationship="Self.FK_DuplicateDeal_Declarer" FromRole="DuplicateDeal" ToRole="SysPlayer" />
           <NavigationProperty Name="Pair" Relationship="Self.FK_DuplicateDeal_EWPair" FromRole="DuplicateDeal" ToRole="Pair" />
           <NavigationProperty Name="Pair1" Relationship="Self.FK_DuplicateDeal_NSPair" FromRole="DuplicateDeal" ToRole="Pair" />
           <NavigationProperty Name="Deal" Relationship="BridgeModel.FK_DuplicateDeal_Deal" FromRole="DuplicateDeal" ToRole="Deal" />
           <Property Name="NSPercentage" Type="Int32" Nullable="false" />
           <Property Name="EWPercentage" Type="Int32" Nullable="false" />
+          <Property Name="HandViewerInput" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="ContractDisplay" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="SysPlayer1" Relationship="BridgeModel.FK_DuplicateDeal_Declarer" FromRole="DuplicateDeal" ToRole="SysPlayer" />
         </EntityType>
         <EntityType Name="Event">
           <Key>
@@ -297,39 +345,6 @@
           <Property Name="EventType" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
           <NavigationProperty Name="Events" Relationship="Self.FK_Event_EventType" FromRole="SysEventType" ToRole="Event" />
         </EntityType>
-        <EntityType Name="SysPlayer">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Int32" Nullable="false" />
-          <Property Name="Player" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
-          <NavigationProperty Name="DuplicateDeals" Relationship="Self.FK_DuplicateDeal_BestContractDeclarer" FromRole="SysPlayer" ToRole="DuplicateDeal" />
-          <NavigationProperty Name="DuplicateDeals1" Relationship="Self.FK_DuplicateDeal_Declarer" FromRole="SysPlayer" ToRole="DuplicateDeal" />
-        </EntityType>
-        <Association Name="FK_DuplicateDeal_BestContractDeclarer">
-          <End Role="SysPlayer" Type="Self.SysPlayer" Multiplicity="0..1" />
-          <End Role="DuplicateDeal" Type="Self.DuplicateDeal" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="SysPlayer">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="DuplicateDeal">
-              <PropertyRef Name="BestContractDeclarer" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_DuplicateDeal_Declarer">
-          <End Role="SysPlayer" Type="Self.SysPlayer" Multiplicity="1" />
-          <End Role="DuplicateDeal" Type="Self.DuplicateDeal" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="SysPlayer">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="DuplicateDeal">
-              <PropertyRef Name="Declarer" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_DuplicateDeal_EWPair">
           <End Role="Pair" Type="Self.Pair" Multiplicity="1" />
           <End Role="DuplicateDeal" Type="Self.DuplicateDeal" Multiplicity="*" />
@@ -383,15 +398,6 @@
           <EntitySet Name="Events" EntityType="Self.Event" />
           <EntitySet Name="Pairs" EntityType="Self.Pair" />
           <EntitySet Name="SysEventTypes" EntityType="Self.SysEventType" />
-          <EntitySet Name="SysPlayers" EntityType="Self.SysPlayer" />
-          <AssociationSet Name="FK_DuplicateDeal_BestContractDeclarer" Association="Self.FK_DuplicateDeal_BestContractDeclarer">
-            <End Role="SysPlayer" EntitySet="SysPlayers" />
-            <End Role="DuplicateDeal" EntitySet="DuplicateDeals" />
-          </AssociationSet>
-          <AssociationSet Name="FK_DuplicateDeal_Declarer" Association="Self.FK_DuplicateDeal_Declarer">
-            <End Role="SysPlayer" EntitySet="SysPlayers" />
-            <End Role="DuplicateDeal" EntitySet="DuplicateDeals" />
-          </AssociationSet>
           <AssociationSet Name="FK_DuplicateDeal_EWPair" Association="Self.FK_DuplicateDeal_EWPair">
             <End Role="Pair" EntitySet="Pairs" />
             <End Role="DuplicateDeal" EntitySet="DuplicateDeals" />
@@ -422,6 +428,24 @@
             <End Role="Deal" EntitySet="Deals" />
             <End Role="DuplicateDeal" EntitySet="DuplicateDeals" />
           </AssociationSet>
+          <EntitySet Name="MakeableContracts" EntityType="BridgeModel.MakeableContract" />
+          <AssociationSet Name="FK_MakeableContract_Deal" Association="BridgeModel.FK_MakeableContract_Deal">
+            <End Role="Deal" EntitySet="Deals" />
+            <End Role="MakeableContract" EntitySet="MakeableContracts" />
+          </AssociationSet>
+          <EntitySet Name="SysPlayers" EntityType="BridgeModel.SysPlayer" />
+          <AssociationSet Name="FK_DuplicateDeal_Declarer" Association="BridgeModel.FK_DuplicateDeal_Declarer">
+            <End Role="SysPlayer" EntitySet="SysPlayers" />
+            <End Role="DuplicateDeal" EntitySet="DuplicateDeals" />
+          </AssociationSet>
+          <AssociationSet Name="FK_MakeableContract_SysPlayer" Association="BridgeModel.FK_MakeableContract_SysPlayer">
+            <End Role="SysPlayer" EntitySet="SysPlayers" />
+            <End Role="MakeableContract" EntitySet="MakeableContracts" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Deal_SysPlayer" Association="BridgeModel.FK_Deal_SysPlayer">
+            <End Role="SysPlayer" EntitySet="SysPlayers" />
+            <End Role="Deal" EntitySet="Deals" />
+          </AssociationSet>
         </EntityContainer>
         <EntityType Name="Deal">
           <Key>
@@ -436,6 +460,12 @@
           <NavigationProperty Name="SysVulnerability" Relationship="BridgeModel.FK_Deal_SysVulnerability" FromRole="Deal" ToRole="SysVulnerability" />
           <NavigationProperty Name="DuplicateDeals" Relationship="BridgeModel.FK_DuplicateDeal_Deal" FromRole="Deal" ToRole="DuplicateDeal" />
           <Property Name="HandViewerInput" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="MakeableContracts" Relationship="BridgeModel.FK_MakeableContract_Deal" FromRole="Deal" ToRole="MakeableContract" />
+          <Property Name="BestContract" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="BestContractDisplay" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="BestContractDeclarer" Type="Int32" Nullable="false" />
+          <Property Name="BestContractResult" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="SysPlayer" Relationship="BridgeModel.FK_Deal_SysPlayer" FromRole="Deal" ToRole="SysPlayer" />
         </EntityType>
         <EntityType Name="SysVulnerability">
           <Key>
@@ -481,6 +511,80 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="MakeableContract">
+          <Key>
+            <PropertyRef Name="MakeableContractId" />
+          </Key>
+          <Property Name="MakeableContractId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="DealId" Type="Int32" Nullable="false" />
+          <Property Name="Level" Type="Int32" Nullable="false" />
+          <Property Name="Denomination" Type="Int32" Nullable="false" />
+          <Property Name="Contract" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="Declarer" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Deal" Relationship="BridgeModel.FK_MakeableContract_Deal" FromRole="MakeableContract" ToRole="Deal" />
+          <Property Name="HandViewerInput" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="SysPlayer" Relationship="BridgeModel.FK_MakeableContract_SysPlayer" FromRole="MakeableContract" ToRole="SysPlayer" />
+        </EntityType>
+        <Association Name="FK_MakeableContract_Deal">
+          <End Type="BridgeModel.Deal" Role="Deal" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="BridgeModel.MakeableContract" Role="MakeableContract" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Deal">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="MakeableContract">
+              <PropertyRef Name="DealId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="SysPlayer">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" />
+          <Property Name="Player" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="DuplicateDeals1" Relationship="BridgeModel.FK_DuplicateDeal_Declarer" FromRole="SysPlayer" ToRole="DuplicateDeal" />
+          <NavigationProperty Name="MakeableContracts" Relationship="BridgeModel.FK_MakeableContract_SysPlayer" FromRole="SysPlayer" ToRole="MakeableContract" />
+          <NavigationProperty Name="Deals" Relationship="BridgeModel.FK_Deal_SysPlayer" FromRole="SysPlayer" ToRole="Deal" />
+        </EntityType>
+        <Association Name="FK_DuplicateDeal_Declarer">
+          <End Type="BridgeModel.SysPlayer" Role="SysPlayer" Multiplicity="1" />
+          <End Type="BridgeModel.DuplicateDeal" Role="DuplicateDeal" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SysPlayer">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="DuplicateDeal">
+              <PropertyRef Name="Declarer" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_MakeableContract_SysPlayer">
+          <End Type="BridgeModel.SysPlayer" Role="SysPlayer" Multiplicity="1" />
+          <End Type="BridgeModel.MakeableContract" Role="MakeableContract" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SysPlayer">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="MakeableContract">
+              <PropertyRef Name="Declarer" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Deal_SysPlayer">
+          <End Type="BridgeModel.SysPlayer" Role="SysPlayer" Multiplicity="1" />
+          <End Type="BridgeModel.Deal" Role="Deal" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SysPlayer">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Deal">
+              <PropertyRef Name="BestContractDeclarer" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -490,6 +594,8 @@
           <EntitySetMapping Name="DuplicateDeals">
             <EntityTypeMapping TypeName="BridgeModel.DuplicateDeal">
               <MappingFragment StoreEntitySet="DuplicateDeal">
+                <ScalarProperty Name="ContractDisplay" ColumnName="ContractDisplay" />
+                <ScalarProperty Name="HandViewerInput" ColumnName="HandViewerInput" />
                 <ScalarProperty Name="EWPercentage" ColumnName="EWPercentage" />
                 <ScalarProperty Name="NSPercentage" ColumnName="NSPercentage" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
@@ -499,10 +605,7 @@
                 <ScalarProperty Name="Contract" ColumnName="Contract" />
                 <ScalarProperty Name="Declarer" ColumnName="Declarer" />
                 <ScalarProperty Name="Result" ColumnName="Result" />
-                <ScalarProperty Name="BestContract" ColumnName="BestContract" />
-                <ScalarProperty Name="BestContractDeclarer" ColumnName="BestContractDeclarer" />
-                <ScalarProperty Name="BestContractResult" ColumnName="BestContractResult" />
-              </MappingFragment>
+                </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="Events">
@@ -537,17 +640,13 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="SysPlayers">
-            <EntityTypeMapping TypeName="BridgeModel.SysPlayer">
-              <MappingFragment StoreEntitySet="SysPlayer">
-                <ScalarProperty Name="Id" ColumnName="Id" />
-                <ScalarProperty Name="Player" ColumnName="Player" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="Deals">
             <EntityTypeMapping TypeName="BridgeModel.Deal">
               <MappingFragment StoreEntitySet="Deal">
+                <ScalarProperty Name="BestContractResult" ColumnName="BestContractResult" />
+                <ScalarProperty Name="BestContractDeclarer" ColumnName="BestContractDeclarer" />
+                <ScalarProperty Name="BestContractDisplay" ColumnName="BestContractDisplay" />
+                <ScalarProperty Name="BestContract" ColumnName="BestContract" />
                 <ScalarProperty Name="HandViewerInput" ColumnName="HandViewerInput" />
                 <ScalarProperty Name="SysVulnerabilityId" ColumnName="SysVulnerabilityId" />
                 <ScalarProperty Name="PBNRepresentation" ColumnName="PBNRepresentation" />
@@ -562,6 +661,27 @@
               <MappingFragment StoreEntitySet="SysVulnerability">
                 <ScalarProperty Name="SysVulnerabilityName" ColumnName="SysVulnerabilityName" />
                 <ScalarProperty Name="SysVulnerabilityId" ColumnName="SysVulnerabilityId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="MakeableContracts">
+            <EntityTypeMapping TypeName="BridgeModel.MakeableContract">
+              <MappingFragment StoreEntitySet="MakeableContract">
+                <ScalarProperty Name="HandViewerInput" ColumnName="HandViewerInput" />
+                <ScalarProperty Name="Declarer" ColumnName="Declarer" />
+                <ScalarProperty Name="Contract" ColumnName="Contract" />
+                <ScalarProperty Name="Denomination" ColumnName="Denomination" />
+                <ScalarProperty Name="Level" ColumnName="Level" />
+                <ScalarProperty Name="DealId" ColumnName="DealId" />
+                <ScalarProperty Name="MakeableContractId" ColumnName="MakeableContractId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="SysPlayers">
+            <EntityTypeMapping TypeName="BridgeModel.SysPlayer">
+              <MappingFragment StoreEntitySet="SysPlayer">
+                <ScalarProperty Name="Player" ColumnName="Player" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

@@ -80,7 +80,7 @@ namespace Dds.Net
             return SolveBoardPbn(game,-1,3, 0);
         }
 
-        public List<Contract> CalculateMakeableContracts(string pbn)
+        public static List<Contract> CalculateMakeableContracts(string pbn)
         {
             var ret = new List<Contract>();
             var results = new DdTableResults();

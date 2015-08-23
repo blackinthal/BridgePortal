@@ -36,11 +36,17 @@ namespace Bridge.Domain.EventAggregate.Commands
         public string PBNRepresentation { get; set; }
         public int Index { get; set; }
         public IList<DuplicateDealMetadata> DealResults { get; set; }
+        public IList<MakeableContractMetadata> MakeableContracts { get; set; } 
         public int SysVulnerabilityId { get; set; }
         public string HandViewerInput { get; set; }
+        public string BestContractDisplay { get; set; }
+        public string BestContract { get; set; }
+        public int BestContractDeclarer { get; set; }
+        public int BestContractResult { get; set; }
         public DealMetadata()
         {
             DealResults = new List<DuplicateDealMetadata>();
+            MakeableContracts = new List<MakeableContractMetadata>();
         }
     }
 
@@ -53,5 +59,16 @@ namespace Bridge.Domain.EventAggregate.Commands
         public int EWPairIndex { get; set; }
         public decimal NSPercentage { get; set; }
         public decimal EWPercentage { get; set; }
+        public string HandViewerInput { get; set; }
+        public string ContractDisplay { get; set; }
+    }
+
+    public class MakeableContractMetadata
+    {
+        public string Contract { get; set; }
+        public int Declarer { get; set; }
+        public int Level { get; set; }
+        public int Denomination { get; set; }
+        public string HandViewerInput { get; set; }
     }
 }

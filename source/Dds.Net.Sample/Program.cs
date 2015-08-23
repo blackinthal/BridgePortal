@@ -14,7 +14,7 @@ namespace Dds.Net.Sample
             Console.WriteLine("Board: " + pbnCode);
             
         
-            var res = dds.CalculateMakeableContracts(pbnCode);
+            var res = DoubleDummyModule.CalculateMakeableContracts(pbnCode);
             Console.WriteLine("Best results:");
             foreach (var contract in res)
             {
