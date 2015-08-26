@@ -43,6 +43,7 @@ namespace Bridge.Domain.EventAggregate.Commands
         public string BestContract { get; set; }
         public int BestContractDeclarer { get; set; }
         public int BestContractResult { get; set; }
+        public int Dealer { get; set; }
         public DealMetadata()
         {
             DealResults = new List<DuplicateDealMetadata>();

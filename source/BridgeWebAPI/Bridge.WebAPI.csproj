@@ -246,12 +246,14 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Modules\Helpers\ParsePBNHelpers.cs" />
     <Compile Include="Models\AccountBindingModels.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\EventModels.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Modules\ComputeOptimalScoreModule.cs" />
     <Compile Include="Modules\ExtractEventMetadataModule.cs" />
+    <Compile Include="Modules\StaticModels\StaticModels.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Providers\ApplicationOAuthProvider.cs" />
     <Compile Include="Providers\IEventProvider.cs" />
@@ -325,7 +327,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Modules\Helpers\" />
+    <Folder Include="Helpers\" />
     <Folder Include="Views\ImportEvent\" />
   </ItemGroup>
   <ItemGroup>

@@ -5,6 +5,7 @@ using Bridge.Domain.Modules;
 using Bridge.Domain.StaticModels;
 using Bridge.WebAPI.Factories;
 using Bridge.WebAPI.Modules;
+using Bridge.WebAPI.Modules.Helpers;
 using Bridge.WebAPI.Providers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -222,7 +223,7 @@ namespace Bridge.WebAPI.Tests.Modules
             //Arrange
             const string input = @"Table\2R;Round\2R;PairId_NS\2R;PairId_EW\2R;Contract\4L;Declarer\1R;Result\2R;Lead\3L;Score_NS\6R;Score_EW\6R;MP_NS\2R;MP_EW\2R;Percentage_NS\3R;Percentage_EW\3R";
             //Act
-            var output = ExtractEventMetadataModule.ParseTableHeader(input);
+            var output = ParsePBNHelpers.ParseTableHeader(input);
             //Assert
             Assert.AreEqual(2,output["Table"]);
             Assert.AreEqual(2, output["Round"]);
@@ -247,8 +248,8 @@ namespace Bridge.WebAPI.Tests.Modules
             const string header = @"Table\2R;Round\2R;PairId_NS\2R;PairId_EW\2R;Contract\4L;Declarer\1R;Result\2R;Lead\3L;Score_NS\6R;Score_EW\6R;MP_NS\2R;MP_EW\2R;Percentage_NS\3R;Percentage_EW\3R";
             const string line = " 8  5  8 24 2H   N  7 H3       -   \"50\" 20  0 100   0";
             //Act
-            var headerColumns = ExtractEventMetadataModule.ParseTableHeader(header);
-            var output = ExtractEventMetadataModule.ParseTableLine(line, headerColumns);
+            var headerColumns = ParsePBNHelpers.ParseTableHeader(header);
+            var output = ParsePBNHelpers.ParseTableLine(line, headerColumns);
 
             //Assert
             Assert.AreEqual("8", output["Table"]);
@@ -273,7 +274,7 @@ namespace Bridge.WebAPI.Tests.Modules
             //Arrange
             const string input = @"Rank\2R;PairId\2R;Table\2R;Direction\5R;TotalScoreMP\3R;TotalPercentage\5R;Names\40L;NrBoards\2R";
             //Act
-            var output = ExtractEventMetadataModule.ParseTableHeader(input);
+            var output = ParsePBNHelpers.ParseTableHeader(input);
             //Assert
             Assert.AreEqual(2, output["Rank"]);
             Assert.AreEqual(2, output["PairId"]);
@@ -292,8 +293,8 @@ namespace Bridge.WebAPI.Tests.Modules
             const string header = @"Rank\2R;PairId\2R;Table\2R;Direction\5R;TotalScoreMP\3R;TotalPercentage\5R;Names\40L;NrBoards\2R";
             const string line = " 1  5  5 \"N-S\" 305 69.32 \"GAVRILIU MADALINA - BONTAS BUJOR\"       22";
             //Act
-            var headerColumns = ExtractEventMetadataModule.ParseTableHeader(header);
-            var output = ExtractEventMetadataModule.ParseTableLine(line, headerColumns);
+            var headerColumns = ParsePBNHelpers.ParseTableHeader(header);
+            var output = ParsePBNHelpers.ParseTableLine(line, headerColumns);
 
             //Assert
             Assert.AreEqual("1", output["Rank"]);
