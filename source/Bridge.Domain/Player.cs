@@ -100,7 +100,6 @@ namespace Bridge.Domain
                 return (int)SysPlayer.W;
             if (Equals(East))
                 return (int)SysPlayer.E;
-
             return (int) SysPlayer.S;
         }
     }

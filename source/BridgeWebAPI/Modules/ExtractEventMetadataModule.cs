@@ -103,10 +103,9 @@ namespace Bridge.WebAPI.Modules
                     }
                     if (currentState == ParseState.ReadingDealScoreTable && identifiedDealResults < result.NoOfRounds)
                     {
-                        var duplicateDeal = ExtractDuplicateDealMetadata(line, (SysVulnerabilityEnum) currentDeal.SysVulnerabilityId, scoreTableHeaders);
+                        var duplicateDeal = ExtractDuplicateDealMetadata(line, currentDeal, scoreTableHeaders);
                         if (duplicateDeal != null)
                         {
-                            duplicateDeal.HandViewerInput = currentDeal.HandViewerInput;
                             currentDeal.DealResults.Add(duplicateDeal);
                         }
                             
@@ -148,7 +147,7 @@ namespace Bridge.WebAPI.Modules
                 Declarer = contract.PlayerPosition.ConvertToSysPlayer(),
                 Denomination = contract.Trump.Order,
                 Level = contract.Value,
-                HandViewerInput = deal.HandViewerInput
+                HandViewerInput = deal.HandViewerInput + ConvertToPbnBiddingSequence(contract, contract.PlayerPosition.ConvertToSysPlayer())
             }));
         }
 
@@ -238,7 +237,7 @@ namespace Bridge.WebAPI.Modules
             return pair;
         }
 
-        public DuplicateDealMetadata ExtractDuplicateDealMetadata(string line, SysVulnerabilityEnum dealVulnerability, Dictionary<string,int> columnHeaders)
+        public DuplicateDealMetadata ExtractDuplicateDealMetadata(string line, DealMetadata deal, Dictionary<string,int> columnHeaders)
         {
             try
             {
@@ -258,7 +257,12 @@ namespace Bridge.WebAPI.Modules
                 var position = PlayerPosition.North;
                 switch (duplicateDeal.Declarer)
                 {
+                    case (int) SysPlayer.S:
+                        position = PlayerPosition.South;
+                        break;
                     case (int) SysPlayer.E:
+                        position = PlayerPosition.East;
+                        break;
                     case (int) SysPlayer.W:
                         position = PlayerPosition.West;
                         break;
@@ -268,12 +272,13 @@ namespace Bridge.WebAPI.Modules
 
                 int tricks;
                 duplicateDeal.Result = Int32.TryParse(values["Result"], out tricks)
-                    ? _scoreCalculator.CalculateScore(contract, tricks, dealVulnerability)
-                    : _scoreCalculator.CalculateScore(contract, values["Result"], dealVulnerability);
+                    ? _scoreCalculator.CalculateScore(contract, tricks, (SysVulnerabilityEnum)deal.SysVulnerabilityId)
+                    : _scoreCalculator.CalculateScore(contract, values["Result"], (SysVulnerabilityEnum)deal.SysVulnerabilityId);
 
                 duplicateDeal.NSPercentage = Int32.Parse(values.ContainsKey("Percentage_NS") ? values["Percentage_NS"] : values["IMP_NS"]);
                 duplicateDeal.EWPercentage = Int32.Parse(values.ContainsKey("Percentage_EW") ? values["Percentage_EW"] : values["IMP_EW"]);
-                duplicateDeal.ContractDisplay = new Contract(duplicateDeal.Contract, PlayerPosition.East).Display();
+                duplicateDeal.ContractDisplay = contract.Display();
+                duplicateDeal.HandViewerInput = deal.HandViewerInput + ConvertToPbnBiddingSequence(contract, duplicateDeal.Declarer);
 
                 return duplicateDeal;
             }
@@ -321,6 +326,38 @@ namespace Bridge.WebAPI.Modules
             });
 
             return parseResult;
-        } 
+        }
+
+        private static string ConvertToPbnBiddingSequence(Contract c, int dealerId)
+        {
+            var declaredId = c.PlayerPosition.ConvertToSysPlayer();
+
+            if (dealerId <= 0 || declaredId <= 0)
+                return string.Empty;
+
+            var sb = new StringBuilder("|b");
+
+            for (var i = dealerId; i < dealerId + 4; i++)
+            {
+                sb.Append("|mb");
+                var currentPlayer = (i%4);
+                if (currentPlayer == 0)
+                    currentPlayer = 4;
+                if (currentPlayer == declaredId)
+                {
+                    sb.Append(string.Format("|{0}", c.Notation()));
+                    break;
+                }
+                sb.Append("|p");
+            }
+
+            if (c.Doubled)
+                sb.Append("|mb|x");
+            if (c.Redoubled)
+                sb.Append("|mb|xx");
+
+            sb.Append("|mb|p|mb|p|mb|p|");
+            return sb.ToString();
+        }
     }
 }

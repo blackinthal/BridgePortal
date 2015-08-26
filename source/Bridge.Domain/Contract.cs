@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using Bridge.Domain.StaticModels;
 
 namespace Bridge.Domain
 {

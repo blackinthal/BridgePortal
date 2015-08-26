@@ -2,9 +2,9 @@
 {
     public enum SysPlayer
     {
-        N = 1,
-        E = 2,
-        S = 3,
-        W = 4
+        N = 3,
+        E = 4,
+        S = 1,
+        W = 2
     }
 }
