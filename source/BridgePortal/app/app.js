@@ -12,8 +12,15 @@
                 templateUrl: 'landing.html'
             })
             .state('viewDeal', {
-                url: '/viewDeal',
-                templateUrl: 'app/deals/viewDeal.html'
+                resolve: {
+                    dealsResource: 'DealsService',
+                    deal: function (dealsResource, $stateParams) {
+                        return dealsResource.get({ id: $stateParams.id }).$promise;
+                    }
+                },
+                url: '/deal/{id}',
+                templateUrl: 'app/deals/viewDeal.html',
+                controller: 'DealDetailController as vm'
             })
             .state('importEvents', {
                 url: '/importEvents?year&month',

@@ -11,12 +11,15 @@
   <!--The order of the <file> elements determines the order of the files in the bundle.-->
   <files>
     <file>/app/common/filters/trustUrl.filter.js</file>
+	  <file>/app/common/filters/scoreDisplay.filter.js</file>
     <file>/app/common/services/urlBuilder.service.js</file>
     <file>/app/common/services/logger.service.js</file>
     <file>/app/events/services/importEvents.service.js</file>
     <file>/app/events/services/events.service.js</file>
+	  <file>/app/deals/services/deals.service.js</file>
     <file>/app/events/importEvents.controller.js</file>
     <file>/app/events/events.controller.js</file>
     <file>/app/events/eventDetail.controller.js</file>
+	  <file>/app/deals/dealDetail.controller.js</file>
   </files>
 </bundle>

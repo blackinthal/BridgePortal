@@ -43,8 +43,8 @@ namespace Bridge.Domain.EventAggregate
                     dealMetadata.DealResults.Each(duplicateDealMetadata =>
                     {
                         var duplicateDeal = Mapper.Map<DuplicateDeal>(duplicateDealMetadata);
-                        duplicateDeal.Pair = pairsDictionary[duplicateDealMetadata.EWPairIndex];
-                        duplicateDeal.Pair1 = pairsDictionary[duplicateDealMetadata.NSPairIndex];
+                        duplicateDeal.EWPair = pairsDictionary[duplicateDealMetadata.EWPairIndex];
+                        duplicateDeal.NSPair = pairsDictionary[duplicateDealMetadata.NSPairIndex];
                         deal.DuplicateDeals.Add(duplicateDeal);
                     });
 

@@ -29,8 +29,8 @@ namespace Bridge.WebAPI.App_Start
                   .ForMember(dest => dest.MakeableContracts, opt => opt.MapFrom(src => src.MakeableContracts
                       .OrderBy(o => o.Denomination).ThenBy(o => o.Declarer)));
 
-            Mapper.CreateMap<DealResultViewModel, DuplicateDeal>();
-            Mapper.CreateMap<MakeableContractViewModel, MakeableContract>();
+            Mapper.CreateMap<DuplicateDeal,DealResultViewModel>();
+            Mapper.CreateMap<MakeableContract, MakeableContractViewModel>();
         }
     }
 }

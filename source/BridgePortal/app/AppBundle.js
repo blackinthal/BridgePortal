@@ -13,6 +13,24 @@
     angular.module('BridgePortal')
         .filter('trustAsResourceUrl', trustUrlFilter);
 })();
+///#source 1 1 /app/common/filters/scoreDisplay.filter.js
+(function() {
+    "use strict";
+
+    var displayScore = function() {
+        return function(input, nsScore) {
+            input = input || '';
+            if (nsScore) {
+                return input >= 0 ? Math.abs(input) : '';
+            } else {
+                return input <= 0 ? Math.abs(input) : '';
+            }
+        }
+    };
+
+    angular.module('BridgePortal')
+           .filter('displayscore', displayScore);
+})();
 ///#source 1 1 /app/common/services/urlBuilder.service.js
 (function() {
     angular.module('BridgePortal')
@@ -72,6 +90,22 @@
 
     angular.module('BridgePortal')
            .factory('EventsService', eventService);
+})();
+///#source 1 1 /app/deals/services/deals.service.js
+(function() {
+    "use strict";
+
+    var dealsResource = function($resource, urlBuilder) {
+        return $resource(
+            urlBuilder.build('api/deals/:id'),
+            { id: '@id' }
+        );
+    };
+
+    dealsResource.$inject = ['$resource', 'UrlBuilder'];
+
+    angular.module('BridgePortal')
+          .factory('DealsService', dealsResource);
 })();
 ///#source 1 1 /app/events/importEvents.controller.js
 (function() {
@@ -211,4 +245,21 @@
     eventDetailController.$inject = ['event'];
     angular.module('BridgePortal')
         .controller('EventDetailController', eventDetailController);
+})();
+///#source 1 1 /app/deals/dealDetail.controller.js
+(function() {
+    "use strict";
+
+    var dealDetailController = function(deal) {
+        var vm = this;
+
+        vm.deal = deal;
+        vm.currentUrl = deal.handViewerInput;
+
+        return vm;
+    }
+
+    dealDetailController.$inject = ['deal'];
+    angular.module('BridgePortal')
+        .controller('DealDetailController', dealDetailController);
 })();

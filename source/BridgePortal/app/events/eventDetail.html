@@ -18,9 +18,9 @@
                             <li ng-repeat="deal in vm.event.deals" ng-class="vm.selectedDeal.index == deal.index ? 'active' : ''">
                                 <a ng-click="vm.selectDeal(deal)">{{deal.index}}</a>
                             </li>
-                            
+
                         </ul>
-                        <br/>
+                        <br />
                         <ul class="pagination pagination-sm">
                             <li>
                                 <a ng-click="vm.goToFirstDeal()" aria-label="Previous">
@@ -44,7 +44,12 @@
                             </li>
                         </ul>
                     </nav>
-                </div>         
+                </div>
+                <div>
+                    <a class="btn btn-primary" data-ui-sref="viewDeal({id : vm.selectedDeal.id})">
+                        <i class="fa fa-eye fa-fw"></i> Go to Deal
+                    </a>
+                </div>
             </div>
         </div>
     </div>

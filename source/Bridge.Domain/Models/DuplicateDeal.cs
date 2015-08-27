@@ -26,9 +26,9 @@ namespace Bridge.Domain.Models
         public string HandViewerInput { get; set; }
         public string ContractDisplay { get; set; }
     
-        public virtual Pair Pair { get; set; }
-        public virtual Pair Pair1 { get; set; }
+        public virtual Pair EWPair { get; set; }
+        public virtual Pair NSPair { get; set; }
         public virtual Deal Deal { get; set; }
-        public virtual SysPlayer SysPlayer1 { get; set; }
+        public virtual SysPlayer Player { get; set; }
     }
 }

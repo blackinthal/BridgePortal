@@ -80,6 +80,8 @@
     </Content>
     <Content Include="app\common\filters\trustUrl.filter.js" />
     <Content Include="app\common\services\logger.service.js" />
+    <Content Include="app\deals\dealDetail.controller.js" />
+    <Content Include="app\deals\services\deals.service.js" />
     <Content Include="app\deals\viewDeal.html" />
     <Content Include="app\events\eventDetail.controller.js" />
     <Content Include="app\events\eventDetail.html" />
