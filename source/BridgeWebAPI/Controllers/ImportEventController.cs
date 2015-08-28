@@ -22,14 +22,26 @@ namespace Bridge.WebAPI.Controllers
             _query = query;
             _eventModule = eventModule;
         }
-
+        
         //GET api/Event/year/month
+        /// <summary>
+        /// Returns a list of all potential events (imported or not) that are played during a month
+        /// </summary>
+        /// <param name="year"></param>
+        /// <param name="month"></param>
+        /// <returns></returns>
         [Route("{year:int}/{month:int}")]
         public IEnumerable<ImportedEventModel> GetEvents(int year, int month)
         {
             return _query.GetEventsInMonth(year, month);
         }
-
+        /// <summary>
+        /// Imports the event played on (day,month,year)
+        /// </summary>
+        /// <param name="year"></param>
+        /// <param name="month"></param>
+        /// <param name="day"></param>
+        /// <returns></returns>
         [Route("{year:int}/{month:int}/{day:int}")]
         public IHttpActionResult Post(int year, int month, int day)
         {

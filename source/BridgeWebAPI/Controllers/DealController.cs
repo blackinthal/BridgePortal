@@ -14,6 +14,11 @@ namespace Bridge.WebAPI.Controllers
             _queries = queries;
         }
 
+        /// <summary>
+        /// Returns metadata about a deal belonging to an event
+        /// </summary>
+        /// <param name="id">Deal Id</param>
+        /// <returns></returns>
         [Route("{id:int}")]
         public DealDetailModel Get(int id)
         {

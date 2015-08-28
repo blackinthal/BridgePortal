@@ -9,6 +9,7 @@ namespace Bridge.WebAPI.Models
         public int Day { get; set; }
         public string Name { get; set; }
         public bool IsImported { get; set; }
+        public int Id { get; set; }
     }
 
     public class EventModel

@@ -14,11 +14,20 @@ namespace Bridge.WebAPI.Controllers
         {
             _queries = queries;
         }
+        /// <summary>
+        /// Returns a list of all imported events
+        /// </summary>
+        /// <returns>list of all imported events</returns>
         [Route("")]
         public IEnumerable<EventModel> Get()
         {
             return _queries.GetEvents();
         }
+        /// <summary>
+        /// Returns metadata about an imported event
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns>metadata about an imported event</returns>
         [Route("{id:int}")]
         public EventDetailModel Get(int id)
         {
