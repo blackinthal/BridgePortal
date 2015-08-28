@@ -25,6 +25,7 @@ namespace Bridge.Domain.Models
         public int EWPercentage { get; set; }
         public string HandViewerInput { get; set; }
         public string ContractDisplay { get; set; }
+        public string Tricks { get; set; }
     
         public virtual Pair EWPair { get; set; }
         public virtual Pair NSPair { get; set; }

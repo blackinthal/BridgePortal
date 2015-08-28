@@ -30,6 +30,7 @@ namespace Bridge.Domain.Models
         public string BestContractDisplay { get; set; }
         public int BestContractDeclarer { get; set; }
         public int BestContractResult { get; set; }
+        public string BestContractHandViewerInput { get; set; }
     
         public virtual Event Event { get; set; }
         public virtual SysVulnerability SysVulnerability { get; set; }

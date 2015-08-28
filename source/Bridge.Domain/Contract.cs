@@ -24,7 +24,7 @@ namespace Bridge.Domain
 
         public string Display()
         {
-            return String.Format("{0}{1}", Value, Trump);
+            return String.Format("{0}{1}", Value, Trump) + (Doubled ? "x" : string.Empty) + (Redoubled ? "x" : string.Empty);
         }
 
         public string Notation()

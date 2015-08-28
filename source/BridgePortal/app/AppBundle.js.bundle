@@ -12,6 +12,7 @@
   <files>
     <file>/app/common/filters/trustUrl.filter.js</file>
 	  <file>/app/common/filters/scoreDisplay.filter.js</file>
+	  <file>/app/common/filters/contractDisplay.filter.js</file>
     <file>/app/common/services/urlBuilder.service.js</file>
     <file>/app/common/services/logger.service.js</file>
     <file>/app/events/services/importEvents.service.js</file>

@@ -78,6 +78,7 @@
     <Content Include="app\AppBundle.min.js">
       <DependentUpon>AppBundle.js</DependentUpon>
     </Content>
+    <Content Include="app\common\filters\contractDisplay.filter.js" />
     <Content Include="app\common\filters\scoreDisplay.filter.js" />
     <Content Include="app\common\filters\trustUrl.filter.js" />
     <Content Include="app\common\services\logger.service.js" />

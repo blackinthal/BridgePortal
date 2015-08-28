@@ -140,6 +140,7 @@ namespace Bridge.WebAPI.Modules
             currentDeal.BestContractDisplay = contract.Item2.Display();
             currentDeal.BestContractResult = contract.Item1;
             currentDeal.BestContractDeclarer = contract.Item2.PlayerPosition.ConvertToSysPlayer();
+            currentDeal.BestContractHandViewerInput = currentDeal.HandViewerInput + ParsePBNHelpers.ConvertToPbnBiddingSequence(contract.Item2, currentDeal.Dealer);
         }
 
         private static void CalculateMakeableContracts(DealMetadata deal)
@@ -216,6 +217,7 @@ namespace Bridge.WebAPI.Modules
                 duplicateDeal.EWPercentage = Int32.Parse(values.ContainsKey("Percentage_EW") ? values["Percentage_EW"] : values["IMP_EW"]);
                 duplicateDeal.ContractDisplay = contract.Display();
                 duplicateDeal.HandViewerInput = deal.HandViewerInput + ParsePBNHelpers.ConvertToPbnBiddingSequence(contract, deal.Dealer);
+                duplicateDeal.Tricks = values["Result"];
 
                 return duplicateDeal;
             }

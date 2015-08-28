@@ -31,6 +31,19 @@
     angular.module('BridgePortal')
            .filter('displayscore', displayScore);
 })();
+///#source 1 1 /app/common/filters/contractDisplay.filter.js
+(function () {
+    "use strict";
+
+    var displayContract = function () {
+        return function (input) {
+            return input && input.level && input.level > 0 ? input.contract : '-';
+        }
+    };
+
+    angular.module('BridgePortal')
+           .filter('displaycontract', displayContract);
+})();
 ///#source 1 1 /app/common/services/urlBuilder.service.js
 (function() {
     angular.module('BridgePortal')
@@ -255,6 +268,16 @@
 
         vm.deal = deal;
         vm.currentUrl = deal.handViewerInput;
+
+        vm.sContracts = deal.makeableContracts.splice(0, 4);
+        vm.hContracts = deal.makeableContracts.splice(0, 4);
+        vm.dContracts = deal.makeableContracts.splice(0, 4);
+        vm.cContracts = deal.makeableContracts.splice(0, 4);
+        vm.ntContracts = deal.makeableContracts.splice(0, 4);
+
+        vm.loadContract = function(url) {
+            vm.currentUrl = url;
+        }
 
         return vm;
     }

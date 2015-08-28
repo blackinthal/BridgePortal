@@ -44,6 +44,7 @@ namespace Bridge.Domain.EventAggregate.Commands
         public int BestContractDeclarer { get; set; }
         public int BestContractResult { get; set; }
         public int Dealer { get; set; }
+        public string BestContractHandViewerInput { get; set; }
         public DealMetadata()
         {
             DealResults = new List<DuplicateDealMetadata>();
@@ -62,6 +63,7 @@ namespace Bridge.Domain.EventAggregate.Commands
         public decimal EWPercentage { get; set; }
         public string HandViewerInput { get; set; }
         public string ContractDisplay { get; set; }
+        public string Tricks { get; set; }
     }
 
     public class MakeableContractMetadata

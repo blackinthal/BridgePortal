@@ -16,11 +16,13 @@ namespace Bridge.WebAPI.Models
         public string SysPlayerPlayer { get; set; }
         [JsonProperty(PropertyName = "BestContractResult")]
         public int BestContractResult { get; set; }
+        public string BestContractHandViewerInput { get; set; }
     }
 
     public class DealResultViewModel
     {
-        public string Contract { get; set; }
+        [JsonProperty(PropertyName = "Contract")]
+        public string ContractDisplay { get; set; }
         public string HandViewerInput { get; set; }
         public int NSPercentage { get; set; }
         public int EWPercentage { get; set; }
@@ -31,6 +33,7 @@ namespace Bridge.WebAPI.Models
         public string NSPairName { get; set; }
         [JsonProperty(PropertyName = "EWPair")]
         public string EWPairName { get; set; }
+        public string Tricks { get; set; }
     }
 
     public class MakeableContractViewModel

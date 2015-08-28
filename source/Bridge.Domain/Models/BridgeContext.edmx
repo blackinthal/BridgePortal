@@ -19,6 +19,7 @@
           <Property Name="BestContractDisplay" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="BestContractDeclarer" Type="int" Nullable="false" />
           <Property Name="BestContractResult" Type="int" Nullable="false" />
+          <Property Name="BestContractHandViewerInput" Type="nvarchar(max)" Nullable="false" />
         </EntityType>
         <EntityType Name="DuplicateDeal">
           <Key>
@@ -35,6 +36,7 @@
           <Property Name="EWPercentage" Type="int" Nullable="false" />
           <Property Name="HandViewerInput" Type="nvarchar(max)" Nullable="false" />
           <Property Name="ContractDisplay" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Tricks" Type="nvarchar" MaxLength="10" Nullable="false" />
         </EntityType>
         <EntityType Name="Event">
           <Key>
@@ -308,6 +310,7 @@
           <Property Name="HandViewerInput" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="ContractDisplay" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="Player" Relationship="BridgeModel.FK_DuplicateDeal_Declarer" FromRole="DuplicateDeal" ToRole="SysPlayer" />
+          <Property Name="Tricks" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="Event">
           <Key>
@@ -466,6 +469,7 @@
           <Property Name="BestContractDeclarer" Type="Int32" Nullable="false" />
           <Property Name="BestContractResult" Type="Int32" Nullable="false" />
           <NavigationProperty Name="SysPlayer" Relationship="BridgeModel.FK_Deal_SysPlayer" FromRole="Deal" ToRole="SysPlayer" />
+          <Property Name="BestContractHandViewerInput" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="SysVulnerability">
           <Key>
@@ -594,6 +598,7 @@
           <EntitySetMapping Name="DuplicateDeals">
             <EntityTypeMapping TypeName="BridgeModel.DuplicateDeal">
               <MappingFragment StoreEntitySet="DuplicateDeal">
+                <ScalarProperty Name="Tricks" ColumnName="Tricks" />
                 <ScalarProperty Name="ContractDisplay" ColumnName="ContractDisplay" />
                 <ScalarProperty Name="HandViewerInput" ColumnName="HandViewerInput" />
                 <ScalarProperty Name="EWPercentage" ColumnName="EWPercentage" />
@@ -643,6 +648,7 @@
           <EntitySetMapping Name="Deals">
             <EntityTypeMapping TypeName="BridgeModel.Deal">
               <MappingFragment StoreEntitySet="Deal">
+                <ScalarProperty Name="BestContractHandViewerInput" ColumnName="BestContractHandViewerInput" />
                 <ScalarProperty Name="BestContractResult" ColumnName="BestContractResult" />
                 <ScalarProperty Name="BestContractDeclarer" ColumnName="BestContractDeclarer" />
                 <ScalarProperty Name="BestContractDisplay" ColumnName="BestContractDisplay" />
