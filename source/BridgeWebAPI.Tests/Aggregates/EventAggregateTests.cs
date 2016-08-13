@@ -18,7 +18,7 @@ namespace Bridge.WebAPI.Tests.Aggregates
         {
             //Arrange
             var aggregate = ServiceLocator.Current.GetInstance<EventAggregate>();
-            var module = ServiceLocator.Current.GetInstance<ExtractEventMetadataModule>();
+            var module = ServiceLocator.Current.GetInstance<LocomotivaEventMetadataProvider>();
             var command = module.ExtractEventMetadata(new DateTime(2015, 7, 14));
 
             using (var scope = TransactionHelpers.GetTransactionScope())
@@ -45,7 +45,7 @@ namespace Bridge.WebAPI.Tests.Aggregates
         {
             //Arrange
             var commandProcessor = ServiceLocator.Current.GetInstance<ICommandProcessor>();
-            var module = ServiceLocator.Current.GetInstance<ExtractEventMetadataModule>();
+            var module = ServiceLocator.Current.GetInstance<LocomotivaEventMetadataProvider>();
             var command = module.ExtractEventMetadata(new DateTime(2015, 7, 14));
             //Act
             commandProcessor.Process(command);

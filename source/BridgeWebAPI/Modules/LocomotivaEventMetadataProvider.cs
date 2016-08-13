@@ -5,6 +5,7 @@ using Bridge.Domain;
 using Bridge.Domain.EventAggregate.Commands;
 using Bridge.Domain.Modules;
 using Bridge.Domain.StaticModels;
+using Bridge.WebAPI.Contracts;
 using Bridge.WebAPI.Factories;
 using Bridge.WebAPI.Modules.Helpers;
 using Bridge.WebAPI.Modules.StaticModels;
@@ -16,10 +17,7 @@ using SysPlayer = Bridge.Domain.StaticModels.SysPlayer;
 
 namespace Bridge.WebAPI.Modules
 {
-    /// <summary>
-    /// This class is responsible 
-    /// </summary>
-    public class ExtractEventMetadataModule
+    public class LocomotivaEventMetadataProvider : IExtractEventMetadataService
     {
         private readonly IEventProvider _provider;
         private readonly UrlProviderFactory _urlProviderFactory;
@@ -27,7 +25,7 @@ namespace Bridge.WebAPI.Modules
         private readonly ComputeOptimalScoreModule _optimalContract;
 
         public List<string> Errors;
-        public ExtractEventMetadataModule(IEventProvider provider, UrlProviderFactory urlProviderFactory, ContractScoreCalculatorModule scoreCalculator, ComputeOptimalScoreModule optimalContract)
+        public LocomotivaEventMetadataProvider(IEventProvider provider, UrlProviderFactory urlProviderFactory, ContractScoreCalculatorModule scoreCalculator, ComputeOptimalScoreModule optimalContract)
         {
             _provider = provider;
             _urlProviderFactory = urlProviderFactory;
@@ -160,7 +158,7 @@ namespace Bridge.WebAPI.Modules
             }));
         }
 
-        public static PairMetadata ExtractPairMetadata(string line, Dictionary<string,int> columnHeaders)
+        private static PairMetadata ExtractPairMetadata(string line, Dictionary<string,int> columnHeaders)
         {
             var pair = new PairMetadata();
             var values = ParsePBNHelpers.ParseTableLine(line, columnHeaders);
@@ -178,7 +176,7 @@ namespace Bridge.WebAPI.Modules
             return pair;
         }
 
-        public DuplicateDealMetadata ExtractDuplicateDealMetadata(string line, DealMetadata deal, Dictionary<string,int> columnHeaders)
+        private DuplicateDealMetadata ExtractDuplicateDealMetadata(string line, DealMetadata deal, Dictionary<string,int> columnHeaders)
         {
             try
             {

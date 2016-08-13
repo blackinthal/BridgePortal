@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Net;
 using System.Web.Http;
+using Bridge.WebAPI.Contracts;
 using Bridge.WebAPI.Models;
-using Bridge.WebAPI.Modules;
 using Bridge.WebAPI.Queries;
 using Domain.Contracts;
 using ElmahExtensions;
@@ -14,13 +14,13 @@ namespace Bridge.WebAPI.Controllers
     public class ImportEventController : BaseCommandProcessorController
     {
         private readonly EventQueries _query;
-        private readonly ExtractEventMetadataModule _eventModule;
+        private readonly IExtractEventMetadataService _eventProvider;
 
-        public ImportEventController(EventQueries query, ICommandProcessor processor, ExtractEventMetadataModule eventModule)
+        public ImportEventController(EventQueries query, ICommandProcessor processor, IExtractEventMetadataService eventProvider)
             : base(processor)
         {
             _query = query;
-            _eventModule = eventModule;
+            _eventProvider = eventProvider;
         }
         
         //GET api/Event/year/month
@@ -47,11 +47,11 @@ namespace Bridge.WebAPI.Controllers
         {
             try
             {
-                var command = _eventModule.ExtractEventMetadata(new DateTime(year, month, day));
+                var command = _eventProvider.ExtractEventMetadata(new DateTime(year, month, day));
 
                 return ProcessCommand(command);
             }
-            catch (WebException webEx)
+            catch (WebException)
             {
                 return InternalServerError(new ApplicationException("The event was not found"));
             }

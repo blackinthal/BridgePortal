@@ -6,12 +6,13 @@ using System.Reflection;
 using System.Web.Http;
 using System.Web.Mvc;
 using System.Web.Routing;
+using Bridge.WebAPI.Contracts;
+using Bridge.WebAPI.Modules;
 using Bridge.WebAPI.Providers;
 using Castle.Core;
 using Castle.MicroKernel.Registration;
 using Castle.Windsor;
 using CommonServiceLocator.WindsorAdapter;
-using Dds.Net;
 using Domain.Common;
 using Domain.Contracts;
 using Domain.EventStorage;
@@ -139,14 +140,13 @@ namespace Bridge.WebAPI.Dependencies
 
         public ComponentRegistrarBuilder RegisterModules()
         {
-            _container.Register(
-                Types.FromAssemblyInThisApplication().Pick().If(a => a.Name.EndsWith("Module")).LifestyleTransient());
+            _container.Register(Types.FromAssemblyInThisApplication().Pick().If(a => a.Name.EndsWith("Module")).LifestyleTransient());
 
-            _container.Register(
-                Types.FromAssemblyInThisApplication().Pick().If(a => a.Name.EndsWith("Factory")).LifestyleTransient());
+            _container.Register(Types.FromAssemblyInThisApplication().Pick().If(a => a.Name.EndsWith("Factory")).LifestyleTransient());
 
             //_container.Register(Component.For<IUrlProvider>().ImplementedBy<LocomotivaUrlProvider>());
             _container.Register(Component.For<IEventProvider>().ImplementedBy<LocomotivaEventProvider>());
+            _container.Register(Component.For<IExtractEventMetadataService>().ImplementedBy<LocomotivaEventMetadataProvider>());
             return this;
         }
 
