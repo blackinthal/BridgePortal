@@ -527,6 +527,11 @@
             <param name="vulnerability"></param>
             <returns></returns>
         </member>
+        <member name="T:Bridge.WebAPI.Modules.ExtractEventMetadataModule">
+            <summary>
+            This class is responsible 
+            </summary>
+        </member>
         <member name="M:Bridge.WebAPI.Providers.IEventProvider.ReadEventPBNData(System.String)">
             <summary>
             Returns a path to a temporary file that contains metatadata about the event

@@ -16,6 +16,9 @@ using SysPlayer = Bridge.Domain.StaticModels.SysPlayer;
 
 namespace Bridge.WebAPI.Modules
 {
+    /// <summary>
+    /// This class is responsible 
+    /// </summary>
     public class ExtractEventMetadataModule
     {
         private readonly IEventProvider _provider;
