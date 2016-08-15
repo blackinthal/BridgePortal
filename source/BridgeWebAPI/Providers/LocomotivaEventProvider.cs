@@ -1,17 +1,18 @@
 using System.IO;
 using System.Net;
+using System.Threading.Tasks;
 
 namespace Bridge.WebAPI.Providers
 {
     public class LocomotivaEventProvider : IEventProvider
     {
-        public string ReadEventPBNData(string url)
+        public async Task<string> ReadEventPBNData(string url)
         {
             var tempPath = Path.GetTempFileName();
 
             var request = WebRequest.Create(url);
 
-            var response = request.GetResponse() as HttpWebResponse;
+            var response = await request.GetResponseAsync() as HttpWebResponse;
 
             if (response == null || response.StatusCode != HttpStatusCode.OK)
                 return tempPath;
@@ -22,11 +23,11 @@ namespace Bridge.WebAPI.Providers
                 return tempPath;
 
             var reader = new StreamReader(stream);
-            var contents = reader.ReadToEnd();
+            var contents = await reader.ReadToEndAsync();
 
             using (var writer = new StreamWriter(tempPath))
             {
-                writer.Write(contents);
+                await writer.WriteAsync(contents);
             }
 
             return tempPath;

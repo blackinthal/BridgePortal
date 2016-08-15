@@ -16,12 +16,12 @@ namespace Bridge.WebAPI.Tests.Modules
     {
         const string Url = "http://www.locomotiva.ro/cls/15/04/28-04-15.pbn";
         [TestMethod]
-        public void TestTemporaryFileIsCreated()
+        public async Task TestTemporaryFileIsCreated()
         {
             //Arrange
             var provider = new LocomotivaEventProvider();
             //Act
-            var tempFilePath = provider.ReadEventPBNData(Url);
+            var tempFilePath = await provider.ReadEventPBNData(Url);
             //Assert
             Assert.IsTrue(File.Exists(tempFilePath));
 
@@ -29,12 +29,12 @@ namespace Bridge.WebAPI.Tests.Modules
         }
 
         [TestMethod]
-        public void TestTemporaryFileIsDeleted()
+        public async Task TestTemporaryFileIsDeleted()
         {
             //Arrange
             var provider = new LocomotivaEventProvider();
             //Act
-            var tempFilePath = provider.ReadEventPBNData(Url);
+            var tempFilePath = await provider.ReadEventPBNData(Url);
             provider.CleanUp(tempFilePath);
             //Assert
             Assert.IsTrue(!File.Exists(tempFilePath));
@@ -52,13 +52,13 @@ namespace Bridge.WebAPI.Tests.Modules
         }
 
         [TestMethod]
-        public void IntegrationTest1()
+        public async Task IntegrationTest1()
         {
             //Arrange
             var eventProvider = new LocomotivaEventProvider();
             var urlProvider = new LocomotivaUrlProvider();
             //Act
-            var tempFilePath = eventProvider.ReadEventPBNData(urlProvider.GetUrl(new DateTime(2015,4,28)));
+            var tempFilePath = await eventProvider.ReadEventPBNData(urlProvider.GetUrl(new DateTime(2015,4,28)));
             
             //Assert
             Assert.IsTrue(File.Exists(tempFilePath));

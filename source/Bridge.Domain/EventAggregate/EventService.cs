@@ -3,7 +3,8 @@ using Domain.Contracts;
 
 namespace Bridge.Domain.EventAggregate
 {
-    public class EventService : ApplicationService<EventAggregate>,
+    public class EventService : 
+        ApplicationService<EventAggregate>,
         ICommandHandler<ImportEvent>
     {
         public void When(ImportEvent command)

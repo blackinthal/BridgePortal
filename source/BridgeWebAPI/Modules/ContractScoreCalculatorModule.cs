@@ -90,6 +90,7 @@ namespace Bridge.WebAPI.Modules
 
                 var contracts = makeableContracts.GetContractsByTrumpAndPlayingSide(contractPlayedByNs, nextContract.Trump)
                     .ToList();
+
                 nextContract.Doubled = true;
                 nextContract.PlayerPosition = contractPlayedByNs ? PlayerPosition.East : PlayerPosition.North;
 

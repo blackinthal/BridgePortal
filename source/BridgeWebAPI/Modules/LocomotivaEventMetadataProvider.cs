@@ -37,7 +37,7 @@ namespace Bridge.WebAPI.Modules
         {
             var urlProvider = _urlProviderFactory.GetUrlProvider(selectedDate);
 
-            var tempFilePath =  _provider.ReadEventPBNData(urlProvider.GetUrl(selectedDate));
+            var tempFilePath =  await _provider.ReadEventPBNData(urlProvider.GetUrl(selectedDate));
 
             var command = await ProcessPbnFile(tempFilePath);
 

@@ -1,3 +1,5 @@
+using System.Threading.Tasks;
+
 namespace Bridge.WebAPI.Providers
 {
     public interface IEventProvider
@@ -7,7 +9,7 @@ namespace Bridge.WebAPI.Providers
         /// </summary>
         /// <param name="url">Url from where to read data</param>
         /// <returns>Returns a path to a temporary file that contains metatadata about the event</returns>
-        string ReadEventPBNData(string url);
+        Task<string> ReadEventPBNData(string url);
 
         void CleanUp(string temporaryFilePath);
     }
