@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Net;
+using System.Threading.Tasks;
 using System.Web.Http;
 using Bridge.WebAPI.Contracts;
 using Bridge.WebAPI.Models;
@@ -43,11 +44,11 @@ namespace Bridge.WebAPI.Controllers
         /// <param name="day"></param>
         /// <returns></returns>
         [Route("{year:int}/{month:int}/{day:int}")]
-        public IHttpActionResult Post(int year, int month, int day)
+        public async Task<IHttpActionResult> Post(int year, int month, int day)
         {
             try
             {
-                var command = _eventProvider.ExtractEventMetadata(new DateTime(year, month, day));
+                var command = await _eventProvider.ExtractEventMetadata(new DateTime(year, month, day));
 
                 return ProcessCommand(command);
             }

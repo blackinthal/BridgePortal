@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Globalization;
 using System.Linq;
+using Bridge.Domain;
+using Bridge.Domain.Extensions;
 using Bridge.Domain.StaticModels;
+using Dds.Net;
 
-namespace Bridge.Domain.Modules
+namespace Bridge.WebAPI.Modules
 {
     public class ContractScoreCalculatorModule
     {
@@ -28,8 +31,8 @@ namespace Bridge.Domain.Modules
 
         private const int NonVulnerableUndertrickPenalty = 50;
         private const int VulnerableUndertrickPenalty = 100;
-        private readonly int[] _doubledVulnerableUndertrickPenalties = {200, 300, 300};
-        private readonly int[] _redoubledVulnerableUndertrickPenalties = {400, 600, 600};
+        private readonly int[] _doubledVulnerableUndertrickPenalties = {200, 300};
+        private readonly int[] _redoubledVulnerableUndertrickPenalties = {400, 600};
         private readonly int[] _doubledNotVulnerableUndertrickPenalties = {100, 200, 200, 300};
         private readonly int[] _redoubledNotVulnerableUndertrickPenalties = {200, 400, 400, 600};
 
@@ -37,22 +40,11 @@ namespace Bridge.Domain.Modules
         private bool _vulnerable;
         private ContractDenomination _contractType;
 
-        public int CalculateScore(Contract c, string tricksMade, SysVulnerabilityEnum vulnerability)
-        {
-            if (tricksMade.Length == 0)
-                return 0;
-
-            var firstLetter = tricksMade.ElementAt(0);
-            if (firstLetter == '=')
-                return CalculateScore(c, c.TricksToBeMade, vulnerability);
-            var tricks = int.Parse(tricksMade.ElementAt(1).ToString(CultureInfo.InvariantCulture));
-            return firstLetter == '+' ? CalculateScore(c, c.TricksToBeMade + tricks, vulnerability) : CalculateScore(c, c.TricksToBeMade - tricks, vulnerability);
-        }
         public int CalculateScore(Contract c, int tricksMade, SysVulnerabilityEnum vulnerability)
         {
             _contract = c;
 
-            if (c.Value == 0)
+            if (c.Level == 0)
                 return 0;
 
             SetVulnerability(vulnerability);
@@ -62,8 +54,81 @@ namespace Bridge.Domain.Modules
 
             var score = trickDifference >= 0 ? CalculateContractMadePoints(trickDifference) : -1 * CalculateContractPenaltyPoints(Math.Abs(trickDifference));
 
-            return _contract.PlayerPosition == PlayerPosition.North || _contract.PlayerPosition == PlayerPosition.South ? score : -1*score;
+            return _contract.PlayerPosition == PlayerPosition.North || _contract.PlayerPosition == PlayerPosition.South ? score : -1 * score;
         }
+        public int CalculateScore(Contract c, string tricksMade, SysVulnerabilityEnum vulnerability)
+        {
+            if (tricksMade.Length == 0)
+                return 0;
+
+            var firstLetter = tricksMade.ElementAt(0);
+            if (firstLetter == '=')
+                return CalculateScore(c, c.TricksToBeMade, vulnerability);
+            var tricks = int.Parse(tricksMade.ElementAt(1).ToString(CultureInfo.InvariantCulture));
+
+            return firstLetter == '+' ? CalculateScore(c, c.TricksToBeMade + tricks, vulnerability) : CalculateScore(c, c.TricksToBeMade - tricks, vulnerability);
+        }
+       
+        public Tuple<int, Contract> ComputeOptimalContract(string pbnDeal, SysVulnerabilityEnum vulnerabilty)
+        {
+            var makeableContracts = DoubleDummyModule.CalculateMakeableContracts(pbnDeal).AsQueryable();
+
+            var bestContract = GetBestUndoubledContract(makeableContracts, vulnerabilty);
+
+            var bestScore = CalculateScore(bestContract, bestContract.TricksToBeMade, vulnerabilty);
+
+            var contractPlayedByNs = bestContract.PlayerPosition == PlayerPosition.North ||
+                                     bestContract.PlayerPosition == PlayerPosition.South;
+
+            var nextContract = bestContract;
+
+            for (var i = 0; i < 5; i++)
+            {
+                nextContract = nextContract.GetNextContract();
+                if (nextContract == null)
+                    break;
+
+                var contracts = makeableContracts.GetContractsByTrumpAndPlayingSide(contractPlayedByNs, nextContract.Trump)
+                    .ToList();
+                nextContract.Doubled = true;
+                nextContract.PlayerPosition = contractPlayedByNs ? PlayerPosition.East : PlayerPosition.North;
+
+                contracts.ForEach(contract =>
+                {
+                    var tricksDown = nextContract.Level - contract.Level;
+                    var score = CalculateScore(nextContract, nextContract.TricksToBeMade - tricksDown, vulnerabilty);
+                    if (Math.Abs(score) >= Math.Abs(bestScore)) return;
+
+                    bestScore = score;
+                    bestContract = nextContract.Clone();
+                });
+            }
+
+            return new Tuple<int, Contract>(bestScore, bestContract);
+        }
+
+        public Contract GetBestUndoubledContract(IQueryable<Contract> contractList, SysVulnerabilityEnum vulnerability)
+        {
+            var bestNSContract = contractList
+                .PlayedByNS()
+                .OrderByDescending(c => CalculateScore(c, c.TricksToBeMade, vulnerability))
+                .FirstOrDefault();
+
+            var bestEWContract = contractList
+                .PlayedByEW()
+                .OrderBy(c => CalculateScore(c, c.TricksToBeMade, vulnerability))
+                .FirstOrDefault();
+
+            if (bestNSContract == null && bestEWContract == null)
+                return null;
+            if (bestNSContract == null)
+                return bestEWContract;
+            if (bestEWContract == null)
+                return bestNSContract;
+
+            return bestNSContract.CanBidOver(bestEWContract) ? bestNSContract : bestEWContract;
+        }
+
         private void SetContractType()
         {
             if (_contract.Trump.Equals(Trump.Clubs) || _contract.Trump.Equals(Trump.Diamonds))
@@ -111,13 +176,13 @@ namespace Bridge.Domain.Modules
             switch (_contractType)
             {
                 case ContractDenomination.MinorSuit:
-                    points = MinorSuitTrickScore * _contract.Value;
+                    points = MinorSuitTrickScore * _contract.Level;
                     break;
                 case ContractDenomination.MajorSuit:
-                    points = MajorSuitTrickScore * _contract.Value;
+                    points = MajorSuitTrickScore * _contract.Level;
                     break;
                 case ContractDenomination.NoTrump:
-                    points = FirstNoTrumpTrickScore + SubsequentNoTrumpTricksScore * (_contract.Value - 1);
+                    points = FirstNoTrumpTrickScore + SubsequentNoTrumpTricksScore * (_contract.Level - 1);
                     break;
             }
 

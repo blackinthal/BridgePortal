@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Linq;
+using System.Threading.Tasks;
 using Bridge.Domain.EventAggregate;
 using Bridge.Domain.EventAggregate.DomainEvents;
-using Bridge.WebAPI.Modules;
+using Bridge.WebAPI.Contracts;
 using Bridge.WebAPI.Tests.Helpers;
 using Domain.Contracts;
 using Microsoft.Practices.ServiceLocation;
@@ -14,12 +15,12 @@ namespace Bridge.WebAPI.Tests.Aggregates
     public class EventAggregateTests
     {
         [TestMethod]
-        public void TestDomainEventsAreRegistered()
+        public async Task TestDomainEventsAreRegistered()
         {
             //Arrange
             var aggregate = ServiceLocator.Current.GetInstance<EventAggregate>();
-            var module = ServiceLocator.Current.GetInstance<LocomotivaEventMetadataProvider>();
-            var command = module.ExtractEventMetadata(new DateTime(2015, 7, 14));
+            var module = ServiceLocator.Current.GetInstance<IExtractEventMetadataService>();
+            var command = await module.ExtractEventMetadata(new DateTime(2015, 7, 14));
 
             using (var scope = TransactionHelpers.GetTransactionScope())
             {
@@ -41,12 +42,12 @@ namespace Bridge.WebAPI.Tests.Aggregates
         }
 
         [TestMethod]
-        public void TestCommandProcessor()
+        public async Task TestCommandProcessor()
         {
             //Arrange
             var commandProcessor = ServiceLocator.Current.GetInstance<ICommandProcessor>();
-            var module = ServiceLocator.Current.GetInstance<LocomotivaEventMetadataProvider>();
-            var command = module.ExtractEventMetadata(new DateTime(2015, 7, 14));
+            var module = ServiceLocator.Current.GetInstance<IExtractEventMetadataService>();
+            var command = await module.ExtractEventMetadata(new DateTime(2015, 7, 14));
             //Act
             commandProcessor.Process(command);
 

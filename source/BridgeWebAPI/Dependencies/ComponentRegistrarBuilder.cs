@@ -144,7 +144,6 @@ namespace Bridge.WebAPI.Dependencies
 
             _container.Register(Types.FromAssemblyInThisApplication().Pick().If(a => a.Name.EndsWith("Factory")).LifestyleTransient());
 
-            //_container.Register(Component.For<IUrlProvider>().ImplementedBy<LocomotivaUrlProvider>());
             _container.Register(Component.For<IEventProvider>().ImplementedBy<LocomotivaEventProvider>());
             _container.Register(Component.For<IExtractEventMetadataService>().ImplementedBy<LocomotivaEventMetadataProvider>());
             return this;

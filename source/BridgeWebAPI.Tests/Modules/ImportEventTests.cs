@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
-using Bridge.Domain.Modules;
+using System.Threading.Tasks;
 using Bridge.Domain.StaticModels;
 using Bridge.WebAPI.Factories;
 using Bridge.WebAPI.Modules;
@@ -70,13 +70,13 @@ namespace Bridge.WebAPI.Tests.Modules
         }
 
         [TestMethod]
-        public void TestPbnParsing()
+        public async Task TestPbnParsing()
         {
             //Arrange
-            var module = new LocomotivaEventMetadataProvider(new LocomotivaEventProvider(), new UrlProviderFactory(), new ContractScoreCalculatorModule(), new ComputeOptimalScoreModule(new ContractScoreCalculatorModule()));
+            var module = new LocomotivaEventMetadataProvider(new LocomotivaEventProvider(), new UrlProviderFactory(), new ContractScoreCalculatorModule());
 
             //Act
-            var command = module.ExtractEventMetadata(new DateTime(2015, 7, 14));
+            var command = await module.ExtractEventMetadata(new DateTime(2015, 7, 14));
 
             //Assert
             Assert.AreEqual(24,command.NoOfBoards);
@@ -85,26 +85,26 @@ namespace Bridge.WebAPI.Tests.Modules
         }
 
         [TestMethod]
-        public void TestPbnParsing_DealList()
+        public async Task TestPbnParsing_DealList()
         {
             //Arrange
-            var module = new LocomotivaEventMetadataProvider(new LocomotivaEventProvider(), new UrlProviderFactory(), new ContractScoreCalculatorModule(), new ComputeOptimalScoreModule(new ContractScoreCalculatorModule()));
+            var module = new LocomotivaEventMetadataProvider(new LocomotivaEventProvider(), new UrlProviderFactory(), new ContractScoreCalculatorModule());
 
             //Act
-            var command = module.ExtractEventMetadata(new DateTime(2015, 7, 14));
+            var command = await module.ExtractEventMetadata(new DateTime(2015, 7, 14));
 
             //Assert
             Assert.AreEqual(26, command.Deals.Count);
         }
 
         [TestMethod]
-        public void TestPbnParsing_RandomDeal()
+        public async Task TestPbnParsing_RandomDeal()
         {
             //Arrange
-            var module = new LocomotivaEventMetadataProvider(new LocomotivaEventProvider(), new UrlProviderFactory(), new ContractScoreCalculatorModule(), new ComputeOptimalScoreModule(new ContractScoreCalculatorModule()));
+            var module = new LocomotivaEventMetadataProvider(new LocomotivaEventProvider(), new UrlProviderFactory(), new ContractScoreCalculatorModule());
 
             //Act
-            var command = module.ExtractEventMetadata(new DateTime(2015, 7, 14));
+            var command = await module.ExtractEventMetadata(new DateTime(2015, 7, 14));
 
             //Assert
             var deal = command.Deals.ElementAt(7);
@@ -114,26 +114,26 @@ namespace Bridge.WebAPI.Tests.Modules
         }
 
         [TestMethod]
-        public void TestPbnParsing_PairsList()
+        public async Task TestPbnParsing_PairsList()
         {
             //Arrange
-            var module = new LocomotivaEventMetadataProvider(new LocomotivaEventProvider(), new UrlProviderFactory(), new ContractScoreCalculatorModule(), new ComputeOptimalScoreModule(new ContractScoreCalculatorModule()));
+            var module = new LocomotivaEventMetadataProvider(new LocomotivaEventProvider(), new UrlProviderFactory(), new ContractScoreCalculatorModule());
 
             //Act
-            var command = module.ExtractEventMetadata(new DateTime(2015, 7, 14));
+            var command = await module.ExtractEventMetadata(new DateTime(2015, 7, 14));
 
             //Assert
             Assert.AreEqual(26, command.Pairs.Count);
         }
 
         [TestMethod]
-        public void TestPbnParsing_RandomPair()
+        public async Task TestPbnParsing_RandomPair()
         {
             //Arrange
-            var module = new LocomotivaEventMetadataProvider(new LocomotivaEventProvider(), new UrlProviderFactory(), new ContractScoreCalculatorModule(), new ComputeOptimalScoreModule(new ContractScoreCalculatorModule()));
+            var module = new LocomotivaEventMetadataProvider(new LocomotivaEventProvider(), new UrlProviderFactory(), new ContractScoreCalculatorModule());
 
             //Act
-            var command = module.ExtractEventMetadata(new DateTime(2015, 7, 14));
+            var command = await module.ExtractEventMetadata(new DateTime(2015, 7, 14));
 
             //Assert
             var pair = command.Pairs.ElementAt(9);
@@ -146,12 +146,12 @@ namespace Bridge.WebAPI.Tests.Modules
         }
 
         [TestMethod]
-        public void TestPbnParsing_DuplicateDealResultsList()
+        public async Task TestPbnParsing_DuplicateDealResultsList()
         {    //Arrange
-            var module = new LocomotivaEventMetadataProvider(new LocomotivaEventProvider(), new UrlProviderFactory(), new ContractScoreCalculatorModule(), new ComputeOptimalScoreModule(new ContractScoreCalculatorModule()));
+            var module = new LocomotivaEventMetadataProvider(new LocomotivaEventProvider(), new UrlProviderFactory(), new ContractScoreCalculatorModule());
 
             //Act
-            var command = module.ExtractEventMetadata(new DateTime(2015, 7, 14));
+            var command = await module.ExtractEventMetadata(new DateTime(2015, 7, 14));
 
             //Assert
             var deal = command.Deals.ElementAt(1);
@@ -159,12 +159,12 @@ namespace Bridge.WebAPI.Tests.Modules
         }
 
         [TestMethod]
-        public void TestPbnParsing_RandomDuplicateDeal1()
+        public async Task TestPbnParsing_RandomDuplicateDeal1()
         {    //Arrange
-            var module = new LocomotivaEventMetadataProvider(new LocomotivaEventProvider(), new UrlProviderFactory(), new ContractScoreCalculatorModule(), new ComputeOptimalScoreModule(new ContractScoreCalculatorModule()));
+            var module = new LocomotivaEventMetadataProvider(new LocomotivaEventProvider(), new UrlProviderFactory(), new ContractScoreCalculatorModule());
 
             //Act
-            var command = module.ExtractEventMetadata(new DateTime(2015, 7, 14));
+            var command = await module.ExtractEventMetadata(new DateTime(2015, 7, 14));
 
             //Assert
             var deal = command.Deals.ElementAt(3);
@@ -180,13 +180,13 @@ namespace Bridge.WebAPI.Tests.Modules
         }
 
         [TestMethod]
-        public void TestPbnParsing_RandomDuplicateDeal2()
+        public async Task TestPbnParsing_RandomDuplicateDeal2()
         {    
             //Arrange
-            var module = new LocomotivaEventMetadataProvider(new LocomotivaEventProvider(), new UrlProviderFactory(), new ContractScoreCalculatorModule(), new ComputeOptimalScoreModule(new ContractScoreCalculatorModule()));
+            var module = new LocomotivaEventMetadataProvider(new LocomotivaEventProvider(), new UrlProviderFactory(), new ContractScoreCalculatorModule());
 
             //Act
-            var command = module.ExtractEventMetadata(new DateTime(2015, 7, 14));
+            var command = await module.ExtractEventMetadata(new DateTime(2015, 7, 14));
 
             //Assert
             var deal = command.Deals.ElementAt(5);
@@ -202,13 +202,13 @@ namespace Bridge.WebAPI.Tests.Modules
         }
 
         [TestMethod]
-        public void TestDuplicateDealAreWellExtracted()
+        public async Task TestDuplicateDealAreWellExtracted()
         {
             //Arrange
-            var module = new LocomotivaEventMetadataProvider(new LocomotivaEventProvider(), new UrlProviderFactory(), new ContractScoreCalculatorModule(), new ComputeOptimalScoreModule(new ContractScoreCalculatorModule()));
+            var module = new LocomotivaEventMetadataProvider(new LocomotivaEventProvider(), new UrlProviderFactory(), new ContractScoreCalculatorModule());
 
             //Act
-            var command = module.ExtractEventMetadata(new DateTime(2015, 7, 14));
+            var command = await module.ExtractEventMetadata(new DateTime(2015, 7, 14));
 
             //Assert
             Assert.AreEqual(17,command.Deals.Count(d => d.DealResults.Count() == 12));

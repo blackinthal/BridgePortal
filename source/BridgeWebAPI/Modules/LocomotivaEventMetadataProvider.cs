@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Threading.Tasks;
 using Bridge.Domain;
 using Bridge.Domain.EventAggregate.Commands;
-using Bridge.Domain.Modules;
 using Bridge.Domain.StaticModels;
 using Bridge.WebAPI.Contracts;
 using Bridge.WebAPI.Factories;
@@ -22,25 +22,24 @@ namespace Bridge.WebAPI.Modules
         private readonly IEventProvider _provider;
         private readonly UrlProviderFactory _urlProviderFactory;
         private readonly ContractScoreCalculatorModule _scoreCalculator;
-        private readonly ComputeOptimalScoreModule _optimalContract;
 
         public List<string> Errors;
-        public LocomotivaEventMetadataProvider(IEventProvider provider, UrlProviderFactory urlProviderFactory, ContractScoreCalculatorModule scoreCalculator, ComputeOptimalScoreModule optimalContract)
+        public LocomotivaEventMetadataProvider(IEventProvider provider, UrlProviderFactory urlProviderFactory, ContractScoreCalculatorModule scoreCalculator)
         {
             _provider = provider;
             _urlProviderFactory = urlProviderFactory;
             _scoreCalculator = scoreCalculator;
-            _optimalContract = optimalContract;
-
+           
             Errors = new List<string>();
         }
 
-        public ImportEvent ExtractEventMetadata(DateTime selectedDate)
+        public async Task<ImportEvent> ExtractEventMetadata(DateTime selectedDate)
         {
             var urlProvider = _urlProviderFactory.GetUrlProvider(selectedDate);
-            var tempFilePath = _provider.ReadEventPBNData(urlProvider.GetUrl(selectedDate));
 
-            var command = ProcessPbnFile(tempFilePath);
+            var tempFilePath =  _provider.ReadEventPBNData(urlProvider.GetUrl(selectedDate));
+
+            var command = await ProcessPbnFile(tempFilePath);
 
             command.Date = selectedDate;
             command.Name = string.Format("Locomotiva {0}", selectedDate.ToShortDateString());
@@ -54,9 +53,9 @@ namespace Bridge.WebAPI.Modules
             return command;
         }
 
-        private ImportEvent ProcessPbnFile(string filePath)
+        private async Task<ImportEvent> ProcessPbnFile(string filePath)
         {
-            var result = new ImportEvent();
+            var command = new ImportEvent();
             var currentDeal = new DealMetadata();
             var currentState = ParseState.ReadingDeal;
 
@@ -68,15 +67,15 @@ namespace Bridge.WebAPI.Modules
             using (var reader = new StreamReader(filePath))
             {
                 string line;
-                while ((line = reader.ReadLine()) != null)
+                while ((line = await reader.ReadLineAsync()) != null)
                 {
-                    if (line.StartsWith("% <META  name=PairCount")) { result.NoOfPairs = Int32.Parse(ParsePBNHelpers.ExtractValue(line)); continue;}
-                    if (line.StartsWith("% <META  name=BoardCount")) {result.NoOfBoards = Int32.Parse(ParsePBNHelpers.ExtractValue(line)); continue;}
-                    if (line.StartsWith("% <META  name=RoundCount")) { result.NoOfRounds = Int32.Parse(ParsePBNHelpers.ExtractValue(line)); continue; }
+                    if (line.StartsWith("% <META  name=PairCount")) { command.NoOfPairs = Int32.Parse(ParsePBNHelpers.ExtractValue(line)); continue;}
+                    if (line.StartsWith("% <META  name=BoardCount")) {command.NoOfBoards = Int32.Parse(ParsePBNHelpers.ExtractValue(line)); continue;}
+                    if (line.StartsWith("% <META  name=RoundCount")) { command.NoOfRounds = Int32.Parse(ParsePBNHelpers.ExtractValue(line)); continue; }
                     if (line.StartsWith("[Board"))
                     {
                         var deal = new DealMetadata {Index = Int32.Parse(ParsePBNHelpers.ExtractValue(line))};
-                        result.Deals.Add(deal);
+                        command.Deals.Add(deal);
                         currentDeal = deal;
                         currentState = ParseState.ReadingDeal;
                         identifiedDealResults = 0;
@@ -101,13 +100,13 @@ namespace Bridge.WebAPI.Modules
                         currentDeal.SysVulnerabilityId = (int)Enum.Parse(typeof(SysVulnerabilityEnum),ParsePBNHelpers.ExtractValue(line), true); 
                         continue;
                     }
-                    if (currentState == ParseState.ReadingTotalScoreTable && identifiedPairs < result.NoOfPairs)
+                    if (currentState == ParseState.ReadingTotalScoreTable && identifiedPairs < command.NoOfPairs)
                     {
-                        result.Pairs.Add(ExtractPairMetadata(line, totalScoreTableHeaders));
+                        command.Pairs.Add(ExtractPairMetadata(line, totalScoreTableHeaders));
                         identifiedPairs++;
                         continue;
                     }
-                    if (currentState == ParseState.ReadingDealScoreTable && identifiedDealResults < result.NoOfRounds)
+                    if (currentState == ParseState.ReadingDealScoreTable && identifiedDealResults < command.NoOfRounds)
                     {
                         var duplicateDeal = ExtractDuplicateDealMetadata(line, currentDeal, scoreTableHeaders);
                         if (duplicateDeal != null)
@@ -130,12 +129,12 @@ namespace Bridge.WebAPI.Modules
                     }
                 }
             }
-            return result;
+            return command;
         }
 
         private void CalculateOptimalContract(DealMetadata currentDeal)
         {
-            var contract = _optimalContract.ComputeOptimalContract(currentDeal.PBNRepresentation, (SysVulnerabilityEnum) currentDeal.SysVulnerabilityId);
+            var contract = _scoreCalculator.ComputeOptimalContract(currentDeal.PBNRepresentation, (SysVulnerabilityEnum) currentDeal.SysVulnerabilityId);
 
             currentDeal.BestContract = contract.Item2.Notation();
             currentDeal.BestContractDisplay = contract.Item2.Display();
@@ -153,7 +152,7 @@ namespace Bridge.WebAPI.Modules
                 Contract = contract.Display(),
                 Declarer = contract.PlayerPosition.ConvertToSysPlayer(),
                 Denomination = contract.Trump.Order,
-                Level = contract.Value,
+                Level = contract.Level,
                 HandViewerInput = deal.HandViewerInput + ParsePBNHelpers.ConvertToPbnBiddingSequence(contract, deal.Dealer)
             }));
         }

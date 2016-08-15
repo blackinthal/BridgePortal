@@ -106,7 +106,7 @@ namespace Dds.Net
                     {
                         Trump = trump,
                         PlayerPosition = player,
-                        Value = results.resTable[index] - 6
+                        Level = results.resTable[index] - 6
                     });
                     index++;
                 }

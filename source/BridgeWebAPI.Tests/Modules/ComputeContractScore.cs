@@ -1,6 +1,6 @@
 ﻿using Bridge.Domain;
-using Bridge.Domain.Modules;
 using Bridge.Domain.StaticModels;
+using Bridge.WebAPI.Modules;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Bridge.WebAPI.Tests.Modules
@@ -244,6 +244,34 @@ namespace Bridge.WebAPI.Tests.Modules
             //Assert
             Assert.AreEqual(0, score);
             Assert.AreEqual(0, score2);
+        }
+
+        [TestMethod]
+        public void TestContract18()
+        {
+            //Arrange
+            var module = new ContractScoreCalculatorModule();
+            var contract = new Contract("4SX", PlayerPosition.North);
+            //Act
+            var score = module.CalculateScore(contract, 7, SysVulnerabilityEnum.EW);
+            var score2 = module.CalculateScore(contract, "-3", SysVulnerabilityEnum.EW);
+            //Assert
+            Assert.AreEqual(-500, score);
+            Assert.AreEqual(-500, score2);
+        }
+
+        [TestMethod]
+        public void TestContract19()
+        {
+            //Arrange
+            var module = new ContractScoreCalculatorModule();
+            var contract = new Contract("4SX", PlayerPosition.North);
+            //Act
+            var score = module.CalculateScore(contract, 7, SysVulnerabilityEnum.All);
+            var score2 = module.CalculateScore(contract, "-3", SysVulnerabilityEnum.All);
+            //Assert
+            Assert.AreEqual(-800, score);
+            Assert.AreEqual(-800, score2);
         }
     }
 }

@@ -252,12 +252,12 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\DealModel.cs" />
+    <Compile Include="Modules\ContractScoreCalculatorModule.cs" />
     <Compile Include="Modules\Helpers\ParsePBNHelpers.cs" />
     <Compile Include="Models\AccountBindingModels.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\EventModels.cs" />
     <Compile Include="Models\IdentityModels.cs" />
-    <Compile Include="Modules\ComputeOptimalScoreModule.cs" />
     <Compile Include="Modules\LocomotivaEventMetadataProvider.cs" />
     <Compile Include="Modules\StaticModels\StaticModels.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

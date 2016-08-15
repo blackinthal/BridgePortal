@@ -10,14 +10,14 @@
         var importSuccess = function() {
             logger.success('Event imported succesfully');
             vm.loadEvents();
-        }
+        };
 
         var importError = function(err) {
             logger.error(err);
-        }
+        };
 
         vm.events = [];
-        
+
         vm.dateOptions = {
             minViewMode: "months",
             maxViewMode: "months",
@@ -25,12 +25,12 @@
             clearBtn: false,
             datepickerMode: "'month'",
             minMode: 'month'
-        }
+        };
 
         vm.eventsLoaded = false;
         vm.format = 'MMMM yyyy';
         vm.minDate = new Date(2015, 1, 1);
-        vm.maxDate = new Date(2015, 12, 31);
+
         vm.selectedDate = new Date(year, month - 1, 1);
 
         vm.status = {
@@ -55,10 +55,10 @@
 
         vm.importEvent = function(event) {
             event.$save({}, importSuccess, importError);
-        }
+        };
 
-        vm.goToImportedEvents = function () {
-        }
+        vm.goToImportedEvents = function() {
+        };
 
         vm.loadEvents();
 
