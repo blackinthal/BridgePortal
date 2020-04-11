@@ -32,6 +32,8 @@ namespace Bridge.API
                 var context = scope.ServiceProvider.GetRequiredService<BridgeContext>();
 
                 context.Database.Migrate();
+
+
             }
         }
 
