@@ -19,7 +19,7 @@ namespace Bridge.API
         {
             var host = BuildWebHost(args);
 
-            MigrateDatabase(host);
+            //MigrateDatabase(host);
 
             host.Run();
 
